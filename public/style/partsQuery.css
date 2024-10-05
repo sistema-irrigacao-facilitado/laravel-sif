@@ -1,0 +1,96 @@
+body {
+  overflow-x: hidden;
+}
+
+.header {
+  padding: 0px;
+  min-height: 10vh;
+  position: fixed; 
+  top: -1px;
+  z-index: 1;
+}
+.helcome, .container, .title, main{
+  margin-top: 15vh;
+}
+.logo-nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.logo {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100vw;
+  text-align: center;
+  padding: 0px 10px;
+}
+
+.nav {
+  position: fixed;
+  top: 80px;
+  left: -100%;
+  width: 100vw;
+  margin: 0px;
+  transition: all 0.4s ease-in;
+  background-color: white;
+  color: black;
+  height: calc(100vh - (10vh + 20px));
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 3;
+}
+
+li {
+  width: 100vw;
+  padding: 20px 0px;
+  font-size: 1.2em;
+  margin: 0px;
+  text-align: center;
+  color: black;
+  margin-right: 0px;
+}
+
+.nav li a, .nav li a:focus, .nav li a:hover{
+  color: black;
+  text-decoration: none;
+}
+.logout {
+  width: 100vw;
+  border: none;
+  text-align: center;
+  background-color: rgb(174, 0, 0);
+  padding: 10px;
+  color: white;
+}
+
+.logout:hover {
+  background-color: white;
+  color: rgb(174, 0, 0);
+  padding: 10px 0px;
+}
+
+.normal {
+  display: none;
+}
+
+.media {
+  display: block;
+}
+
+.logo i {
+  display: block;
+  scale: 0.5;
+}
+
+.nav.open {
+  left: 0;
+  z-index: 1;
+  height: 90%;
+}

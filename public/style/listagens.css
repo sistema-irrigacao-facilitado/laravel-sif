@@ -1,0 +1,93 @@
+.editar, .excluir, .desativar,.ativar, .analise,.disponivel{
+    font-weight: 600;
+    padding: 5px;
+    cursor: pointer;
+}
+.analise{
+    color: rgb(99, 46, 148);
+}
+.analise:hover{
+    text-decoration: none;
+    color: rgb(99, 46, 148);
+}
+.disponivel{
+    color: rgb(74, 154, 90);
+}
+.disponivel:hover{
+    color: rgb(74, 154, 74);
+    text-decoration: none;
+}
+.desativar{
+    color: rgb(219, 110, 0);
+}
+.desativar:hover{
+    text-decoration: none;
+    color: rgb(219, 110, 0);
+}
+.ativar{
+    color: rgb(51, 145, 106);
+}
+.ativar:hover{
+    text-decoration: none;
+    color: rgb(35, 109, 78);
+}
+.editar{
+    color: rgb(0, 148, 207);
+}
+.editar:hover{
+    text-decoration: none;
+    color: rgb(0, 148, 207);
+}
+.excluir{
+    color: rgb(193, 0, 0);
+}
+.excluir:hover{
+    text-decoration: none;
+    color: rgb(193, 0, 0);
+}
+.navegacao{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.navegacao a,.voltar,.novo{
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.navegacao a{
+    padding: 5px 7px; 
+}
+.voltar,.novo{
+    padding: 9px;
+}
+.navA{
+    color: black;
+    border: 2px solid gray;
+}
+.atual{
+    background-color: rgb(49, 49, 49);
+    color: white;
+    border: 2px solid rgb(49, 49, 49);
+}
+.voltar{
+    background-color: rgb(97, 97, 97);
+    color: white;
+}
+.novo{
+    background-color: var(--cor3);
+    color: black;
+}
+.atual:hover, .voltar:hover{
+    color: white;
+    text-decoration: none;
+}
+.navA:hover, .novo:hover{
+    color: black;
+    text-decoration: none;
+}
+thead{
+    background-color: rgb(49, 49, 49);
+    color: white;
+}

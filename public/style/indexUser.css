@@ -1,0 +1,347 @@
+body {
+    background-color: #F0F2F5;
+    position: relative;
+}
+
+.helcome {
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+}
+
+
+.sectionDispositivos {
+    width: 90%;
+    margin: auto;
+}
+
+h1 {
+    font-family: var(--font-serifada);
+}
+
+h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0px 0px 20px 20px;
+}
+
+.dispositivo {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid gray;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 15px;
+    background-color: white;
+}
+
+.dispL1 {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.dispL2 {
+    width: 100%;
+}
+
+.config{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+}
+
+h3 {
+    font-family: var(--font-serifada);
+    margin-bottom: 15px;
+}
+
+.acoes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 0px 20px;
+}
+.acSepar{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.temperatura, .umidade{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+.temperatura{
+    color: rgb(255, 98, 0);
+}
+.umidade{
+    color: rgb(0, 170, 255);
+}
+.acoes svg{
+    width: 30px;
+}
+/* Toggle  */
+
+.component-title {
+    width: 100%;
+    position: absolute;
+    z-index: 999;
+    top: 30px;
+    left: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #888;
+    text-align: center;
+}
+
+.toggle {
+    width: 41px;
+    height: 21px;
+    position: relative;
+}
+
+.checkbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.switch {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: #e9e9eb;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.slider {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: calc(50% - 27px/2 - 10px);
+    top: calc(50% - 27px/2);
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-out;
+    cursor: pointer;
+}
+
+.checkbox:checked+.switch {
+    background-color: #34C759;
+}
+
+.checkbox:checked+.switch .slider {
+    left: calc(50% - 27px/2 + 10px);
+    top: calc(50% - 27px/2);
+}
+
+
+/* .......... */
+
+.actionFlex{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-right: 20px;
+    border-right: 2px solid black;
+}
+
+
+.disInfo {
+    display: flex;
+    align-items: start;
+    justify-content: space-evenly;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.indenDis {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.getModelo {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.getNum {
+    font-size: 0.9em;
+}
+
+.other {
+    font-size: 0.9em;
+}
+
+.aButtonExcluir,
+.aButtonRelatorio {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+}
+.aButtonExcluir svg {
+    width: 35px;
+    height: 35px;
+}
+.aButtonRelatorio svg{
+    width: 30px;
+    height: 30px;
+}
+.ancoragem{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+#nenhumDis {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-top: 30px;
+}
+
+.addDisposBlock{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    margin: 30px auto;
+    text-align: center;
+    background-color: #538e62;
+    border-radius: 0px 0px 20px 20px;
+    padding: 20px;
+    font-weight: bold;
+    text-align: none;
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+}
+.dispL3{
+    display: none;
+}
+@media screen and (max-width: 768px) {
+    .helcome{
+        width: 100%;
+    }
+    .sectionDispositivos{
+        width: 95%;
+    }
+    .addDisposBlock{
+        width: 95%;
+        background-color: #538e62;
+        height: 6vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .dispL2{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .acoes{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    .actionFlex{
+        border: none;
+    }
+    .dispL2 h3{
+        text-align: center;
+        padding-top: 10px;
+        border-top: 1px solid black;
+        width: 15em;
+    }
+    .dispL1{
+        gap: 20px;
+        flex-direction: column;
+    }
+    .dispositivo{
+        padding: 20px 0px 0px 0px;
+        overflow: hidden;
+        position: relative;
+        z-index: 0;
+    }
+    .config{
+        position: absolute;
+        top:20px;
+        right: 20px;
+    }
+    .ancoragem{
+        display: none;
+    }
+    .toggle{
+        width: 30px;
+        height: 15px;
+    }
+    .slider{
+        width: 20px;
+        height: 20px;
+        top: calc(50% - 22px / 2);
+    }
+    .checkbox:checked+.switch .slider{
+        left: calc(50% - 20px/2 + 10px);
+    }
+    .dispL3{
+        width: 90%;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        padding-bottom: 20px;
+    }  
+    .dispL3 a{
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+    .dispL3 svg{
+        width: 25px;
+        height: 25px;
+    }
+    .dispL3 p{
+        color: black;
+        text-decoration: none;
+    }
+    .disInfo{
+        width: 80%;
+        padding: 10px;
+    }
+    .whats{
+        width: 50px;
+        height: 50px;
+        z-index: 1;
+    }
+    .acSepar:nth-child(2){
+        padding: 5px 20px;
+        border: 1px solid black;
+        border-radius: 10px;
+        text-align: center;
+    }
+}  

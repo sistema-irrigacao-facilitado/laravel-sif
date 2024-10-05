@@ -1,0 +1,179 @@
+body{
+    margin-bottom: 10vh;
+}
+h2{
+    font-size: 1em;
+}
+h3{
+    text-align: center;
+    font-size: 1.4em;
+}
+h4{
+    margin-bottom: 20px;
+    font-size: 1.4em;
+}
+.infoDisp{
+    display: block;
+    margin: 5vh auto;
+    text-align: center;
+}
+.voltar{
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    padding: 9px;
+    background-color: rgb(97, 97, 97);
+    color: white;
+}
+.voltar:hover{
+    color: white;
+    text-decoration: none;
+}
+
+
+
+.seAMCards{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: none;
+    margin-bottom: 10vh;
+}
+.seAMCItem{
+    width: 45%;
+    height: 35vh;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.449);
+    background-color: white;
+}
+.dadosAtuais{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 60%;
+    margin: 0px auto 5vh auto;
+}
+.temperatura, .umidade{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+.temperatura{
+    color: rgb(255, 98, 0);
+}
+.umidade{
+    color: rgb(0, 170, 255);
+}
+svg{
+    width: 70px;
+}
+.seAMCItem .img{
+    width: 50%;
+    height: 100%;
+}
+.img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.seAMCItem:hover{
+    text-decoration: none;
+}
+.nome{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+    width: 70%;
+    margin: auto;
+}
+.info{
+    width: 70%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.caracteristicas{
+    font-size: 0.8em;
+    padding: 0px 20px;
+    color: black;
+}
+.caracteristicas p{
+    margin-bottom: 3px;
+
+}
+.seAMCItem h1{
+    font-size: 1.2em;
+    
+    font-weight: bold;
+}
+.seAMCItem h2, .seAMCItem h1{
+    color: black;
+    text-decoration: none;
+}
+.chMode{
+    margin: auto;
+    text-align: center;
+}
+#changeForm{
+    display: none;
+    margin: auto;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+    gap: 10px;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: white;
+}
+.radioButtons{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 10px;
+}
+.hrLigar{
+    display: none;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+    gap: 10px;
+}
+.salvar{
+    width: 30%;
+    padding: 3px 7px;
+    border: none;
+    border-radius: 3px;
+    background-color: rgb(69, 182, 69);
+    color: white;
+    font-weight: bold;
+}
+@media screen and (max-width: 768px) {
+    .seAMCItem{
+        width: 100%;
+        height: 40vh;
+        flex-direction: column;
+    }
+    .img{
+        width: 100%;
+    }
+    .seAMCards{
+        flex-wrap: wrap;
+        gap: 5vh;
+    }
+    .info{
+        width: 100%;
+    }
+}

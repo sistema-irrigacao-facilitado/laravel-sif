@@ -1,0 +1,81 @@
+/* CSS Header */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Russo+One&display=swap');
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 5%;
+  background-color: var(--preto-padrao);
+  color: white;
+  box-shadow: 1px 0px 4px rgba(0, 0, 0, 0.388);
+  margin-bottom: 50px;
+}
+
+.logo-nav-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-size: 2em;
+  font-weight: bold;
+  color: var(--cor1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo img{
+  height: 10vh;
+}
+
+.nav {
+  list-style: none;
+  display: flex;
+  flex-flow: wrap;
+  margin-left: 20px;
+  z-index: 3;
+}
+.nav div{
+  display: flex;
+  flex-flow: wrap;
+}
+li {
+  margin-right: 20px;
+}
+
+.nav li a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.nav a:hover {
+  color: white;
+}
+
+.logout {
+  padding: 5px 10px;
+  border: 3px solid rgb(121, 0, 0);
+  text-decoration: none;
+  border-radius: 5px;
+  color: rgb(235, 0, 0);
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.logout a {
+  color: rgb(174, 0, 0);
+}
+
+.logout:hover{
+  background-color: rgb(218, 0, 0);
+  border: 3px solid rgb(218, 0, 0);
+  color: white;
+}
+.media{
+  display: none;
+}
+.logo i{
+  display: none;
+}

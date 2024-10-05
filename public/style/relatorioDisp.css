@@ -1,0 +1,190 @@
+body {
+    background-color: #ffffff;
+    position: relative;
+}
+
+.whats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: fixed;
+    background-color: #32D851;
+    bottom: 20px;
+    right: 20px;
+    overflow: hidden;
+    border: 2px solid black;
+    color: #9500ff;
+    z-index: 1;
+}
+
+.whats img {
+    height: 75%;
+}
+
+main {
+    width: 70vw;
+    margin: auto;
+}
+
+#chart_div {
+    margin: auto;
+    width: 100%;
+    height: 100%;
+}
+
+.formDado {
+    padding: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+    gap: 10px;
+}
+
+.formDado label {
+    font-size: 1.4em;
+    font-weight: bold;
+    font-family: var(--font-serifada);
+}
+
+.formDado select {
+    width: 40%;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.formFiltro {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    color: white;
+    background-color: rgb(65, 65, 65);
+    font-size: 1.1em;
+}
+
+.formFiltro select {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: white;
+    font-weight: 700;
+}
+
+.formFiltro option {
+    color: black;
+}
+
+.filtro {
+    padding: 3px 6px;
+    background-color: var(--cor3);
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+
+}
+.filt{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+
+.grafUmi {
+    margin: auto;
+    width: 70%;
+}
+
+.button {
+    display: inline-block;
+    padding: 5px 10px;
+    border: 1px solid #4f4f4f;
+    border-radius: 4px;
+    transition: all 0.2s ease-in;
+    position: relative;
+    overflow: hidden;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    color: #28907f;
+    z-index: 1;
+    background-color: transparent;
+}
+.time{
+    display: block;
+    margin: auto;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.1em;
+}
+.button:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) scaleY(1) scaleX(1.25);
+    top: 100%;
+    width: 140%;
+    height: 180%;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    display: block;
+    transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+    z-index: -1;
+}
+
+.button:after {
+    content: "";
+    position: absolute;
+    left: 55%;
+    transform: translateX(-50%) scaleY(1) scaleX(1.45);
+    top: 180%;
+    width: 160%;
+    height: 190%;
+    background-color: #39bda7;
+    border-radius: 50%;
+    display: block;
+    transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+    z-index: -1;
+}
+
+.button:hover {
+    color: #ffffff;
+    border: 1px solid #39bda7;
+}
+
+.button:hover:before {
+    top: -35%;
+    background-color: #39bda7;
+    transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+.button:hover:after {
+    top: -45%;
+    background-color: #39bda7;
+    transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+@media screen and (max-width: 768px) {
+    .whats{
+        width: 50px;
+        height: 50px;
+    }
+    main{
+        width: 95%;
+    }
+    .button{
+        z-index: 0;
+    }
+    .formFiltro{
+        max-width: 100%;
+        flex-wrap: wrap;
+    }
+}

@@ -1,0 +1,99 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
+
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Paleta Principal */
+    --cor1: #008060;
+    /* cor primaria */
+    --cor2: #ADD8E6;
+    /* cor secundaria */
+    --cor3: #FFC300;
+    /* cor destaque */
+
+    /* Cores complementares */
+
+    --cor4-: #696969;
+    /* para detalhes e acentos */
+    --cor5-: #228B22;
+    /* para contraste e profundidade */
+
+    /* Padrões */
+    --cinza-padrao: #E0E0E0;
+    --preto-padrao: #1d201e;
+
+    /* Fontes */
+
+    --font-serifada: "Merriweather", serif;
+    --fonte-padrao: Arial, Helvetica, sans-serif;
+}
+
+.erro,
+.ssc {
+    padding: 5px 10px;
+    width: 80%;
+    margin: auto;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+.erro p, .ssc p{
+    padding: 0px;
+    margin: 0px;
+}
+
+.erro {
+    background-color: rgba(255, 0, 0, 0.386);
+    border-left: 7px solid red;
+    color: rgb(53, 0, 0);
+}
+.ssc{
+    background-color: rgba(90, 203, 90, 0.463);
+    border-left: 7px solid rgb(0, 210, 0);
+    color: rgb(0, 45, 0);
+}
+
+body {
+    min-height: 100vh;
+}
+
+p,
+a {
+    font-family: var(--fonte-padrao);
+    text-decoration: none;
+}
+
+.whats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: fixed;
+    background-color: #32D851;
+    bottom: 20px;
+    right: 20px;
+    overflow: hidden;
+    border: 2px solid black;
+}
+
+.whats img {
+    height: 70%;
+    width: 70%;
+}
+
+@media screen and (max-width: 768px) {
+    .whats {
+        width: 50px;
+        height: 50px;
+        z-index: 1;
+    }
+}

@@ -1,0 +1,224 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
+
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+.erro{
+    background-color: rgba(255, 0, 0, 0.386);
+    border-left: 7px solid red;
+    padding: 5px 10px;
+    width: 80%;
+    margin: auto;
+    font-weight: bold;
+    color: rgb(53, 0, 0);
+    font-family: Arial, Helvetica, sans-serif;
+}
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #161616ee;
+}
+
+.blockForm {
+    min-width: 55%;
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px #3b63516a;
+}
+.divis{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:rgb(103, 146, 131) url('../images/fundo.jpg') center center;
+    background-size: cover;
+    width: 40%;
+    height: 100%;
+}
+.divis img{
+    max-width: 60%;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 60%;
+    padding: 20px 0px;
+}
+
+.group {
+    position: relative;
+    width: 50%;
+    margin-top: 10px;
+}
+
+.input {
+    font-size: 16px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #515151;
+    background: transparent;
+    
+}
+
+.input:focus {
+    outline: none;
+}
+
+label {
+    color: #999;
+    font-size: 18px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 10px;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+.input:focus~label,
+.input:valid~label {
+    top: -20px;
+    font-size: 14px;
+    color: #5264AE;
+}
+
+.bar {
+    position: relative;
+    display: block;
+    width: 200px;
+}
+
+.bar:before,
+.bar:after {
+    content: '';
+    height: 2px;
+    width: 0;
+    bottom: 1px;
+    position: absolute;
+    background: #5264AE;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+.bar:before {
+    left: 50%;
+}
+
+.bar:after {
+    right: 50%;
+}
+
+.input:focus~.bar:before,
+.input:focus~.bar:after {
+    width: 0;
+}
+
+.highlight {
+    position: absolute;
+    height: 60%;
+    width: 100px;
+    top: 25%;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.input:focus~.highlight {
+    animation: inputHighlighter 0.3s ease;
+}
+
+@keyframes inputHighlighter {
+    from {
+        background: #5264AE;
+    }
+
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+
+button {
+    padding: 5px 7px;
+    font-size: 1em;
+    width: 50%;
+    border: 1px solid #1a242f;
+    border-radius: 10px;
+    background-color: rgb(191, 230, 217);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background-color: rgb(103, 146, 131);
+    color: white;
+}
+
+form p {
+    font-size: 1em;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+h1 {
+    font-family: "Merriweather", serif;
+    text-align: center;
+    color: #29322e;
+}
+@media screen and (max-width: 1024px) and (min-width: 768px){
+    .blockForm{
+        width: 70%;
+    }
+}
+@media screen and (max-width: 768px){
+    .blockForm{
+        width: 95%;
+        height: 70%;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column-reverse;
+    }
+    form{
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 85%;
+        padding: 30px 0px;
+    }
+    .divis{
+        display: block;
+        width: 100%;
+        height: 15%;
+    }
+    .divis img{
+        display: none;
+    }
+    .group{
+        width: 90%;
+        margin: auto;
+    }
+    .input{
+        width: 100%;
+    }
+    button{
+        width: 90%;
+    }
+}
