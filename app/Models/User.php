@@ -56,4 +56,8 @@ class User extends Authenticatable
     protected $casts = [
         'perfil' => 'string',
     ];
+
+    public function devices(){
+        return $this->belongsTo('App\Models\Devices');
+    }
 }
