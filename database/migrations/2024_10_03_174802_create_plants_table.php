@@ -13,21 +13,21 @@ return new class extends Migration
     {
         Schema::create('plants', function (Blueprint $table) {
             $table->id();
-            $table->string('icommon_namep', 255);
+            $table->string('common_name', 255);
             $table->string('scientific_name', 255);
             $table->enum('water_need', ['small','medium','tall']);
             $table->enum('soil_type', ['sandy','clayey','humus','calcareous']);
             $table->integer('humidity_tolerance');
             $table->integer('temperature_tolerance');
-            $table->binary('image');
+            $table->longText('image')->charset('binary');
 
             $table->integer('status');
             $table->string('obs', 255)->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('collaborators_inclusion_id')->constrained('collaborators')->onDelete('cascade');
-            $table->foreignId('collaborators_change_id')->constrained('collaborators')->onDelete('cascade')->nullable();
-            $table->foreignId('collaborators_exclusion_id')->constrained('collaborators')->onDelete('cascade')->nullable();
+            $table->foreignId('collaborators_change_id')->nullable()->constrained('collaborators')->onDelete('cascade');
+            $table->foreignId('collaborators_exclusion_id')->nullable()->constrained('collaborators')->onDelete('cascade');
         });
     }
 

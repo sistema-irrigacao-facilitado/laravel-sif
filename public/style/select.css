@@ -15,20 +15,26 @@ main {
     display: flex;
     align-items: center;
     justify-content: end;
-    gap: 15px;
     color: black;
 }
 .paginacao a{
-    color: black;
+    color: rgb(0, 0, 0);
     text-decoration: none;
-    padding: 2px 8px;
-    border: 1px solid black;
+    
 }
-.paginacao p{
-    padding: 2px 8px;
-    margin: 0px;
-    border: 1px solid black;
-    background-color: rgb(182, 182, 182);
+.paginacao a:hover{
+    color: rgb(0, 174, 90);
+    text-decoration: none;
+}
+.paginacao nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    gap: 5px; 
+}
+.paginacao svg{
+    height: 2vh;
 }
 .sctCard{
     width: 90%;

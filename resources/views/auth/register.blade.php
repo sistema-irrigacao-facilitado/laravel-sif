@@ -22,8 +22,17 @@
             <path d="M10.212 12.007 7.645 9.414h15.124v-4H7.62l2.585-2.586L7.377 0 0 7.378l7.37 7.443 2.842-2.814z" />
         </svg></a>
     <div>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
         <h1>Cadastro</h1>
-        <p>Torne sua vida mais pratica e tranquila com S.I.F</p>
+        <p>Torne sua vida mais prática e tranquila com S.I.F</p>
     </div>
     <form action="{{ route('register') }}" method="POST">
         @csrf
@@ -33,7 +42,7 @@
                 <span class="input-border"></span>
             </div>
             <div class="campo">
-                <input class="input" placeholder="lastname" type="text" name="lastname" required maxlength="250">
+                <input class="input" placeholder="Sobrenome" type="text" name="lastname" required maxlength="250">
                 <span class="input-border"></span>
             </div>
         </div>

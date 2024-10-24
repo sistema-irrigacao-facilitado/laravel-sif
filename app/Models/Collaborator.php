@@ -19,6 +19,6 @@ class Collaborator extends Model
         return $this->hasMany('App\Models\Plants');
     }
     public function devices(){
-        return $this->hasMany('App\Models\Devices');
+        return $this->hasMany('App\Models\Device');
     }
 }

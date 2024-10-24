@@ -15,20 +15,20 @@ return new class extends Migration
             $table->id();
             $table->string('ip', 300)->nullable();
             $table->string('model', 255);
-            $table->string('numbering', 255);
+            $table->string('numbering', 8);
             $table->binary('qr')->nullable();
-            $table->enum('mode', ['1', '2'])->default('1');
+            $table->enum('mode', [1, 2])->default(1);
             $table->time('time_on')->nullable();
             $table->integer('status');
 
             $table->timestamps();
             $table->softDeletes();
-            $table->foreignId('users_id')->constrained('users')->onDelete('cascade')->nullable();
-            $table->foreignId('plants_id')->constrained('plants')->onDelete('cascade')->nullable();
-            $table->foreignId('pumps_id')->constrained('pumps')->onDelete('cascade')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('plant_id')->nullable()->constrained('plants')->onDelete('cascade');
+            $table->foreignId('pump_id')->nullable()->constrained('pumps')->onDelete('cascade');
             $table->foreignId('collaborators_inclusion_id')->constrained('collaborators')->onDelete('cascade');
-            $table->foreignId('collaborators_change_id')->constrained('collaborators')->onDelete('cascade')->nullable();
-            $table->foreignId('collaborators_exclusion_id')->constrained('collaborators')->onDelete('cascade')->nullable();
+            $table->foreignId('collaborators_change_id')->nullable()->constrained('collaborators')->onDelete('cascade');
+            $table->foreignId('collaborators_exclusion_id')->nullable()->constrained('collaborators')->onDelete('cascade');
         });
     }
 

@@ -58,6 +58,6 @@ class User extends Authenticatable
     ];
 
     public function devices(){
-        return $this->belongsTo('App\Models\Devices');
+        return $this->belongsTo('App\Models\Device');
     }
 }

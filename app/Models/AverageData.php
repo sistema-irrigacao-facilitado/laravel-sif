@@ -10,6 +10,6 @@ class AverageData extends Model
     use HasFactory;
 
     public function devices(){
-        return $this->belongsTo('App\Models\Devices');
+        return $this->belongsTo('App\Models\Device');
     }
 }

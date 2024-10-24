@@ -9,8 +9,8 @@ class DataDevice extends Model
 {
     use HasFactory;
 
-    public function devices(){
-        return $this->belongsTo('App\Models\Devices');
+    public function device(){
+        return $this->belongsTo('App\Models\Device');
     }
 
     public function avaregeData(){

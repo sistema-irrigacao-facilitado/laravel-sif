@@ -17,8 +17,8 @@ return new class extends Migration
             $table->float('temperature');
             $table->float('liters_pump');
             $table->timestamps();
-            $table->foreignId('devices_id')->constrained('devices')->onDelete('cascade');
-            $table->foreignId('average_data_id')->constrained('average_data')->onDelete('cascade')->nullable();
+            $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
+            $table->foreignId('average_data_id')->nullable()->constrained('average_data')->onDelete('cascade');
         });
     }
 

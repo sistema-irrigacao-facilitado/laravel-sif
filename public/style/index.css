@@ -69,7 +69,9 @@ a {
     font-family: var(--fonte-padrao);
     text-decoration: none;
 }
-
+p{
+    margin-bottom: 0px;
+}
 .whats {
     display: flex;
     align-items: center;

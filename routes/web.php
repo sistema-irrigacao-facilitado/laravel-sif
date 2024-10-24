@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -7,11 +8,9 @@ Route::get('/', function () {
     return view('auth/login');
 });
 
-Route::get('/dashboard', function () {
-    return view('user/dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-
+Route::get('/dashboard', [DeviceController::class, 'getAuth'])
+    ->middleware(['auth:web', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -20,3 +19,5 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/user/web.php';
+require __DIR__.'/admin/web.php';

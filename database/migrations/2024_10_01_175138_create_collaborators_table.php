@@ -21,12 +21,12 @@ return new class extends Migration
             $table->string('cpf', 15)->unique();
             $table->string('rg', 15)->unique()->nullable();
             $table->integer('status');
-            $table->enum('perfil', ['regular', 'premium']);
+            $table->enum('perfil', ['regular', 'admin']);
             $table->timestamps();
             $table->softDeletes();
-            $table->foreignId('collaborators_inclusion_id')->constrained('collaborators')->onDelete('cascade');
-            $table->foreignId('collaborators_change_id')->constrained('collaborators')->onDelete('cascade')->nullable();
-            $table->foreignId('collaborators_exclusion_id')->constrained('collaborators')->onDelete('cascade')->nullable();
+            $table->foreignId('collaborators_inclusion_id')->nullable()->constrained('collaborators')->onDelete('cascade');
+            $table->foreignId('collaborators_change_id')->nullable()->constrained('collaborators')->onDelete('cascade');
+            $table->foreignId('collaborators_exclusion_id')->nullable()->constrained('collaborators')->onDelete('cascade');
         });
     }
 

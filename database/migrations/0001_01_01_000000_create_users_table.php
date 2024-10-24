@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password', 70);
             $table->string('telephone', 15);
             $table->string('cpf', 15)->unique();
+            $table->string('status', 2);
             $table->enum('perfil', ['regular', 'premium']);
             $table->timestamps();
             $table->softDeletes(); // Adiciona coluna 'deleted_at' para soft delete

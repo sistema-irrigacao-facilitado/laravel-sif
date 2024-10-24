@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="{{ asset('images/sificon-bg.ico') }}" type="image/x-icon">
     @yield('style')
     <title>@yield('title')</title>
+    @vite(['resources/js/app.js'])
 </head>
 
 <body>

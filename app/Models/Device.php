@@ -9,27 +9,38 @@ class Device extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'ip',
+        'model',
+        'numbering',
+        'qr',
+        'mode',
+        'time_on',
+        'status',
+        'user_id',
+    ];
+
     public function collaborators(){
         return $this->belongsTo('App\Models\Collaborator');
     }
 
-    public function plants(){
-        return $this->belongsTo('App\Models\Plants');
+    public function plant(){
+        return $this->belongsTo('App\Models\Plant');
     }
 
-    public function pumps(){
-        return $this->belongsTo('App\Models\Pumps');
+    public function pump(){
+        return $this->belongsTo('App\Models\Pump');
     }
 
     public function users(){
         return $this->belongsTo('App\Models\Users');
     }
 
-    public function dataDevices(){
-        return $this->belongsTo('App\Models\DataDevices');
+    public function dataDevice(){
+        return $this->hasMany('App\Models\DataDevice');
     }
 
     public function avaregeData(){
-        return $this->belongsTo('App\Models\AvaregeData');
+        return $this->hasMany('App\Models\AvaregeData');
     }
 }
