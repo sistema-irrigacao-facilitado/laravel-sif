@@ -1,38 +1,119 @@
-body{
-    margin-bottom: 10vh;
+body {
+    max-height: 0px;
+    background-color: white !important;
 }
-h2{
-    font-size: 1em;
-}
-h3{
+h1 {
     text-align: center;
-    font-size: 1.4em;
+    font-size: 1.7em ;
+
 }
-h4{
+
+h2 {
+    font-size: 1.3em ;
+}
+
+h3 {
+    text-align: center;
+    font-size: 1.4em ;
+}
+
+h4 {
     margin-bottom: 20px;
     font-size: 1.4em;
 }
-.infoDisp{
+
+.infoDisp {
     display: block;
     margin: 5vh auto;
     text-align: center;
 }
+
+.vavav{
+    position: relative;
+    width: 90%;
+    margin: auto;
+    text-align: center;
+}
 .voltar{
-    text-decoration: none;
-    border-radius: 5px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
     font-weight: bold;
+    border-radius: 5px;
     padding: 9px;
     background-color: rgb(97, 97, 97);
     color: white;
 }
-.voltar:hover{
+
+.voltar:hover {
     color: white;
     text-decoration: none;
 }
 
+.modo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding-bottom: 10vh;
+}
+main{
+    width: 85vw;
+}
 
+#hrLigar {
+    display: none;
+}
 
-.seAMCards{
+.day-container {
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.hr-text {
+    width: 100%;
+    margin-bottom: 20px !important;
+}
+
+.time-inputs {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.input-group{
+    width: auto !important;
+}
+input[type="time"] {
+    font-size: 1.1em;
+    padding: 7px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+}
+.oculto{
+    display: none;
+}
+.periodoContainer{
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+#pertime{
+    font-size: 1.2em;
+    padding: 3px;
+    max-width: 100px;
+    text-align: center;
+    border-radius: 3px;
+}
+.seAMCards {
     width: 100%;
     display: flex;
     align-items: center;
@@ -40,7 +121,8 @@ h4{
     border: none;
     margin-bottom: 10vh;
 }
-.seAMCItem{
+
+.seAMCItem {
     width: 45%;
     height: 35vh;
     border-radius: 20px;
@@ -54,42 +136,52 @@ h4{
     box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.449);
     background-color: white;
 }
-.dadosAtuais{
+
+.dadosAtuais {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
     width: 60%;
     margin: 0px auto 5vh auto;
 }
-.temperatura, .umidade{
+
+.temperatura,
+.umidade {
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2em;
     font-weight: 600;
 }
-.temperatura{
+
+.temperatura {
     color: rgb(255, 98, 0);
 }
-.umidade{
+
+.umidade {
     color: rgb(0, 170, 255);
 }
-svg{
+
+svg {
     width: 70px;
 }
-.seAMCItem .img{
+
+.seAMCItem .img {
     width: 50%;
     height: 100%;
 }
+
 .img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-.seAMCItem:hover{
+
+.seAMCItem:hover {
     text-decoration: none;
 }
-.nome{
+
+.nome {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -97,83 +189,114 @@ svg{
     width: 70%;
     margin: auto;
 }
-.info{
+
+.info {
     width: 70%;
     height: 100%;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
 }
-.caracteristicas{
+
+.caracteristicas {
     font-size: 0.8em;
     padding: 0px 20px;
     color: black;
 }
-.caracteristicas p{
+
+.caracteristicas p {
     margin-bottom: 3px;
 
 }
-.seAMCItem h1{
+
+.seAMCItem h1 {
     font-size: 1.2em;
-    
+
     font-weight: bold;
 }
-.seAMCItem h2, .seAMCItem h1{
+
+.seAMCItem h2,
+.seAMCItem h1 {
     color: black;
     text-decoration: none;
 }
-.chMode{
-    margin: auto;
-    text-align: center;
-}
-#changeForm{
-    display: none;
-    margin: auto;
+
+/* From Uiverse.io by CheekyTurtle */
+.days-btn-container {
+    display: flex;
+    width: 300px;
     align-items: center;
     justify-content: space-evenly;
-    flex-direction: column;
-    gap: 10px;
-    border: 2px solid gray;
-    border-radius: 10px;
-    padding: 20px;
-    background-color: white;
+    height: 34px;
 }
-.radioButtons{
+
+.day-btn {
+    display: none;
+    /* Hide the original checkbox */
+}
+
+.day-label {
+    background-color: transparent;
+    font-size: 11px;
+    font-weight: 600;
+    color: #008cff;
+    cursor: pointer;
+    border: 2px solid #008cff;
+    border-radius: 20%;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    gap: 10px;
+    justify-content: center;
+    margin: 0 5px;
 }
-.hrLigar{
-    display: none;
-    align-items: center;
-    justify-content: space-evenly;
-    flex-direction: column;
-    gap: 10px;
-}
-.salvar{
-    width: 30%;
-    padding: 3px 7px;
+
+/* Apply styles for the selected state */
+.day-btn:checked+.day-label {
+    background-color: #008cff;
+    background-image: linear-gradient(147deg, #00ccff 0%, #004cff 74%);
     border: none;
-    border-radius: 3px;
-    background-color: rgb(69, 182, 69);
     color: white;
-    font-weight: bold;
 }
+.l{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
 @media screen and (max-width: 768px) {
-    .seAMCItem{
+
+    
+    .vavav{
+        display: flex;
         width: 100%;
-        height: 40vh;
+        text-align: center;
+        align-items: start;
+        justify-content: center;
         flex-direction: column;
     }
-    .img{
+    .voltar{
+        position: relative;
+    }
+    .seAMCItem {
+        width: 100%;
+        height: unset;
+        min-height: 30vh;
+        flex-direction: column;
+    }
+
+    .img {
         width: 100%;
     }
-    .seAMCards{
+
+    .seAMCards {
         flex-wrap: wrap;
         gap: 5vh;
+        
     }
-    .info{
+
+    .info {
         width: 100%;
     }
 }

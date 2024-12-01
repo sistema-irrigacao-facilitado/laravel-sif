@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Device;
 
+use App\Http\Controllers\Controller;
+use App\Http\Traits\Filterable;
+use App\Models\AverageData;
 use App\Models\DataDevice;
 use App\Models\Device;
 use App\Models\Plant;
@@ -69,26 +72,55 @@ class DeviceController extends Controller
         return redirect()->route('logout');
     }
 
-    public function report($id)
+    public function report(Request $request, $id)
     {
         $user = User::find(getAuthUser()->id);
         $device = Device::findOrFail($id);
-        $dataDevice = DataDevice::where('device_id', $device->id)->first();
+
         if ($user) {
             if ($user->status == 2) {
+
+                if ($request->perMode == 2) {
+                    $query = AverageData::query();
+                    $fields = ['average_humidity', 'average_temperature', 'average_liters', 'created_at'];
+                } else {
+                    $query = DataDevice::query();
+                    $fields = ['humidity', 'temperature', 'liters_pump', 'created_at'];
+                }
+
+                $userTimezone = 'America/Sao_Paulo'; // Exemplo, você pode obter dinamicamente do banco de dados
+                $hr = now()->setTimezone($userTimezone)->subHour()->format('Y-m-d H:i:s');
+
+                if ($request->from) {
+                    $query = $query->where('created_at', '>=', $request->from);
+                } else {
+                    $query = $query->where('created_at', '>=', $hr);
+                }
+
+                
+                $collection = $query->where('device_id', $id)->get();
+
+                $values = extractValuesFromCollection($collection, $fields);
+
                 return view(
                     'user.device.report',
                     [
                         'device' => $device,
-                        'dataDevice' => $dataDevice
+                        'collection' => $collection,
+                        'values' => $values,
+                        'perMode' => $request->perMode,
                     ]
                 );
             }
             return redirect()->route('logout');
         }
+
+        // Redirecionar para logout se o usuário não for encontrado
         return redirect()->route('logout');
     }
 
+
+    use Filterable;
     public function config($id)
     {
         $user = User::find(getAuthUser()->id);

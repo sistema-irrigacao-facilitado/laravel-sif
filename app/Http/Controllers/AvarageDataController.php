@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\Filterable;
+use App\Models\AverageData;
 use Illuminate\Http\Request;
 
 class AvarageDataController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+    
 
     /**
      * Show the form for creating a new resource.

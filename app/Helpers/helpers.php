@@ -8,3 +8,25 @@ function getAuthUser(){
         return Auth::guard('web')->user();
     }
 }
+
+function periodFormat($period){
+    $segundos = $period / 1000;
+
+        // Calcula minutos e segundos
+        $minutos = floor($segundos / 60);
+        $segundos = $segundos % 60;
+
+        // Formata a saída
+        return sprintf("%02d:%02d", $minutos, $segundos);
+}
+
+function extractValuesFromCollection($collection, $fields)
+    {
+        $result = [];
+
+        foreach ($fields as $field) {
+            $result[$field] = $collection->pluck($field)->toArray();
+        }
+
+        return $result;
+    }

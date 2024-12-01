@@ -172,6 +172,31 @@ main {
     transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
+.vavav{
+    position: relative;
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+.voltar{
+    position: absolute;
+    left: -10px;
+    top: 0px;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 9px;
+    background-color: rgb(97, 97, 97);
+    color: white;
+}
+.voltar:hover{
+    color: white;
+    text-decoration: none;
+}
+#chart{
+    margin: auto;
+    width: 100%;
+    height: 100%;
+}
 @media screen and (max-width: 768px) {
     .whats{
         width: 50px;
@@ -179,6 +204,11 @@ main {
     }
     main{
         width: 95%;
+        margin-top: 15vh;
+    }
+    #chart{
+        width: 100%;
+        height: 100%;
     }
     .button{
         z-index: 0;

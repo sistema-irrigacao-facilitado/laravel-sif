@@ -36,9 +36,9 @@
         <div class="ajuda">
             <h3>Como encontrar o número do meu dispositivo? <strong id="strTagAjuda">#ajuda</strong></h3>
             <ul>
-                <li>Em seu dispositivo SIF, encontre o QR Code de indentificação.</li><br>
-                <li>Caso esteja tendo problemas ao adiconar ele pelo QR Code, anote o número presente em baixo do QR, esta é o seu número de indentificação, o Sif Id</li><br>
-                <li>Agora que você ja possui o Sif Id, siga para o campo de Adiconar Manualmente ao lado.</li>
+                <li>Em seu dispositivo SIF, encontre o QR Code para conexão Wi-Fi.</li><br>
+                <li>Ao scanear o Qr Code, poderá encontrar o numero de identificação de seu dispositivo</li><br>
+                <li>Agora que você ja possui o SIF-Id (codigo de identificação), siga para o campo de Adiconar Manualmente ao lado.</li>
             </ul>
         </div>
     </div>

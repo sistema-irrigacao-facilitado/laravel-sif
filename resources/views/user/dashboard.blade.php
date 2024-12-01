@@ -94,11 +94,11 @@
                         </a>
                     </div>
                 </div>
-                @if ($device->ip != null)
+
                     <div class="dispL2">
-                        <h3>Ações Rápidas</h3>
+                        <h3>Informações Rápidas</h3>
                         <div class="acoes">
-                            <div class="acSepar">
+                            {{-- <div class="acSepar">
                                 <div class="actionFlex">
                                     <div class="toggle">
                                         <input type="checkbox" class="checkbox" id="a{{ $device->id }}"
@@ -119,7 +119,7 @@
                                     </div>
                                     <p>Manual</p>
                                 </div>
-                            </div>
+                            </div> --}}
                             @if ($device->dataDevice->count() > 0)
                                 <div class="acSepar">
                                     <div class="temperatura">
@@ -252,7 +252,7 @@
                             </svg>
                         </a>
                     </div>
-                @endif
+
             </div>
         @empty
             <p id="nenhumDis">Nenhum dispositivo Encontrado.</p>

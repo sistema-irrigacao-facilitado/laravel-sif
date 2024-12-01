@@ -10,13 +10,15 @@ class Device extends Model
     use HasFactory;
 
     protected $fillable = [
-        'ip',
+        
         'model',
         'numbering',
         'qr',
         'mode',
         'time_on',
+        'period',
         'status',
+        'update_status',
         'user_id',
     ];
 
