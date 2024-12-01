@@ -28,7 +28,23 @@ Route::controller(DeviceController::class)->group(function () {
         ->middleware(['auth:web', 'verified'])
         ->name('user.device.add');
 
-    Route::put('/device/{id}/config',  'modeUpdate')
+        Route::get('/user/conf',  'conf')
+        ->middleware(['auth:web', 'verified'])
+        ->name('user.conf');
+
+        Route::post('/user/conf/update',  'confUpdate')
+        ->middleware(['auth:web', 'verified'])
+        ->name('user.conf.update');
+
+        Route::get('/user/conf/password',  'password')
+        ->middleware(['auth:web', 'verified'])
+        ->name('user.password');
+
+        Route::post('/user/conf/password/update',  'passwordUpdate')
+        ->middleware(['auth:web', 'verified'])
+        ->name('user.password.update');
+
+    Route::post('/device/{id}/config',  'modeUpdate')
         ->middleware(['auth:web', 'verified'])
         ->name('user.device.modeUpdate');
 
@@ -39,6 +55,10 @@ Route::controller(DeviceController::class)->group(function () {
     Route::put('device/{id}/pump/selected',  'pumpSelect')
         ->middleware(['auth:web', 'verified'])
         ->name('user.device.pump.selected');
+
+    Route::put('device/unlink',  'unlink')
+        ->name('user.device.unlink');
+
 });
 
 Route::get('device/{id}/plant', [PlantController::class, 'select'])

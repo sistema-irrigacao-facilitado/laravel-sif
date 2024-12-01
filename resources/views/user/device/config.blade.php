@@ -177,11 +177,13 @@
             </div>
         </div>
     </div>
-    <form action="modo_post.php" method="POST" id="formModo" style="display: none;">
-        <input type="text" name="modo" id="modo">
-        <input class="hrLigarInput" name="time" value='{{ $device->time_on }}'>
+    <form action="{{ route('user.device.modeUpdate', $device->id) }}" method="POST" id="formModo" style="display: none;">
+        @csrf
+
+        <input type="text" name="mode" id="modo">
+        <input class="hrLigarInput" name="time_on" value='{{ $device->time_on }}'>
         <input type="text" name="id" value="{{ $device->id }}">
-        <input type="text" name="periodo" id="periodo" value="{{ $device->period }}">
+        <input type="text" name="period" id="periodo" value="{{ $device->period }}">
         <button type="submit"></button>
     </form>
     <script src="{{ asset('js/confDevice.js') }}"></script>

@@ -57,9 +57,7 @@ h4 {
     flex-direction: column;
     padding-bottom: 10vh;
 }
-main{
-    width: 85vw;
-}
+
 
 #hrLigar {
     display: none;

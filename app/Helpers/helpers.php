@@ -19,6 +19,18 @@ function periodFormat($period){
         // Formata a saída
         return sprintf("%02d:%02d", $minutos, $segundos);
 }
+function periodUnFormat($tempoString){
+    // Separa minutos e segundos
+    list($minutos, $segundos) = explode(':', $tempoString);
+
+    // Converte tudo para segundos
+    $segundosTotal = ($minutos * 60) + $segundos;
+
+    // Converte para milissegundos
+    $milissegundos = $segundosTotal * 1000;
+
+    return $milissegundos;
+}
 
 function extractValuesFromCollection($collection, $fields)
     {

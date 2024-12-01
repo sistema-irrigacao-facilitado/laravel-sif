@@ -263,6 +263,8 @@
             <p>&#43; Adicionar um novo Dispositivo</p>
         </a>
     </div>
+        
+    
     <div class="modal" id="popup" tabindex="-1">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
@@ -283,15 +285,16 @@
                 <div class="modal-footer">
                     <div class="w-100">
                         <div class="row">
-                            <form action="">
+                            <form action="{{ route('user.device.unlink') }}" method="POST">
+                                @csrf
+                                @method('PUT')
                                 <input type="int" id="id" name="id" hidden>
                                 <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
                                         Cancelar
                                     </a></div>
-                                <div class="col"><a href="#" class="btn btn-danger w-100"
-                                        data-bs-dismiss="modal">
+                                <div class="col"><button type="submit" class="btn btn-danger w-100">
                                         Excluir
-                                    </a></div>
+                                    </button></div>
                             </form>
                         </div>
                     </div>

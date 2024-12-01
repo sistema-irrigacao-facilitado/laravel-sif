@@ -12,7 +12,10 @@
 
     <div class="title">
 
-        <h1>Selecione a bomba d'agua utilizada em sua plantação</h1>
+        <div class="vavav">
+            <h1>Selecione a Bomba utilizada em sua plantação</h1>
+            <a href="{{ route('user.device.config', $device->id) }}" class="voltar">Voltar</a>
+        </div>
         <div class="search">
             <div class="search-box">
                 <div class="search-field">

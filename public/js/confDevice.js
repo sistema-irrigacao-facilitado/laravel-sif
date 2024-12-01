@@ -11,6 +11,10 @@ $(document).ready(function () {
         diasDaSemana.css('display', 'flex');
         periodo.css('display', 'flex');
         $('.l').css('display', 'flex');
+    } else{
+        diasDaSemana.css('display', 'none');
+        periodo.css('display', 'none');
+        $('.l').css('display', 'none');
     }
 
     let vazao = $('#vazao').val()
@@ -188,7 +192,7 @@ function calcLitros(vazao, pertime, qtd) {
     let milissegundos = segundosTotal * 1000;
     let tempo = milissegundos * qtd;
     let litrosGastos = (tempo / 60000.0) * parseFloat(vazao);
-    let texto = `<p>Litros: ${litrosGastos} </p>`;
+    let texto = `<p>Litros: ${litrosGastos.toFixed(2)} </p>`;
 
     $('.l').empty();
     $('.l').append(texto);

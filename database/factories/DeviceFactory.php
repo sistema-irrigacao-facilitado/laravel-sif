@@ -22,7 +22,7 @@ class DeviceFactory extends Factory
                 $this->faker->time,
                 $this->faker->time,
             ]), // Array JSON com tempos
-            'period' => $this->faker->numberBetween(0, 59) . ':' . $this->faker->numberBetween(0, 59),
+            'period' => $this->faker->numberBetween(0, 100000),
             'status' => 2,
             'user_id' => User::factory(), // Vincula a um usuário
             'collaborators_inclusion_id' => Collaborator::factory(),

@@ -37,7 +37,7 @@
             <ul class="nav">
                 <div>
                     <li><a href="{{ route('dashboard') }}">Início</a></li>
-                    <li><a href="../confUser/conf.php">Configurações</a></li>
+                    <li><a href="{{ route('user.conf') }}">Configurações</a></li>
                     <!-- <li><a href="#">Ajuda</a></li>
                 <li><a href="#">Contato</a></li>
                 <li><a href="#">Loja</a></li> -->
