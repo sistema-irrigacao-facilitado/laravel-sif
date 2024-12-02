@@ -45,4 +45,26 @@ class Device extends Model
     public function avaregeData(){
         return $this->hasMany('App\Models\AvaregeData');
     }
+
+    public function updateIoT($device)
+{
+    $plant = Plant::where('device_id', $device->id)->first();
+    $pump = Pump::where('device_id', $device->id)->first();
+
+    $dados = [
+        "mode" => $device->mode,
+        "time_on" => $device->time_on,
+        "period" => $device->period,
+        "humidity" => $plant->humidity_tolerance ?? null,
+        "temperature" => $plant->temperature_tolerance ?? null,
+        "flow" => $pump->flow ?? null,
+    ];
+
+    $json = json_encode($dados);
+    if ($json === false) {
+        return json_last_error_msg();
+    }
+
+    return $json;
+}
 }

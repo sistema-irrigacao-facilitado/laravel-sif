@@ -24,6 +24,54 @@ class DeviceController extends Controller
         //
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+
     public function getAuth()
     {
         $devices = Device::where('user_id', getAuthUser()->id)->where('status', 2)
@@ -96,7 +144,7 @@ class DeviceController extends Controller
                     "name" => "required|string|max:200",
                     "lastname" => "required|string|max:200",
                     "telephone" => "required|string|max:15|regex:/^\(\d{2}\)\s\d{5}-\d{4}$/",
-                    "cpf" => "required|string|max:15|regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/", 
+                    "cpf" => "required|string|max:15|regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/",
                     "email" => "required|email|max:200"
                 ]);
 
@@ -129,30 +177,30 @@ class DeviceController extends Controller
     }
 
     public function passwordUpdate(Request $request)
-{
-    $user = User::find(getAuthUser()->id);
+    {
+        $user = User::find(getAuthUser()->id);
 
-    if ($user) {
-        if ($user->status == 2) {
-            // Validação dos dados enviados
-            $request->validate([
-                "password" => "required|string|min:8|confirmed", // 'confirmed' exige o campo 'password_confirmation'
-            ]);
+        if ($user) {
+            if ($user->status == 2) {
+                // Validação dos dados enviados
+                $request->validate([
+                    "password" => "required|string|min:8|confirmed", // 'confirmed' exige o campo 'password_confirmation'
+                ]);
 
-            // Hash da senha antes de salvar
-            $password = bcrypt($request->password);
+                // Hash da senha antes de salvar
+                $password = bcrypt($request->password);
 
-            // Atualizar o usuário com os dados validados
-            $user->update([
-                "password" => $password,
-            ]);
+                // Atualizar o usuário com os dados validados
+                $user->update([
+                    "password" => $password,
+                ]);
 
-            return view('user.conf', ['user' => $user]);
+                return view('user.conf', ['user' => $user]);
+            }
+            return redirect()->route('logout');
         }
         return redirect()->route('logout');
     }
-    return redirect()->route('logout');
-}
 
 
     public function report(Request $request, $id)
@@ -395,51 +443,101 @@ class DeviceController extends Controller
 
         return redirect()->route('logout');
     }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    // IoT
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+    public function write(Request $request, $id)
+{
+    try {
+        $request->validate([
+            "numbering" => "required|string|size:8",
+            "liters_pump" => "required|numeric",
+            "humidity" => "required|numeric",
+            "temperature" => "required|numeric",
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $device = Device::findOrFail($id);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $dataDevice = DataDevice::create([
+            "humidity" => $request->humidity,
+            "temperature" => $request->temperature,
+            "liters_pump" => $request->liters_pump,
+            "device_id" => $device->id,
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $average = AverageData::where('device_id', $device->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $currentDate = $dataDevice->created_at->toDateString();
+        $lastDate = null;
+
+        if ($average) {
+            $dataDates = json_decode($average->data, true) ?? [];
+            $lastDate = end($dataDates);
+
+            if ($lastDate === $currentDate) {
+                $average->addHumidityData($request->humidity);
+                $average->addTemperatureData($request->temperature);
+                $average->addLiters($request->liters_pump);
+                $average->addDate($currentDate);
+
+                $average->save();
+
+                $dataDevice->average_id = $average->id;
+                $dataDevice->save();
+            } else {
+                $averageHumidity = $average->calculateAverageHumidity();
+                $averageTemperature = $average->calculateAverageTemperature();
+                $totalLiters = $average->calculateTotalLiters();
+
+                $average->average_humidity = $averageHumidity;
+                $average->average_temperature = $averageTemperature;
+                $average->average_liters = $totalLiters;
+
+                $average->save();
+
+                $newAverage = AverageData::create([
+                    'device_id' => $device->id,
+                    'humidity' => json_encode([$request->humidity]),
+                    'temperature' => json_encode([$request->temperature]),
+                    'data' => json_encode([$currentDate]),
+                ]);
+
+                $dataDevice->average_id = $newAverage->id;
+                $dataDevice->save();
+            }
+        } else {
+            $newAverage = AverageData::create([
+                'device_id' => $device->id,
+                'humidity' => json_encode([$request->humidity]),
+                'temperature' => json_encode([$request->temperature]),
+                'liters' => json_encode([$request->liters_pump]),
+                'data' => json_encode([$currentDate]),
+            ]);
+
+            $dataDevice->average_id = $newAverage->id;
+            $dataDevice->save();
+        }
+
+        if($device->update_status == 1){
+            $up = $device->updateIoT($device);
+
+            return response()->json([
+                "message" => "Dados registrados com sucesso",
+                "update" =>$up
+            ]);
+        }
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            "message" => "Ocorreu um erro ao processar a solicitação",
+            "error" => $e->getMessage(),
+        ], 500);
     }
+}
+
+
+
+
 }
