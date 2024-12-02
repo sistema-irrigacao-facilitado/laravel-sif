@@ -446,7 +446,7 @@ class DeviceController extends Controller
 
     // IoT
 
-    public function write(Request $request, $id)
+    public function write(Request $request)
 {
     try {
         $request->validate([
@@ -456,7 +456,7 @@ class DeviceController extends Controller
             "temperature" => "required|numeric",
         ]);
 
-        $device = Device::findOrFail($id);
+        $device = Device::where('numbering', $request->numbering);
 
         $dataDevice = DataDevice::create([
             "humidity" => $request->humidity,
