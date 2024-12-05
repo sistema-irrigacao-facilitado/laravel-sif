@@ -22,7 +22,7 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ route('login') }}" method="post">
+        <form action="{{ route('user.login') }}" method="post">
             @csrf
             <input type="text" name="email" id="email" placeholder="Email" required
                 maxlength="250">

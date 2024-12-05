@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('model', 255);
             $table->float('flow');
-            $table->longText('image')->charset('binary');
+            $table->longText('image')->charset('binary')->nullable();
             $table->integer('status');
             $table->string('obs', 255)->nullable();
 

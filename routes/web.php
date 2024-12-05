@@ -1,15 +1,21 @@
 <?php
 
-use App\Http\Controllers\Device\DeviceController;
+use App\Http\Controllers\Adm\CollaboratorController as AdmCollaboratorController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function () {
-    return view('auth/login');
+    return view('auth/user/login');
 });
 
-Route::get('/dashboard', [DeviceController::class, 'getAuth'])
+Route::get('/admin', function () {
+    return view('auth/adm/login');
+});
+
+Route::get('/dashboard', [UserController::class, 'index'])
     ->middleware(['auth:web', 'verified'])
     ->name('dashboard');
 
@@ -24,6 +30,6 @@ Route::post('/filter/{page}', [FilterController::class, 'filter'])
 Route::get('/filter_clear/{page}', [FilterController::class, 'filter'])
     ->name('filter_clear.page');
 
-require __DIR__.'/auth.php';
-require __DIR__.'/user/web.php';
-require __DIR__.'/admin/web.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/user/web.php';
+require __DIR__ . '/admin/web.php';

@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="{{ asset('style/parts.css') }}">
     <link rel="stylesheet" href="{{ asset('style/partsQuery.css') }}" media="screen and (max-device-width: 800px)">
     @yield('style')
-    
+
     <title>@yield('title') - SIF</title>
 
 </head>
@@ -31,29 +31,24 @@
     <header class="header">
         <div class="logo-nav-container">
             <div class="logo">
-
-                <i class="fa fa-bars fa-2x" onclick="menuShow()"></i>
                 <img src="{{ asset('images/isologo-wh.png') }}" alt="">
+                <i class="fa fa-bars fa-2x" onclick="menuShow()"></i>
             </div>
             <ul class="nav">
                 <div>
-                    <li><a href="{{ route('dashboard') }}">Início</a></li>
-                    <li><a href="{{ route('user.conf') }}">Configurações</a></li>
-                    <!-- <li><a href="#">Ajuda</a></li>
-                <li><a href="#">Contato</a></li>
-                <li><a href="#">Loja</a></li> -->
+                    <li><a href="{{ route('admin.dashboard') }}">Início</a></li>
+                    <li><a href="{{ route('admin.users') }}">Usuarios</a></li>
+                    <li><a href="{{ route('admin.devices') }}">Dispositivos</a></li>
+                    <li><a href="{{ route('admin.list') }}">Colaboradores</a></li>
+                    <li><a href="{{ route('admin.pumps') }}">Bomba</a></li>
+                    <li><a href="{{ route('admin.plants') }}">Planta</a></li>
                 </div>
-                <a href="{{ route('user.logout') }}" class="logout query">Sair</a>
+                <a href="{{ route('admin.logout') }}" class="logout query">Sair</a>
             </ul>
         </div>
-        <a href="{{ route('user.logout') }}" class="logout normal">Sair</a>
+        <a href="{{ route('admin.logout') }}" class="logout normal">Sair</a>
     </header>
     <script src="{{ asset('js/header.js') }}"></script>
-    
-
-    <a href="#" target="_blank">
-        <div class="whats"><img src="{{ asset('images/wapp.png') }}" alt=""></div>
-    </a>
 
     @yield('content')
     <script>

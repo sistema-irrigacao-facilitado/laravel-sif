@@ -25,7 +25,7 @@ body {
 }
 
 .blockForm {
-    min-width: 55%;
+    width: 65vw;
     height: 60vh;
     display: flex;
     align-items: center;
@@ -182,15 +182,11 @@ h1 {
     text-align: center;
     color: #29322e;
 }
-@media screen and (max-width: 1024px) and (min-width: 768px){
-    .blockForm{
-        width: 70%;
-    }
-}
+
 @media screen and (max-width: 768px){
     .blockForm{
-        width: 95%;
-        height: 70%;
+        width: 95vw;
+        height: unset;
         align-items: center;
         justify-content: center;
         flex-direction: column-reverse;
@@ -213,7 +209,7 @@ h1 {
     }
     .group{
         width: 90%;
-        margin: auto;
+        margin: 0px 0px 5px 0px;
     }
     .input{
         width: 100%;

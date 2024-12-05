@@ -19,46 +19,12 @@ class PumpController extends Controller
         //
     }
 
-    public function select($id){
-        $user = User::find(getAuthUser()->id);
-        $device = Device::findOrFail($id)->first();
-        $pumps = Pump::paginate();
-        foreach ($pumps as $pump) {
-            // Decodificando a imagem
-            $decodedImage = base64_decode($pump->image);
-    
-            // Criando um data URI (recomendado para evitar criar arquivos temporários)
-            $imageDataUri = 'data:image/jpeg;base64,' . base64_encode($decodedImage);
-    
-            // Passando os dados para a view
-            $pump->image_url = $imageDataUri;
-        }
-
-        if ($user) {
-            if ($user->status == 2) {
-                if (!$device) {
-                    return redirect()->route('dashboard');
-                }
-                
-                if ($device->status != 2) {
-                    return redirect()->route('dashboard');
-                }
-                if(!$pumps){
-                    return redirect()->route('dashboard');
-                }
-                return view('user.device.select.pump', [
-                    'device' => $device,
-                    'pumps' => $pumps,
-                ]);
-            }
-
-            return redirect()->route('logout');
-        }
-
-        return redirect()->route('logout');
+    public function list()
+    {
+        return view('admin.pump.list');
     }
 
-    /**
+     /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -105,4 +71,78 @@ class PumpController extends Controller
     {
         //
     }
+
+    public function select($id){
+        $user = User::find(getAuthUser()->id);
+        $device = Device::findOrFail($id)->first();
+        $pumps = Pump::paginate();
+        foreach ($pumps as $pump) {
+            // Decodificando a imagem
+            $decodedImage = base64_decode($pump->image);
+    
+            // Criando um data URI (recomendado para evitar criar arquivos temporários)
+            $imageDataUri = 'data:image/jpeg;base64,' . base64_encode($decodedImage);
+    
+            // Passando os dados para a view
+            $pump->image_url = $imageDataUri;
+        }
+
+        if ($user) {
+            if ($user->status == 2) {
+                if (!$device) {
+                    return redirect()->route('dashboard');
+                }
+                
+                if ($device->status != 2) {
+                    return redirect()->route('dashboard');
+                }
+                if(!$pumps){
+                    return redirect()->route('dashboard');
+                }
+                return view('user.device.select.pump', [
+                    'device' => $device,
+                    'pumps' => $pumps,
+                ]);
+            }
+
+            return redirect()->route('logout');
+        }
+
+        return redirect()->route('logout');
+    }
+
+    public function pumpSelect(Request $request, $id)
+    {
+        $user = User::find(getAuthUser()->id);
+        $device = Device::findOrFail($id)->first();
+        $pump = Pump::where('id', $request->id);
+
+
+        if ($user) {
+            if ($user->status == 2) {
+                if (!$device) {
+                    return redirect()->route('dashboard');
+                }
+
+                if ($device->status != 2) {
+                    return redirect()->route('dashboard');
+                }
+                if (!$pump) {
+                    return redirect()->route('dashboard');
+                }
+
+
+                $device->pump_id = $request->id;
+                $device->save();
+
+                return redirect()->route('user.device.config', $id);
+            }
+
+            return redirect()->route('logout');
+        }
+
+        return redirect()->route('logout');
+    }
+
+   
 }

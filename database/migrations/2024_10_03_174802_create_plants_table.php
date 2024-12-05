@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('soil_type', ['sandy','clayey','humus','calcareous']);
             $table->integer('humidity_tolerance');
             $table->integer('temperature_tolerance');
-            $table->longText('image')->charset('binary');
+            $table->longText('image')->charset('binary')->nullable();
 
             $table->integer('status');
             $table->string('obs', 255)->nullable();

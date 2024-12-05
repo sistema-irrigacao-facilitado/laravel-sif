@@ -19,9 +19,9 @@ class DeviceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function list()
     {
-        //
+        return view('admin.device.list');
     }
 
     /**
@@ -72,22 +72,6 @@ class DeviceController extends Controller
         //
     }
 
-    public function getAuth()
-    {
-        $devices = Device::where('user_id', getAuthUser()->id)->where('status', 2)
-            ->with(['dataDevice' => function ($query) {
-                $query->orderBy('created_at', 'desc')->first();
-            }])
-            ->get();
-        $user = User::findOrFail(getAuthUser()->id);
-        if ($user->status == 2) {
-            if ($devices) {
-                return view('user.dashboard', ['devices' => $devices, 'user' => $user]);
-            }
-        }
-        return redirect()->route('logout');
-    }
-
     public function add()
     {
         $user = User::find(getAuthUser()->id);
@@ -122,85 +106,7 @@ class DeviceController extends Controller
         return redirect()->route('logout');
     }
 
-    public function conf()
-    {
-        $user = User::find(getAuthUser()->id);
-        if ($user) {
-            if ($user->status == 2) {
-                return view('user.conf', ['user' => $user]);
-            }
-            return redirect()->route('logout');
-        }
-        return redirect()->route('logout');
-    }
-
-    public function confUpdate(Request $request)
-    {
-        $user = User::find(getAuthUser()->id);
-        if ($user) {
-            if ($user->status == 2) {
-                // Validação dos dados enviados
-                $request->validate([
-                    "name" => "required|string|max:200",
-                    "lastname" => "required|string|max:200",
-                    "telephone" => "required|string|max:15|regex:/^\(\d{2}\)\s\d{5}-\d{4}$/",
-                    "cpf" => "required|string|max:15|regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/",
-                    "email" => "required|email|max:200"
-                ]);
-
-                // Atualizar o usuário com os dados validados
-                $user->update([
-                    "name" => $request->name,
-                    "lastname" => $request->lastname,
-                    "telephone" => $request->telephone,
-                    "cpf" => $request->cpf,
-                    "email" => $request->email
-                ]);
-
-                return view('user.conf', ['user' => $user]);
-            }
-            return redirect()->route('logout');
-        }
-        return redirect()->route('logout');
-    }
-
-    public function password()
-    {
-        $user = User::find(getAuthUser()->id);
-        if ($user) {
-            if ($user->status == 2) {
-                return view('user.password');
-            }
-            return redirect()->route('logout');
-        }
-        return redirect()->route('logout');
-    }
-
-    public function passwordUpdate(Request $request)
-    {
-        $user = User::find(getAuthUser()->id);
-
-        if ($user) {
-            if ($user->status == 2) {
-                // Validação dos dados enviados
-                $request->validate([
-                    "password" => "required|string|min:8|confirmed", // 'confirmed' exige o campo 'password_confirmation'
-                ]);
-
-                // Hash da senha antes de salvar
-                $password = bcrypt($request->password);
-
-                // Atualizar o usuário com os dados validados
-                $user->update([
-                    "password" => $password,
-                ]);
-
-                return view('user.conf', ['user' => $user]);
-            }
-            return redirect()->route('logout');
-        }
-        return redirect()->route('logout');
-    }
+    
 
 
     public function report(Request $request, $id)
@@ -369,73 +275,6 @@ class DeviceController extends Controller
                 $device->save();
 
                 return redirect()->route('dashboard');
-            }
-
-            return redirect()->route('logout');
-        }
-
-        return redirect()->route('logout');
-    }
-
-
-    public function plantSelect(Request $request, $id)
-    {
-        $user = User::find(getAuthUser()->id);
-        $device = Device::findOrFail($id)->first();
-        $plant = Plant::where('id', $request->id);
-
-
-        if ($user) {
-            if ($user->status == 2) {
-                if (!$device) {
-                    return redirect()->route('dashboard');
-                }
-
-                if ($device->status != 2) {
-                    return redirect()->route('dashboard');
-                }
-                if (!$plant) {
-                    return redirect()->route('dashboard');
-                }
-
-
-                $device->plant_id = $request->id;
-                $device->save();
-
-                return redirect()->route('user.device.config', $id);
-            }
-
-            return redirect()->route('logout');
-        }
-
-        return redirect()->route('logout');
-    }
-
-    public function pumpSelect(Request $request, $id)
-    {
-        $user = User::find(getAuthUser()->id);
-        $device = Device::findOrFail($id)->first();
-        $pump = Pump::where('id', $request->id);
-
-
-        if ($user) {
-            if ($user->status == 2) {
-                if (!$device) {
-                    return redirect()->route('dashboard');
-                }
-
-                if ($device->status != 2) {
-                    return redirect()->route('dashboard');
-                }
-                if (!$pump) {
-                    return redirect()->route('dashboard');
-                }
-
-
-                $device->pump_id = $request->id;
-                $device->save();
-
-                return redirect()->route('user.device.config', $id);
             }
 
             return redirect()->route('logout');

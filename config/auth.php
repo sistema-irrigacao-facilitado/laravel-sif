@@ -40,11 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'admin' => [
+        'admin' => [ // Guard para administradores
             'driver' => 'session',
             'provider' => 'admins',
         ],
     ],
+
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -66,18 +69,12 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Models\User::class,
         ],
-        'admins' => [
+        'admins' => [ // Provider para administradores
             'driver' => 'eloquent',
             'model' => App\Models\Collaborator::class,
-
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
