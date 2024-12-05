@@ -16,9 +16,38 @@ class CollaboratorController extends Controller
         return view('admin.dashboard');
     }
 
-    public function list()
+    use Filterable;
+    public function list(Request $request)
     {
-        return view('admin.list');
+        $query = Collaborator::query();
+        $filters = [
+            'id' => '=',
+            'name' => function ($query, $value) {
+                $query->where('name', 'like', '%' . $value . '%');
+            },
+            'lastname' => function ($query, $value) {
+                $query->where('lastname', 'like', '%' . $value . '%');
+            },
+            'telephone' => function ($query, $value) {
+                $query->where('telephone', 'like', '%' . $value . '%');
+            },
+            'email' => function ($query, $value) {
+                $query->where('email', 'like', '%' . $value . '%');
+            },
+            'cpf' => function ($query, $value) {
+                $query->where('cpf', 'like', '%' . $value . '%');
+            },
+            'created_at_from' => function ($query, $value) {
+                $query->whereDate('created_at', '>=', $value);
+            },
+            'created_at_to' => function ($query, $value) {
+                $query->whereDate('created_at', '<=', $value);
+            },
+            'status' => '=',
+        ];
+        $this->applyFilters($query, $request->session(), 'admins', $filters);
+        $collection = $query->orderBy('id')->paginate(30);
+        return view('admin.list', ['collection' => $collection]);
     }
 
     /**

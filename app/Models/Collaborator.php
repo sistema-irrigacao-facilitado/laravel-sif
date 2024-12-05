@@ -14,7 +14,6 @@ class Collaborator extends Authenticatable
     // Campos preenchíveis para criação/atualização em massa
     protected $fillable = [
         'name',
-        'lastname',
         'email',
         'password',
         'telephone',

@@ -19,9 +19,27 @@ class DeviceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function list()
+    
+    public function list(Request $request)
     {
-        return view('admin.device.list');
+        $query = Device::query();
+        $filters = [
+            'id' => '=',
+            'model' => '=',
+            'numbering' => function ($query, $value) {
+                $query->where('numbering', 'like', '%' . $value . '%');
+            },
+            'created_at_from' => function ($query, $value) {
+                $query->whereDate('created_at', '>=', $value);
+            },
+            'created_at_to' => function ($query, $value) {
+                $query->whereDate('created_at', '<=', $value);
+            },
+            'status' => '=',
+        ];
+        $this->applyFilters($query, $request->session(), 'devices', $filters);
+        $collection = $query->orderBy('id')->paginate(30);
+        return view('admin.device.list', ['collection' => $collection]);
     }
 
     /**

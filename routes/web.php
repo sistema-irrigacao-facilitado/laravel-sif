@@ -15,9 +15,7 @@ Route::get('/admin', function () {
     return view('auth/adm/login');
 });
 
-Route::get('/dashboard', [UserController::class, 'index'])
-    ->middleware(['auth:web', 'verified'])
-    ->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Traits\Filterable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -23,10 +26,36 @@ class UserController extends Controller
         }
         return redirect()->route('logout');
     }
-
-    public function list()
+    use Filterable;
+    public function list(Request $request)
     {
-        return view('admin.user.list');
+        $query = User::query();
+        
+        $filters = [
+            'id' => '=',
+            'name' => function ($query, $value) {
+                $query->where('name', 'like', '%' . $value . '%');
+            },
+            'telephone' => function ($query, $value) {
+                $query->where('telephone', 'like', '%' . $value . '%');
+            },
+            'email' => function ($query, $value) {
+                $query->where('email', 'like', '%' . $value . '%');
+            },
+            'cpf' => function ($query, $value) {
+                $query->where('cpf', 'like', '%' . $value . '%');
+            },
+            'created_at_from' => function ($query, $value) {
+                $query->whereDate('created_at', '>=', $value);
+            },
+            'created_at_to' => function ($query, $value) {
+                $query->whereDate('created_at', '<=', $value);
+            },
+            'status' => '=',
+        ];
+        $this->applyFilters($query, $request->session(), 'users', $filters);
+        $collection = $query->orderBy('id')->paginate(30);
+        return view('admin.user.list', ['collection' => $collection]);
     }
 
     /**

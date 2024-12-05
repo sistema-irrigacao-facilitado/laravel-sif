@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\Filterable;
 use App\Models\Device;
 use App\Models\Pump;
 use App\Models\User;
@@ -18,10 +19,29 @@ class PumpController extends Controller
     {
         //
     }
-
-    public function list()
+    use Filterable;
+    public function list(Request $request)
     {
-        return view('admin.pump.list');
+        $query = Pump::query();
+        $filters = [
+            'id' => '=',
+            'model' => function ($query, $value) {
+                $query->where('model', 'like', '%' . $value . '%');
+            },
+            'flow' => function ($query, $value) {
+                $query->where('flow', 'like', '%' . $value . '%');
+            },
+            'created_at_from' => function ($query, $value) {
+                $query->whereDate('created_at', '>=', $value);
+            },
+            'created_at_to' => function ($query, $value) {
+                $query->whereDate('created_at', '<=', $value);
+            },
+            'status' => '=',
+        ];
+        $this->applyFilters($query, $request->session(), 'pumps', $filters);
+        $collection = $query->orderBy('id')->paginate(30);
+        return view('admin.pump.list', ['collection' => $collection]);
     }
 
      /**

@@ -16,7 +16,7 @@
         </div> <br>
         <div class="resultado">
             <form method="GET" action="" class="formFiltro">
-                
+
                 <div class="filt">
                     <label for="time">Periodo:</label>
                     <select id="time" name="time">
@@ -38,10 +38,10 @@
                 <button type="submit" class="filtro">Filtrar</button>
             </form>
 
-                <div id="chart"></div>
+            <div id="chart"></div>
 
 
-            
+
             <div class="time" style="margin-top: 5px">Exibindo Dados: </div>
         </div>
     </main>
@@ -66,9 +66,9 @@
             value="{{ implode(', ', $values['created_at'] ?? []) }}">
     @endif
 
+@endsection
 
+@section('script')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
     <script src="{{ asset('js/report.js') }}"></script>
-
 @endsection

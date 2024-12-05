@@ -1,0 +1,9 @@
+.hcard{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.thead-buttons{
+    display: flex;
+    align-items: center;
+}

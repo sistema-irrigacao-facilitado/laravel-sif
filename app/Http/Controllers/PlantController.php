@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\Filterable;
 use App\Models\Device;
 use App\Models\Plant;
 use App\Models\User;
@@ -19,9 +20,29 @@ class PlantController extends Controller
         //
     }
 
-    public function list()
+    use Filterable;
+    public function list(Request $request)
     {
-        return view('admin.plant.list');
+        $query = Plant::query();
+        $filters = [
+            'id' => '=',
+            'common_name' => function ($query, $value) {
+                $query->where('common_name', 'like', '%' . $value . '%');
+            },
+            'scientific_name' => function ($query, $value) {
+                $query->where('scientific_name', 'like', '%' . $value . '%');
+            },
+            'created_at_from' => function ($query, $value) {
+                $query->whereDate('created_at', '>=', $value);
+            },
+            'created_at_to' => function ($query, $value) {
+                $query->whereDate('created_at', '<=', $value);
+            },
+            'status' => '=',
+        ];
+        $this->applyFilters($query, $request->session(), 'plants', $filters);
+        $collection = $query->orderBy('id')->paginate(30);
+        return view('admin.plant.list', ['collection' => $collection]);
     }
 
     /**

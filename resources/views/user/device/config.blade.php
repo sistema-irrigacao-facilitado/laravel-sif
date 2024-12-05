@@ -28,10 +28,11 @@
 
             <h4>Bomba d'agua e planta selecionados -- clique para trocar</h4>
             <div class="seAMCards">
-            
+
                 @if ($plant)
                     <a class="seAMCItem plantaCard" href="{{ route('user.device.plant', $device->id) }}">
-                        <div class="img"><img src="data:image/png;base64,{{ $plant->image }}" alt="Minha Imagem"   class="imagem-obj"></div>
+                        <div class="img"><img src="data:image/png;base64,{{ $plant->image }}" alt="Minha Imagem"
+                                class="imagem-obj"></div>
                         <div class="info">
                             <div class="nome">
                                 <h1>{{ $plant->common_name }}</h1>
@@ -46,23 +47,22 @@
                         </div>
                     </a>
                 @else
-
                     <a class="seAMCItem plantaCard" href="{{ route('user.device.plant', $device->id) }}">
                         <h1>Nenhuma planta selecionada</h1>
                     </a>
-
                 @endif
                 @if ($pump)
-                   
                     <a class="seAMCItem bombaCard" href="{{ route('user.device.pump', $device->id) }}">
-                        <div class="img"><img src="data:image/png;base64,{{ $pump->image }}" alt="Minha Imagem"   class="imagem-obj"></div>
+                        <div class="img"><img src="data:image/png;base64,{{ $pump->image }}" alt="Minha Imagem"
+                                class="imagem-obj"></div>
                         <div class="info">
                             <div class="nome">
                                 <h1>{{ $pump->model }}</h1>
                             </div>
                             <div class="caracteristicas">
                                 <p>Vazão: {{ $pump->flow }}</p>
-                                <input id="vazao" style="display: none;" type="text" readonly value="{{ $pump->flow }}">
+                                <input id="vazao" style="display: none;" type="text" readonly
+                                    value="{{ $pump->flow }}">
                             </div>
                         </div>
                     </a>
@@ -74,11 +74,12 @@
             </div>
 
             <div class="modo">
-                <h3>Modo atual: @if($device->mode == 2)
-                                    Ligar a bomba d'agua em determinado horario
-                                @else
-                                    Ligar a partir dos dados coletados pelos sensores
-                                @endif</h3>
+                <h3>Modo atual: @if ($device->mode == 2)
+                        Ligar a bomba d'agua em determinado horario
+                    @else
+                        Ligar a partir dos dados coletados pelos sensores
+                    @endif
+                </h3>
                 <button type="button" class="btn btn-primary center" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     Alterar modo
                 </button>
@@ -98,35 +99,40 @@
                     <div class="form-selectgroup-boxes row mb-3">
                         <div class="col-md-6">
                             <label class="form-selectgroup-item">
-                                <input type="radio" name="modoRadio" value="1" class="form-selectgroup-input" @if($device->mode ==1) {{ 'checked' }} @endif />
+                                <input type="radio" name="modoRadio" value="1" class="form-selectgroup-input"
+                                    @if ($device->mode == 1) {{ 'checked' }} @endif />
                                 <span class="form-selectgroup-label d-flex align-items-center p-3">
                                     <span class="me-3">
                                         <span class="form-selectgroup-check"></span>
                                     </span>
                                     <span class="form-selectgroup-label-content">
                                         <span class="form-selectgroup-title strong mb-1">Automático</span>
-                                        <span class="d-block text-secondary">O dispositivo realiza a irrigação da plantação de acordo com os dados coletados</span>
+                                        <span class="d-block text-secondary">O dispositivo realiza a irrigação da plantação
+                                            de acordo com os dados coletados</span>
                                     </span>
                                 </span>
                             </label>
                         </div>
                         <div class="col-md-6">
                             <label class="form-selectgroup-item">
-                                <input type="radio" name="modoRadio" value="2" id="lbdh" class="form-selectgroup-input" @if($device->mode == 2) {{ 'checked' }} @endif />
+                                <input type="radio" name="modoRadio" value="2" id="lbdh"
+                                    class="form-selectgroup-input"
+                                    @if ($device->mode == 2) {{ 'checked' }} @endif />
                                 <span class="form-selectgroup-label d-flex align-items-center p-3">
                                     <span class="me-3">
                                         <span class="form-selectgroup-check"></span>
                                     </span>
                                     <span class="form-selectgroup-label-content">
                                         <span class="form-selectgroup-title strong mb-1">Por horário</span>
-                                        <span class="d-block text-secondary">Onde você define os dias e horas em que o dispositivo fara a irrigação</span>
+                                        <span class="d-block text-secondary">Onde você define os dias e horas em que o
+                                            dispositivo fara a irrigação</span>
                                     </span>
                                 </span>
                             </label>
                         </div>
                     </div>
                 </div>
-                <div class="row modal-body" id="hrLigar" @if($device->mode ==1) style='display: flex;' @endif>
+                <div class="row modal-body" id="hrLigar" @if ($device->mode == 1) style='display: flex;' @endif>
                     <div class="col-12 mb-3 mx-auto p-relative">
 
                         <div class="days-btn-container m-auto">
@@ -155,18 +161,23 @@
                     </div>
                     <div class="col-12 m-auto time">
                     </div>
-                    <div class="periodoContainer" @if($device->mode == 2) style='display: flex;' @endif>
+                    <div class="periodoContainer" @if ($device->mode == 2) style='display: flex;' @endif>
                         <label for="pertime" class="form-label">Tempo ligado</label>
-                        <input type="text" id="pertime" value="{{ periodFormat($device->period) ?? '00:00' }}" placeholder="Min:Seg">
+                        <input type="text" id="pertime" value="{{ periodFormat($device->period) ?? '00:00' }}"
+                            placeholder="Min:Seg">
                     </div>
-                    <div class="l"><p></p></div>
+                    <div class="l">
+                        <p></p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
                         Cancelar
                     </a>
                     <a href="#" class="btn btn-success ms-auto" data-bs-dismiss="modal">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24"
+                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                             <path d="M12 5l0 14"></path>
                             <path d="M5 12l14 0"></path>
@@ -177,7 +188,8 @@
             </div>
         </div>
     </div>
-    <form action="{{ route('user.device.modeUpdate', $device->id) }}" method="POST" id="formModo" style="display: none;">
+    <form action="{{ route('user.device.modeUpdate', $device->id) }}" method="POST" id="formModo"
+        style="display: none;">
         @csrf
 
         <input type="text" name="mode" id="modo">
@@ -186,5 +198,9 @@
         <input type="text" name="period" id="periodo" value="{{ $device->period }}">
         <button type="submit"></button>
     </form>
+@endsection
+
+@section('script')
+
     <script src="{{ asset('js/confDevice.js') }}"></script>
 @endsection

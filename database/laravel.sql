@@ -1,4 +1,4 @@
-INSERT INTO `collaborators` (`id`, `name`, `lastname`, `email`, `password`, `telephone`, `cpf`, `rg`, `status`, `perfil`, `created_at`, `updated_at`, `deleted_at`, `collaborators_inclusion_id`, `collaborators_change_id`, `collaborators_exclusion_id`) VALUES (1, 'admin', 'admin', 'admin12345@gmail.com', '$2y$12$GHkKfIQpKcARWuO7F0au/us/cUzNTLlF.2nwCxHAimk2/ilxLsAwO', '(45) 99842-0205', '098.765.432-10', NULL, '2', 'admin', '2024-12-04 21:28:23', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `collaborators` (`id`, `name`, `email`, `password`, `telephone`, `cpf`, `rg`, `status`, `perfil`, `created_at`, `updated_at`, `deleted_at`, `collaborators_inclusion_id`, `collaborators_change_id`, `collaborators_exclusion_id`) VALUES (1, 'admin', 'admin12345@gmail.com', '$2y$12$GHkKfIQpKcARWuO7F0au/us/cUzNTLlF.2nwCxHAimk2/ilxLsAwO', '(45) 99842-0205', '098.765.432-10', NULL, '2', 'admin', '2024-12-04 21:28:23', NULL, NULL, NULL, NULL, NULL);
 
 INSERT INTO `devices` (`id`, `model`, `numbering`, `qr`, `mode`, `time_on`, `period`, `status`, `update_status`, `created_at`, `updated_at`, `deleted_at`, `user_id`, `plant_id`, `pump_id`, `collaborators_inclusion_id`, `collaborators_change_id`, `collaborators_exclusion_id`) VALUES
 (1, 'SIF', '00000001', NULL, '1', NULL, NULL, 2, '0', '2024-12-04 21:52:00', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL);
@@ -43,6 +43,6 @@ INSERT INTO `pumps` (`id`, `model`, `flow`, `image`, `status`, `obs`, `created_a
 
 
 
-INSERT INTO `users` (`id`, `name`, `lastname`, `email`, `password`, `telephone`, `cpf`, `status`, `perfil`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Teste', 'Testado', 'teste123@gmail.com', '$2y$12$f6Xd86K66u5hs7/.vy.Oy.0sTKMzSAjihSp5x88ZMLUnlWwujTkOq', '(45) 99842-0205', '077.329.589-50', '2', 'regular', '2024-12-05 00:58:34', '2024-12-05 00:58:34', NULL);
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `telephone`, `cpf`, `status`, `perfil`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Teste', 'teste123@gmail.com', '$2y$12$f6Xd86K66u5hs7/.vy.Oy.0sTKMzSAjihSp5x88ZMLUnlWwujTkOq', '(45) 99842-0205', '077.329.589-50', '2', 'regular', '2024-12-05 00:58:34', '2024-12-05 00:58:34', NULL);
 
