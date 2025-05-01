@@ -25,7 +25,7 @@
                                         form="filtro">Filtrar</button>
                                 </div>
                                 <div class="text-end">
-                                    <a class="btn btn-green" href="">Criar usuário</a>
+                                    <a class="btn btn-green" href="">Criar dispositivo</a>
                                 </div>
                             </div>
                         </div>

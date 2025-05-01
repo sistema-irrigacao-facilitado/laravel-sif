@@ -13,14 +13,14 @@
             <h1>S.I.F</h1>
             <p>Entrar no Painel Administrativo</p>
             @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="group">
                 <input required type="email" class="input" name="email" autocomplete="off">
                 <span class="highlight"></span>

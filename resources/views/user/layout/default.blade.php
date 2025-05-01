@@ -49,11 +49,6 @@
         <a href="{{ route('user.logout') }}" class="logout normal">Sair</a>
     </header>
     <script src="{{ asset('js/header.js') }}"></script>
-    
-
-    <a href="#" target="_blank">
-        <div class="whats"><img src="{{ asset('images/wapp.png') }}" alt=""></div>
-    </a>
 
     @yield('content')
     <script>

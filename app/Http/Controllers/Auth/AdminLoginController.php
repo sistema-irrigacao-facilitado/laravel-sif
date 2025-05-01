@@ -17,13 +17,14 @@ class AdminLoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::guard('admin')->attempt($credentials)) {
-            return redirect()->route('admin.dashboard'); // Ajuste para a rota do dashboard do admin
+            return redirect()->route('admin.dashboard');
         }
 
-        return back()->withErrors(['email' => 'Credenciais inválidas.']);
+        return redirect()->back()->with('error', 'Credenciais Invalidas');
     }
 
     public function showLoginForm(){
+
         return view('auth/adm/login');
     }
 }

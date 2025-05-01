@@ -39,6 +39,10 @@ Route::controller(DeviceController::class)->group(function () {
 
 
 Route::controller(UserController::class)->group(function () {
+    Route::get('/user', 'index')
+        ->middleware(['auth:web', 'verified'])
+        ->name('dashboard');
+
     Route::get('/user/conf',  'conf')
         ->middleware(['auth:web', 'verified'])
         ->name('user.conf');

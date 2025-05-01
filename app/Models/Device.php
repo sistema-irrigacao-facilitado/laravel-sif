@@ -10,7 +10,6 @@ class Device extends Model
     use HasFactory;
 
     protected $fillable = [
-        
         'model',
         'numbering',
         'qr',
