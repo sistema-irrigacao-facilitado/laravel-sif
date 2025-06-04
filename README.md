@@ -1,63 +1,210 @@
-# Sistema de Irrigação Facilitado (SIF)
-Com o SIF, é possivel monitorar e configurar um sistema de irrigação com acesso a internet, com o objetivo de tornar o processo mais preciso possivel. Este projeto foi criado com o intuito de facilitar o cuidado de plantas de forma acessivel, com o principal foco a agricultura familiar.
 
-Criado inicialmente com PHP puro, decidimos disponibilizar o projeto, porem em uma versão melhorada com o framework Laravel, para facilitar o deploy da aplicação e manutenção do projeto.
+## 📘 Sistema de Irrigação Facilitado (SIF)
 
-Apresentado e premiado na FI Ciências, uma das maiores feiras de ciencia da America Latina, com o 1° Lugar na categoria de Ciências Agrarias em 2024.
+[🇧🇷 Versão em Português](#) | [🇺🇸 English Version](#english-version-below)
 
+### 💧 Sobre o Projeto
 
+O **SIF** permite monitorar e configurar um sistema de irrigação via internet, tornando o processo mais preciso e automatizado. Criado com foco na **agricultura familiar**, o projeto busca democratizar o acesso à tecnologia no campo.
 
-## Como rodar
-Certifique-se de ter o Docker instalado em sua maquina
+Inicialmente desenvolvido em PHP puro, foi posteriormente migrado para **Laravel** visando facilitar o deploy, manutenibilidade e escalabilidade.
 
-1. Clone o repositorio
-````
-git clone https://github.com/sistema-irrigacao-facilitado/laravel-sif.git
-cd laravel-sif
-````
+🏆 **Premiado com 1º Lugar na categoria Ciências Agrárias da FI Ciências 2024**, uma das maiores feiras de ciência da América Latina.
 
-2. Copie o arquivo .env.example para um novo arquivo .env
-````
-cp .env.example .env
-````
+---
 
-3. Rode o projeto, e execute o conteiner app com bash
-````
-docker compose up -d
-docker compose exec app bash
-````
+## 🚀 Como Rodar
 
-4. Por fim, rode as migrações do projeto
-````
-php artisan migrate
-````
+> **Pré-requisitos**: Docker e Docker Compose instalados.
 
+1. Clone o repositório:
 
-## Estrutura de arquivos
+   ```bash
+   git clone https://github.com/sistema-irrigacao-facilitado/laravel-sif.git
+   cd laravel-sif
+   ```
 
-````
+2. Copie o `.env` de exemplo:
 
-````
+   ```bash
+   cp .env.example .env
+   ```
 
+3. Inicie os containers:
+
+   ```bash
+   docker compose up -d
+   docker compose exec app bash
+   ```
+
+4. Rode as migrações:
+
+   ```bash
+   php artisan migrate
+   ```
+
+---
+
+## 🗂 Estrutura do Projeto
+
+```
+laravel-sif/
+├── app/                 # Lógica da aplicação (Models, Controllers, etc.)
+├── bootstrap/           # Inicialização do Laravel
+├── config/              # Arquivos de configuração
+├── database/            # Migrations, Seeders e Factories
+├── docker/              # Configurações específicas do Docker
+├── node_modules/        # Dependências JS
+├── public/              # Entrada pública da aplicação (index.php)
+├── resources/           # Views (Blade), Tailwind, etc.
+├── routes/              # Arquivos de rotas (web.php, api.php)
+├── storage/             # Arquivos gerados pela aplicação (logs, cache, etc.)
+├── tests/               # Testes automatizados
+├── vendor/              # Dependências PHP via Composer
+├── .env                 # Variáveis de ambiente
+├── docker-compose.yml  # Orquestração do Docker
+├── package.json         # Dependências JS
+├── composer.json        # Dependências PHP
+└── README.md
+```
+
+---
 
 ## 🌐 Acessos
+
 | Serviço          | URL                                                        |
 | ---------------- | ---------------------------------------------------------- |
-| Login do Usuario | [http://localhost:8000/](http://localhost:8000/)           |
+| Login do Usuário | [http://localhost:8000/](http://localhost:8000/)           |
 | Login do Admin   | [http://localhost:8000/admin](http://localhost:8000/admin) |
-| phpmyadmin       | [http://localhost:8080](http://localhost:8080)             |
+| phpMyAdmin       | [http://localhost:8080](http://localhost:8080)             |
 
+---
 
+## 🔐 Login de Administrador
 
-## Login de Administrador
+Para criar um usuário administrador, execute o seguinte seeder:
 
-Para acessar o login de administrador, será nescessario rodar um seeder para a criação de um colaborador dentro do sistema, já que não é possivel fazer o cadastro pela tela de login, para isso, rode o seguinte comando para criar um colaborador com acesso de administrador dentro do sistema, suas credenciais para login são:
-E-mail: admin@admin.com, senha: admin123
-````
+```bash
 php artisan db:seed --class=ManagerAdminSeeder
-````
+```
 
+**Credenciais Padrão:**
 
+* **E-mail:** [admin@admin.com](mailto:admin@admin.com)
+* **Senha:** admin123
+
+---
 
 ## ⚙️ Personalização
-Você pode modificar configurações como porta, credenciais e nome do banco diretamente no arquivo docker-compose.yml.
+
+É possível personalizar portas, nome do banco de dados e credenciais diretamente no arquivo:
+
+```bash
+docker-compose.yml
+```
+
+---
+
+## 🇺🇸 English Version
+
+> [⬆ Back to Portuguese Version](#sistema-de-irrigação-facilitado-sif)
+
+### 💧 About the Project
+
+**SIF** enables monitoring and configuration of an irrigation system via the internet, aiming to make the process as precise and automated as possible. Created with a focus on **family farming**, this project seeks to bring accessible technology to rural producers.
+
+Originally built in pure PHP, the project was upgraded to **Laravel** to simplify deployment and long-term maintenance.
+
+🏆 **Awarded 1st Place in the Agricultural Sciences category at FI Ciências 2024**, one of the largest science fairs in Latin America.
+
+---
+
+### 🚀 How to Run
+
+> **Requirements**: Docker and Docker Compose installed.
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/sistema-irrigacao-facilitado/laravel-sif.git
+   cd laravel-sif
+   ```
+
+2. Copy the `.env` example file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Start the containers:
+
+   ```bash
+   docker compose up -d
+   docker compose exec app bash
+   ```
+
+4. Run the migrations:
+
+   ```bash
+   php artisan migrate
+   ```
+
+---
+
+### 🗂 Project Structure
+
+```
+laravel-sif/
+├── app/                 # Application logic (Models, Controllers, etc.)
+├── bootstrap/           # Laravel Initialization
+├── config/              # Configuration files
+├── database/            # Migrations, Seeders e Factories
+├── docker/              # Docker specific configurations
+├── node_modules/        # JS Dependencies
+├── public/              # Public entry of the application (index.php)
+├── resources/           # Views (Blade), Tailwind, etc.
+├── routes/              # Route files (web.php, api.php)
+├── storage/             # Files generated by the application (logs, cache, etc.)
+├── tests/               # Automated testing
+├── vendor/              # PHP Dependencies via Composer
+├── .env                 # Environment variables
+├── docker-compose.yml   # Docker Orchestration
+├── package.json         # JS Dependencies
+├── composer.json        # PHP Dependencies
+└── README.md
+```
+
+---
+
+### 🌐 Access URLs
+
+| Service     | URL                                                        |
+| ----------- | ---------------------------------------------------------- |
+| User Login  | [http://localhost:8000/](http://localhost:8000/)           |
+| Admin Login | [http://localhost:8000/admin](http://localhost:8000/admin) |
+| phpMyAdmin  | [http://localhost:8080](http://localhost:8080)             |
+
+---
+
+### 🔐 Admin Login
+
+Run the following seeder to create an administrator account:
+
+```bash
+php artisan db:seed --class=ManagerAdminSeeder
+```
+
+**Default Credentials:**
+
+* **Email:** [admin@admin.com](mailto:admin@admin.com)
+* **Password:** admin123
+
+---
+
+## ⚙️ Personalization
+
+You can customize ports, database name and credentials directly in the file:
+
+```bash
+docker-compose.yml
+```
