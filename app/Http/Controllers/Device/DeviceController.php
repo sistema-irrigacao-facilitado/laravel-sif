@@ -10,8 +10,10 @@ use App\Models\Device;
 use App\Models\Plant;
 use App\Models\Pump;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class DeviceController extends Controller
@@ -19,7 +21,7 @@ class DeviceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    
+
     public function list(Request $request)
     {
         $query = Device::query();
@@ -42,52 +44,85 @@ class DeviceController extends Controller
         return view('admin.device.list', ['collection' => $collection]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function new()
     {
-        //
+        return view('admin.device.new');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'model' => 'required|string',
+                'numbering' => 'required|string|size:8',
+            ]);
+
+            $device = new Device([
+                'model' => $request->model,
+                'numbering' => $request->numbering,
+            ]);
+
+            $device->save();
+
+            return redirect()->route('admin.devices')->with('success', 'Dispositivo criado com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Ocorreu um erro ao salvar este dispositivo.');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit($id)
     {
-        //
+        $device = Device::findOrFail($id);
+        return view('admin.device.edit', compact('device'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $request->validate([
+                'model' => 'required|string',
+                'numbering' => 'required|string|size:8',
+            ]);
+
+            $device = Device::findOrFail($id);
+            $device->update([
+                'model' => $request->model,
+                'numbering' => $request->numbering,
+            ]);
+
+            return redirect()->route('admin.devices')->with('success', 'Dispositivo atualizado com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este dispositivo.');
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function updateStatus($id, $status)
     {
-        //
+        try {
+            $device = Device::findOrFail($id);
+            $device->status = $status;
+            $device->save();
+
+            return redirect()->route('admin.devices')->with('success', 'Status do dispositivo atualizado com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Erro ao atualizar o status do dispositivo.');
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function delete($id)
     {
-        //
+        try {
+            $device = Device::findOrFail($id);
+            $device->delete();
+
+            return redirect()->route('admin.devices')->with('success', 'Dispositivo excluído com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Erro ao excluir o dispositivo.');
+        }
     }
 
     public function add()
@@ -124,7 +159,7 @@ class DeviceController extends Controller
         return redirect()->route('logout');
     }
 
-    
+
 
 
     public function report(Request $request, $id)
@@ -304,97 +339,92 @@ class DeviceController extends Controller
     // IoT
 
     public function write(Request $request)
-{
-    try {
-        $request->validate([
-            "numbering" => "required|string|size:8",
-            "liters_pump" => "required|numeric",
-            "humidity" => "required|numeric",
-            "temperature" => "required|numeric",
-        ]);
+    {
+        try {
+            $request->validate([
+                "numbering" => "required|string|size:8",
+                "liters_pump" => "required|numeric",
+                "humidity" => "required|numeric",
+                "temperature" => "required|numeric",
+            ]);
 
-        $device = Device::where('numbering', $request->numbering);
+            $device = Device::where('numbering', $request->numbering);
 
-        $dataDevice = DataDevice::create([
-            "humidity" => $request->humidity,
-            "temperature" => $request->temperature,
-            "liters_pump" => $request->liters_pump,
-            "device_id" => $device->id,
-        ]);
+            $dataDevice = DataDevice::create([
+                "humidity" => $request->humidity,
+                "temperature" => $request->temperature,
+                "liters_pump" => $request->liters_pump,
+                "device_id" => $device->id,
+            ]);
 
-        $average = AverageData::where('device_id', $device->id)
-            ->orderBy('created_at', 'desc')
-            ->first();
+            $average = AverageData::where('device_id', $device->id)
+                ->orderBy('created_at', 'desc')
+                ->first();
 
-        $currentDate = $dataDevice->created_at->toDateString();
-        $lastDate = null;
+            $currentDate = $dataDevice->created_at->toDateString();
+            $lastDate = null;
 
-        if ($average) {
-            $dataDates = json_decode($average->data, true) ?? [];
-            $lastDate = end($dataDates);
+            if ($average) {
+                $dataDates = json_decode($average->data, true) ?? [];
+                $lastDate = end($dataDates);
 
-            if ($lastDate === $currentDate) {
-                $average->addHumidityData($request->humidity);
-                $average->addTemperatureData($request->temperature);
-                $average->addLiters($request->liters_pump);
-                $average->addDate($currentDate);
+                if ($lastDate === $currentDate) {
+                    $average->addHumidityData($request->humidity);
+                    $average->addTemperatureData($request->temperature);
+                    $average->addLiters($request->liters_pump);
+                    $average->addDate($currentDate);
 
-                $average->save();
+                    $average->save();
 
-                $dataDevice->average_id = $average->id;
-                $dataDevice->save();
+                    $dataDevice->average_id = $average->id;
+                    $dataDevice->save();
+                } else {
+                    $averageHumidity = $average->calculateAverageHumidity();
+                    $averageTemperature = $average->calculateAverageTemperature();
+                    $totalLiters = $average->calculateTotalLiters();
+
+                    $average->average_humidity = $averageHumidity;
+                    $average->average_temperature = $averageTemperature;
+                    $average->average_liters = $totalLiters;
+
+                    $average->save();
+
+                    $newAverage = AverageData::create([
+                        'device_id' => $device->id,
+                        'humidity' => json_encode([$request->humidity]),
+                        'temperature' => json_encode([$request->temperature]),
+                        'data' => json_encode([$currentDate]),
+                    ]);
+
+                    $dataDevice->average_id = $newAverage->id;
+                    $dataDevice->save();
+                }
             } else {
-                $averageHumidity = $average->calculateAverageHumidity();
-                $averageTemperature = $average->calculateAverageTemperature();
-                $totalLiters = $average->calculateTotalLiters();
-
-                $average->average_humidity = $averageHumidity;
-                $average->average_temperature = $averageTemperature;
-                $average->average_liters = $totalLiters;
-
-                $average->save();
-
                 $newAverage = AverageData::create([
                     'device_id' => $device->id,
                     'humidity' => json_encode([$request->humidity]),
                     'temperature' => json_encode([$request->temperature]),
+                    'liters' => json_encode([$request->liters_pump]),
                     'data' => json_encode([$currentDate]),
                 ]);
 
                 $dataDevice->average_id = $newAverage->id;
                 $dataDevice->save();
             }
-        } else {
-            $newAverage = AverageData::create([
-                'device_id' => $device->id,
-                'humidity' => json_encode([$request->humidity]),
-                'temperature' => json_encode([$request->temperature]),
-                'liters' => json_encode([$request->liters_pump]),
-                'data' => json_encode([$currentDate]),
-            ]);
 
-            $dataDevice->average_id = $newAverage->id;
-            $dataDevice->save();
-        }
+            if ($device->update_status == 1) {
+                $up = $device->updateIoT($device);
 
-        if($device->update_status == 1){
-            $up = $device->updateIoT($device);
-
+                return response()->json([
+                    "message" => "Dados registrados com sucesso",
+                    "update" => $up
+                ]);
+            }
+        } catch (\Exception $e) {
             return response()->json([
-                "message" => "Dados registrados com sucesso",
-                "update" =>$up
-            ]);
+                "message" => "Ocorreu um erro ao processar a solicitação",
+                "error" => $e->getMessage(),
+            ], 500);
         }
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            "message" => "Ocorreu um erro ao processar a solicitação",
-            "error" => $e->getMessage(),
-        ], 500);
     }
-}
-
-
-
-
 }

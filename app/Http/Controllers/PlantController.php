@@ -6,8 +6,10 @@ use App\Http\Traits\Filterable;
 use App\Models\Device;
 use App\Models\Plant;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class PlantController extends Controller
@@ -45,52 +47,122 @@ class PlantController extends Controller
         return view('admin.plant.list', ['collection' => $collection]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+     public function new()
     {
-        //
+        return view('admin.plants.new');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
+{
+    try {
+        $request->validate([
+            'common_name' => 'required|string|max:255',
+            'scientific_name' => 'required|string|max:255',
+            'water_need' => 'required|string|max:255',
+            'soil_type' => 'required|string|max:255',
+            'humidity_tolerance' => 'required|string|max:255',
+            'temperature_tolerance' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'obs' => 'nullable|string',
+        ]);
+
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('plants', 'public');
+        }
+
+        $plant = new Plant([
+            'common_name' => $request->common_name,
+            'scientific_name' => $request->scientific_name,
+            'water_need' => $request->water_need,
+            'soil_type' => $request->soil_type,
+            'humidity_tolerance' => $request->humidity_tolerance,
+            'temperature_tolerance' => $request->temperature_tolerance,
+            'image' => $imagePath,
+            'obs' => $request->obs,
+        ]);
+
+        $plant->save();
+
+        return redirect()->route('admin.plants')->with('success', 'Planta criada com sucesso');
+    } catch (Exception $e) {
+        Log::error($e);
+        return redirect()->back()->with('error', 'Ocorreu um erro ao salvar esta planta.');
+    }
+}
+
+
+    public function edit($id)
     {
-        //
+        $plant = Plant::findOrFail($id);
+        return view('admin.plants.edit', compact('plant'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+   public function update(Request $request, $id)
+{
+    try {
+        $request->validate([
+            'common_name' => 'required|string|max:255',
+            'scientific_name' => 'required|string|max:255',
+            'water_need' => 'required|string|max:255',
+            'soil_type' => 'required|string|max:255',
+            'humidity_tolerance' => 'required|string|max:255',
+            'temperature_tolerance' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'obs' => 'nullable|string',
+        ]);
+
+        $plant = Plant::findOrFail($id);
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('plants', 'public');
+            $plant->image = $imagePath;
+        }
+
+        $plant->update([
+            'common_name' => $request->common_name,
+            'scientific_name' => $request->scientific_name,
+            'water_need' => $request->water_need,
+            'soil_type' => $request->soil_type,
+            'humidity_tolerance' => $request->humidity_tolerance,
+            'temperature_tolerance' => $request->temperature_tolerance,
+            'obs' => $request->obs,
+        ]);
+
+        return redirect()->route('admin.plants')->with('success', 'Planta atualizada com sucesso');
+    } catch (Exception $e) {
+        Log::error($e);
+        return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar esta planta.');
+    }
+}
+
+
+    public function updateStatus($id, $status)
     {
-        //
+        try {
+            $plant = Plant::findOrFail($id);
+            $plant->status = $status;
+            $plant->save();
+
+            return redirect()->route('admin.plants')->with('success', 'Status da planta atualizado com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Erro ao atualizar o status do planta.');
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function delete($id)
     {
-        //
-    }
+        try {
+            $plant = Plant::findOrFail($id);
+            $plant->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            return redirect()->route('admin.plants')->with('success', 'Dispositivo excluído com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Erro ao excluir o dispositivo.');
+        }
     }
 
     public function select($id){

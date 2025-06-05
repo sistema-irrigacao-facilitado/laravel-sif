@@ -21,13 +21,7 @@ class ManagerAdminSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => Hash::make('admin123'), 
             'telephone' => '11999999999',
-            'cpf' => '00000000000',
-            'rg' => '000000000',
             'status' => '1',
-            'perfil' => 'admin',
-            'collaborators_inclusion_id' => null,
-            'collaborators_change_id' => null,
-            'collaborators_exclusion_id' => null,
         ]);
     }
 }

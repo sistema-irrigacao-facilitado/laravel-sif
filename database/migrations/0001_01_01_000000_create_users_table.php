@@ -13,19 +13,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 250);
-            $table->string('email')->nullable();
+            $table->string('name', length: 250);
+            $table->string('email')->unique();
             $table->string('password', 70);
             $table->string('telephone', 15);
-            $table->string('cpf', 15)->unique();
-            $table->string('status', 2);
-            $table->enum('perfil', ['regular', 'premium']);
+            $table->string('status', 2)->default(2);
             $table->timestamps();
-            $table->softDeletes(); // Adiciona coluna 'deleted_at' para soft delete
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('cpf')->primary();
+            $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });

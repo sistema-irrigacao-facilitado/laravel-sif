@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('data_devices', function (Blueprint $table) {
             $table->id();
-            $table->float('humidity');
+        $table->float('humidity');
             $table->float('temperature');
             $table->float('liters_pump');
             $table->timestamps();

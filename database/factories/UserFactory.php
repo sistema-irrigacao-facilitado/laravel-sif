@@ -18,7 +18,6 @@ class UserFactory extends Factory
             'email' => 'teste123@gmail.com',
             'password' => bcrypt('teste123'),
             'telephone' => $this->faker->phoneNumber,
-            'cpf' => $this->faker->unique()->numerify('###.###.###-##'),
             'status' => 2, 
             'perfil' => 'premium',
         ];

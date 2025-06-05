@@ -35,7 +35,6 @@ class RegisteredUserController extends Controller
             'telephone' => ['required', 'string', 'max:150'],
             'email' => ['nullable', 'string', 'email:rfc,dns', 'max:255'],
             'perfil' => ['required', 'string', 'max:255'],
-            'cpf' => ['required', 'string', 'lowercase', 'cpf', 'max:150', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -44,7 +43,6 @@ class RegisteredUserController extends Controller
             'lastname' => $request->lastname,
             'telephone' => $request->telephone,
             'perfil' => $request->perfil,
-            'cpf' => $request->cpf,
             'status' => 2,
             'email' => $request->email,
             'password' => Hash::make($request->password),

@@ -37,12 +37,6 @@
                                     <input type="text" name="telephone" id="telephone" class="form-control"
                                         placeholder="(99) 99999-9999" value="{{ $user->telephone }}" minlength="15">
                                 </div>
-
-                                <div class="campoForm">
-                                    <label for="cpf" class="form-label">Cpf <strong>*</strong></label>
-                                    <input type="text" name="cpf" id="cpf" class="form-control"
-                                        placeholder="000.000.000-00" value="{{ $user->cpf }}" minlength="14">
-                                </div>
                             </div>
 
                             <div class="campoForm">
@@ -89,12 +83,6 @@
         }
         $(document).ready(function() {
             $('.data_nascimento').mask('00/00/0000');
-            $('#cpf').mask('000.000.000-00', {
-                reverse: true
-            });
-            $('#rg').mask('00.000.000-0', {
-                reverse: true
-            });
             $('#telephone').mask('(00) 00000-0000');
         });
     </script>

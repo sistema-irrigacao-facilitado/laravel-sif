@@ -15,15 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('model', 255);
             $table->float('flow');
-            $table->longText('image')->charset('binary')->nullable();
-            $table->integer('status');
+            $table->longText('image')->nullable();
+            $table->integer('status')->default(2);
             $table->string('obs', 255)->nullable();
 
             $table->timestamps();
             $table->softDeletes();
-            $table->foreignId('collaborators_inclusion_id')->constrained('collaborators')->onDelete('cascade');
-            $table->foreignId('collaborators_change_id')->nullable()->constrained('collaborators')->onDelete('cascade');
-            $table->foreignId('collaborators_exclusion_id')->nullable()->constrained('collaborators')->onDelete('cascade');
         });
     }
 

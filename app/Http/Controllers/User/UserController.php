@@ -7,12 +7,16 @@ use App\Models\Device;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Traits\Filterable;
+use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $devices = Device::where('user_id', getAuthUser()->id)->where('status', 2)
             ->with(['dataDevice' => function ($query) {
                 $query->orderBy('created_at', 'desc')->first();
@@ -30,7 +34,7 @@ class UserController extends Controller
     public function list(Request $request)
     {
         $query = User::query();
-        
+
         $filters = [
             'id' => '=',
             'name' => function ($query, $value) {
@@ -42,9 +46,7 @@ class UserController extends Controller
             'email' => function ($query, $value) {
                 $query->where('email', 'like', '%' . $value . '%');
             },
-            'cpf' => function ($query, $value) {
-                $query->where('cpf', 'like', '%' . $value . '%');
-            },
+
             'created_at_from' => function ($query, $value) {
                 $query->whereDate('created_at', '>=', $value);
             },
@@ -58,52 +60,115 @@ class UserController extends Controller
         return view('admin.user.list', ['collection' => $collection]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function new()
     {
-
+        return view('admin.user.new');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'telephone' => 'required|string|max:20',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+
+            $user = new User([
+                'name' => $request->name,
+                'telephone' => $request->telephone,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            $user->save();
+
+            return redirect()->route('admin.user')->with('success', 'Usuário criado com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Ocorreu um erro ao salvar este usuário.');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+
+    public function edit($id)
     {
-        //
+        $user = User::findOrFail($id);
+        return view('admin.user.edit', compact('user'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'telephone' => 'required|string|max:20',
+                'email' => 'required|email|unique:users,email',
+            ]);
+
+            $user = User::findOrFail($id);
+            $user->update([
+                'name' => $request->name,
+                'telephone' => $request->telephone,
+                'email' => $request->email,
+            ]);
+
+            return redirect()->route('admin.user')->with('success', 'Usuário atualizado com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este usuário.');
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function editPassword($id)
     {
-        //
+        $user = User::findOrFail($id);
+        return view('admin.user.password', compact('user'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function updatePassword(Request $request, $id)
     {
-        //
+        try {
+            $request->validate([
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+            $user = User::findOrFail($id);
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+            return redirect()->route('admin.user.edit', $id)->with('success', 'Senha atualizada com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar a senha deste usuário');
+        }
+    }
+
+    public function updateStatus($id, $status)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->status = $status;
+            $user->save();
+
+            return redirect()->route('admin.user')->with('success', 'Status do usuário atualizado com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Erro ao atualizar o status do usuário.');
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+
+            return redirect()->route('admin.user')->with('success', 'Usuário excluído com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Erro ao excluir o usuário.');
+        }
     }
 
     public function conf()
@@ -128,7 +193,6 @@ class UserController extends Controller
                     "name" => "required|string|max:200",
                     "lastname" => "required|string|max:200",
                     "telephone" => "required|string|max:15|regex:/^\(\d{2}\)\s\d{5}-\d{4}$/",
-                    "cpf" => "required|string|max:15|regex:/^\d{3}\.\d{3}\.\d{3}-\d{2}$/",
                     "email" => "required|email|max:200"
                 ]);
 
@@ -137,7 +201,6 @@ class UserController extends Controller
                     "name" => $request->name,
                     "lastname" => $request->lastname,
                     "telephone" => $request->telephone,
-                    "cpf" => $request->cpf,
                     "email" => $request->email
                 ]);
 

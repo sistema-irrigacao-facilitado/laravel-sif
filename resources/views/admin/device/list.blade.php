@@ -17,7 +17,7 @@
 
                             <div class="thead-buttons">
                                 <div class="text-end" style="margin-right: 10px;">
-                                    <a href="{{ route('filter_clear.page', 'users') }}" class="btn btn-primary">Limpar
+                                    <a href="{{ route('filter_clear.page', 'device') }}" class="btn btn-primary">Limpar
                                         filtro</a>
                                 </div>
                                 <div class="text-end" style="margin-right: 10px;">
@@ -25,7 +25,8 @@
                                         form="filtro">Filtrar</button>
                                 </div>
                                 <div class="text-end">
-                                    <a class="btn btn-green" href="">Criar dispositivo</a>
+                                    <a class="btn btn-green" href="{{ route('admin.devices.new', $item->id) }}">Criar
+                                        dispositivo</a>
                                 </div>
                             </div>
                         </div>
@@ -33,7 +34,7 @@
                             <table class="table card-table  table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <form action="{{ route('filter.page', 'users') }}" method="POST" id="filtro">
+                                        <form action="{{ route('filter.page', 'device') }}" method="POST" id="filtro">
                                             @csrf
                                             <td>
                                                 <div class="mb-3">
@@ -86,8 +87,12 @@
                                                         <label class="input-group-text" for="status">Status: </label>
                                                         <select class="form-select" name="status" id="status">
                                                             <option value="">Qualquer</option>
-                                                            <option value="A">Ativo</option>
-                                                            <option value="I">Desativado</option>
+                                                            <option value="2">Ativo</option>
+                                                            <option value="9">Desativado</option>
+
+                                                            <option value="0">Em Espera</option>
+                                                            <option value="1">Disponível</option>
+                                                            <option value="8">Em Análise</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -124,41 +129,66 @@
 
                                             </td>
                                             <td>
-                                                
-                                                    <div class="dropdown">
-                                                        <a href="#" class="btn dropdown-toggle"
-                                                            data-bs-toggle="dropdown">Ação</a>
-                                                        <div class="dropdown-menu">
 
-                                                            <a class="dropdown-item" href="">
-                                                                Dados
+                                                <div class="dropdown">
+                                                    <a href="#" class="btn dropdown-toggle"
+                                                        data-bs-toggle="dropdown">Ação</a>
+                                                    <div class="dropdown-menu">
+
+
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('admin.devices.edit', $item->id) }}">
+                                                            Editar
+                                                        </a>
+
+                                                        <a href="{{ route('admin.devices.delete', $item->id) }}"
+                                                            class="dropdown-item bg-danger text-light">
+                                                            Excluir
+                                                        </a>
+
+
+                                                        @switch($type)
+                                                            @case(0)
+                                                            <a href="{{ route('admin.devices.updateStatus', [$item->id, 1]) }}"
+                                                                class="dropdown-item bg-danger text-light">
+                                                                Disponibilizar
                                                             </a>
+                                                            @break
 
-
-                                                            <a class="dropdown-item" href="">
-                                                                Editar
-                                                            </a>
-
-                                                            @if ($item->status == 'A')
-                                                                <a onclick="removeItem('')"
+                                                            @case(1)
+                                                            @case(2)
+                                                                <a href="{{ route('admin.devices.updateStatus', [$item->id, 8]) }}"
                                                                     class="dropdown-item bg-danger text-light">
-                                                                    Excluir
+                                                                    Colocar em Analise
                                                                 </a>
-                                                            @endif
-                                                            @if ($item->status == 'A')
-                                                                <a onclick="disableItem('')"
+                                                                <a href="{{ route('admin.devices.updateStatus', [$item->id, 9]) }}"
                                                                     class="dropdown-item bg-danger text-light">
                                                                     Desativar
                                                                 </a>
-                                                            @else
-                                                                <a onclick="enableItem('')"
-                                                                    class="dropdown-item bg-danger text-light">
-                                                                    Ativar
-                                                                </a>
-                                                            @endif
-                                                        </div>
+                                                            @break
+
+                                                            @case(9)
+                                                           <a href="{{ route('admin.devices.updateStatus', [$item->id, 1]) }}"
+                                                                class="dropdown-item bg-danger text-light">
+                                                                Disponibilizar
+                                                            </a>
+                                                            @break
+
+                                                            @case(8)
+                                                            <a href="{{ route('admin.devices.updateStatus', [$item->id, 1]) }}"
+                                                                class="dropdown-item bg-danger text-light">
+                                                                Disponibilizar
+                                                            </a>
+                                                            <a href="{{ route('admin.devices.updateStatus', [$item->id, 9]) }}"
+                                                                class="dropdown-item bg-danger text-light">
+                                                                Desativar
+                                                            </a>
+                                                            @break
+                                                        @endswitch
+                                                      
                                                     </div>
-                                                
+                                                </div>
+
 
                                             </td>
                                         </tr>

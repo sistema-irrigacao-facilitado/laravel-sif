@@ -10,21 +10,10 @@ class Pump extends Model
     use HasFactory;
 
     protected $fillable = [
-        // 'ip',
-        // 'model',
-        // 'numbering',
-        // 'qr',
-        // 'mode',
-        // 'time_on',
-        // 'status',
-        // 'user_id',
+        'model',
+        'flow',
+        'image',
+        'obs',
+        'status',
     ];
-
-    public function collaborators(){
-        return $this->belongsTo('App\Models\Collaborator');
-    }
-
-    public function device(){
-        return $this->belongsTo('App\Models\Device');
-    }
 }

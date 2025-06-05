@@ -10,21 +10,14 @@ class Plant extends Model
     use HasFactory;
 
     protected $fillable = [
-        // 'ip',
-        // 'model',
-        // 'numbering',
-        // 'qr',
-        // 'mode',
-        // 'time_on',
-        // 'status',
-        // 'user_id',
+       'common_name',
+       'scientific_name',
+       'water_need',
+       'soil_type',
+       'humidity_tolerance',
+       'temperature_tolerance',
+       'image',
+       'status',
+       'obs'
     ];
-
-    public function collaborators(){
-        return $this->belongsTo('App\Models\Collaborator');
-    }
-
-    public function device(){
-        return $this->belongsTo('App\Models\Device');
-    }
 }

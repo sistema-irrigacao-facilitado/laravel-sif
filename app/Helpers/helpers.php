@@ -55,7 +55,7 @@ function extractValuesFromCollection($collection, $fields)
 }
 
 function statusSpan($status)
-{
+{ 
     switch ($status) {
         case 0:
             return "<span class='badge bg-warning me-1'></span> Em Espera"; 
@@ -67,13 +67,10 @@ function statusSpan($status)
             return "<span class='badge bg-success me-1'></span> Ativado"; 
             break;
         case 8:
-            return "<span class='badge bg-info me-1'></span> Análise";
+            return "<span class='badge bg-info me-1'></span>Em Análise";
             break;
         case 9:
             return "<span class='badge bg-danger me-1'></span> Desativado"; 
-            break;
-        case 10:
-            return "<span class='badge bg-dark me-1'></span> Excluído"; 
             break;
         
     }

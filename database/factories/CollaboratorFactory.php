@@ -17,8 +17,6 @@ class CollaboratorFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'password' => bcrypt('password'), // Senha criptografada
             'telephone' => $this->faker->phoneNumber,
-            'cpf' => $this->faker->unique()->numerify('###.###.###-##'),
-            'rg' => $this->faker->unique()->numerify('##.###.###-#'),
             'status' => 2, // Supondo que o status possa ser 1 ou 2
             'perfil' => 'admin',
         ];

@@ -25,7 +25,7 @@
                                         form="filtro">Filtrar</button>
                                 </div>
                                 <div class="text-end">
-                                    <a class="btn btn-green" href="">Criar usuário</a>
+                                    <a class="btn btn-green" href="{{ route('admin.users.new') }}">Criar usuário</a>
                                 </div>
                             </div>
                         </div>
@@ -95,8 +95,8 @@
                                                         <label class="input-group-text" for="status">Status: </label>
                                                         <select class="form-select" name="status" id="status">
                                                             <option value="">Qualquer</option>
-                                                            <option value="A">Ativo</option>
-                                                            <option value="I">Desativado</option>
+                                                            <option value="2">Ativo</option>
+                                                            <option value="9">Desativado</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -129,7 +129,7 @@
                                             <td>
                                                 {{ $item->email }}
                                             </td>
-                                            
+
                                             <td>
                                                 {{ dateFormat($item->created_at) }}
                                             </td>
@@ -138,41 +138,37 @@
 
                                             </td>
                                             <td>
-                                                
-                                                    <div class="dropdown">
-                                                        <a href="#" class="btn dropdown-toggle"
-                                                            data-bs-toggle="dropdown">Ação</a>
-                                                        <div class="dropdown-menu">
 
-                                                            <a class="dropdown-item" href="">
-                                                                Dados
+                                                <div class="dropdown">
+                                                    <a href="#" class="btn dropdown-toggle"
+                                                        data-bs-toggle="dropdown">Ação</a>
+                                                    <div class="dropdown-menu">
+
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('admin.users.edit', $item->id) }}">
+                                                            Editar
+                                                        </a>
+
+
+                                                        <a onclick="removeItem({{ route('admin.users.delete', $item->id) }})"
+                                                            class="dropdown-item bg-danger text-light">
+                                                            Excluir
+                                                        </a>
+
+                                                        @if ($item->status == 2)
+                                                            <a href="{{ route('admin.users.updateStatus', [$item->id, 9]) }}"
+                                                                class="dropdown-item bg-danger text-light">
+                                                                Desativar
                                                             </a>
-
-
-                                                            <a class="dropdown-item" href="">
-                                                                Editar
+                                                        @else
+                                                            <a href="{{ route('admin.users.updateStatus', [$item->id, 2]) }}"
+                                                                class="dropdown-item bg-danger text-light">
+                                                                Ativar
                                                             </a>
-
-                                                            @if ($item->status == 'A')
-                                                                <a onclick="removeItem('')"
-                                                                    class="dropdown-item bg-danger text-light">
-                                                                    Excluir
-                                                                </a>
-                                                            @endif
-                                                            @if ($item->status == 'A')
-                                                                <a onclick="disableItem('')"
-                                                                    class="dropdown-item bg-danger text-light">
-                                                                    Desativar
-                                                                </a>
-                                                            @else
-                                                                <a onclick="enableItem('')"
-                                                                    class="dropdown-item bg-danger text-light">
-                                                                    Ativar
-                                                                </a>
-                                                            @endif
-                                                        </div>
+                                                        @endif
                                                     </div>
-                                                
+                                                </div>
+
 
                                             </td>
                                         </tr>

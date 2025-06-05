@@ -19,10 +19,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'telephone',
-        'cpf',
+
         'email',
         'password',
-        'perfil',
         'status',
     ];
 
@@ -44,7 +43,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'cpf_verified_at' => 'datetime',
+            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -57,6 +56,6 @@ class User extends Authenticatable
     ];
 
     public function devices(){
-        return $this->belongsTo('App\Models\Device');
+        return $this->belongsTo('App\Models\Device', 'user_id');
     }
 }

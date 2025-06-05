@@ -6,8 +6,10 @@ use App\Http\Traits\Filterable;
 use App\Models\Device;
 use App\Models\Pump;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class PumpController extends Controller
@@ -44,65 +46,113 @@ class PumpController extends Controller
         return view('admin.pump.list', ['collection' => $collection]);
     }
 
-     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function new()
     {
-        //
+        return view('admin.pump.new');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'model' => 'required|string|max:255',
+                'flow' => 'required|numeric',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'obs' => 'nullable|string',
+            ]);
+
+            $pump = new Pump([
+                'model' => $request->model,
+                'flow' => $request->flow,
+                'image' => $request->image ? $request->image->store('pumps', 'public') : null,
+                'obs' => $request->obs,
+                'status' => $request->status,
+            ]);
+
+            $pump->save();
+
+            return redirect()->route('admin.pumps')->with('success', "Bomba d'água criada com sucesso");
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', "Ocorreu um erro ao salvar esta bomba d'água.");
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit($id)
     {
-        //
+        $pump = Pump::findOrFail($id);
+        return view('admin.pump.edit', compact('pump'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $request->validate([
+                'model' => 'required|string|max:255',
+                'flow' => 'required|numeric',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'obs' => 'nullable|string',
+                'status' => 'required|number',
+            ]);
+
+            $pump = Pump::findOrFail($id);
+            $pump->model = $request->model;
+            $pump->flow = $request->flow;
+            $pump->obs = $request->obs;
+            $pump->status = $request->status;
+
+            if ($request->hasFile('image')) {
+                $pump->image = $request->image->store('pumps', 'public');
+            }
+
+            $pump->save();
+
+            return redirect()->route('admin.pumps')->with('success', "Bomba atualizada com sucesso");
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', "Ocorreu um erro ao atualizar esta bomba.");
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function updateStatus($id, $status)
     {
-        //
+        try {
+            $pump = Pump::findOrFail($id);
+            $pump->status = $status;
+            $pump->save();
+
+            return redirect()->route('admin.pumps')->with('success', "Status da bomba atualizado com sucesso");
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', "Erro ao atualizar o status da bomba.");
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function delete($id)
     {
-        //
+        try {
+            $pump = Pump::findOrFail($id);
+            $pump->delete();
+
+            return redirect()->route('admin.pumps')->with('success', "Bomba excluída com sucesso");
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', "Erro ao excluir a bomba.");
+        }
     }
 
-    public function select($id){
+    public function select($id)
+    {
         $user = User::find(getAuthUser()->id);
         $device = Device::findOrFail($id)->first();
         $pumps = Pump::paginate();
         foreach ($pumps as $pump) {
             // Decodificando a imagem
             $decodedImage = base64_decode($pump->image);
-    
+
             // Criando um data URI (recomendado para evitar criar arquivos temporários)
             $imageDataUri = 'data:image/jpeg;base64,' . base64_encode($decodedImage);
-    
+
             // Passando os dados para a view
             $pump->image_url = $imageDataUri;
         }
@@ -112,11 +162,11 @@ class PumpController extends Controller
                 if (!$device) {
                     return redirect()->route('dashboard');
                 }
-                
+
                 if ($device->status != 2) {
                     return redirect()->route('dashboard');
                 }
-                if(!$pumps){
+                if (!$pumps) {
                     return redirect()->route('dashboard');
                 }
                 return view('user.device.select.pump', [
@@ -163,6 +213,4 @@ class PumpController extends Controller
 
         return redirect()->route('logout');
     }
-
-   
 }

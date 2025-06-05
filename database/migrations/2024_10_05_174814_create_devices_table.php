@@ -13,23 +13,18 @@ return new class extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
-            
             $table->string('model', 255);
             $table->string('numbering', 8);
             $table->longText('qr')->binary()->nullable();
             $table->enum('mode', [1, 2])->default(1);
             $table->json('time_on')->nullable();
             $table->string('period', 200)->nullable();
-            $table->integer('status');
-            $table->enum('update_status', [1,0])->default(0);
+            $table->integer('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('plant_id')->nullable()->constrained('plants')->onDelete('cascade');
             $table->foreignId('pump_id')->nullable()->constrained('pumps')->onDelete('cascade');
-            $table->foreignId('collaborators_inclusion_id')->constrained('collaborators')->onDelete('cascade');
-            $table->foreignId('collaborators_change_id')->nullable()->constrained('collaborators')->onDelete('cascade');
-            $table->foreignId('collaborators_exclusion_id')->nullable()->constrained('collaborators')->onDelete('cascade');
         });
     }
 

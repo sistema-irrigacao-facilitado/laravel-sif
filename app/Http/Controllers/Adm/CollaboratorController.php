@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\Filterable;
 use App\Models\AverageData;
 use App\Models\Collaborator;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CollaboratorController extends Controller
 {
-    
 
-    public function index(){
+
+    public function index()
+    {
         return view('admin.dashboard');
     }
 
@@ -34,9 +37,7 @@ class CollaboratorController extends Controller
             'email' => function ($query, $value) {
                 $query->where('email', 'like', '%' . $value . '%');
             },
-            'cpf' => function ($query, $value) {
-                $query->where('cpf', 'like', '%' . $value . '%');
-            },
+
             'created_at_from' => function ($query, $value) {
                 $query->whereDate('created_at', '>=', $value);
             },
@@ -50,50 +51,124 @@ class CollaboratorController extends Controller
         return view('admin.list', ['collection' => $collection]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function new()
     {
+        return view('admin.new');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:collaborators,email',
+                'password' => 'required|string|min:6|confirmed',
+                'telephone' => 'nullable|string|max:20',
+            ]);
+
+            $collaborator = new Collaborator([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'telephone' => $request->telephone,
+            ]);
+
+            $collaborator->save();
+
+            return redirect()->route('admin.list')->with('success', 'Colaborador criado com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Ocorreu um erro ao salvar este colaborador.');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+
+    public function edit($id)
     {
-        //
+        $collaborator = Collaborator::findOrFail($id);
+        return view('admin.edit', compact('collaborator'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+     public function editPassword($id)
     {
-        //
+        $collaborator = Collaborator::findOrFail($id);
+        return view('admin.editPassword', compact('collaborator'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:collaborators,email,' . $id,
+                'telephone' => 'nullable|string|max:20',
+            ]);
+
+            $collaborator = Collaborator::findOrFail($id);
+
+            $data = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'telephone' => $request->telephone,
+            ];
+
+            $collaborator->update($data);
+
+            return redirect()->route('admin.list')->with('success', 'Colaborador atualizado com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este colaborador.');
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function updatePassword(Request $request, $id)
     {
-        //
+        try {
+            $request->validate([
+                'password' => 'nullable|string|min:6|confirmed',
+            ]);
+
+            $collaborator = Collaborator::findOrFail($id);
+
+            $data = [];
+            if ($request->filled('password')) {
+                $data['password'] = bcrypt($request->password);
+            }
+
+            $collaborator->update($data);
+
+            return redirect()->route('admin.list')->with('success', 'Colaborador atualizado com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este colaborador.');
+        }
+    }
+
+
+    public function updateStatus($id, $status)
+    {
+        try {
+            $collaborator = Collaborator::findOrFail($id);
+            $collaborator->status = $status;
+            $collaborator->save();
+
+            return redirect()->route('admin.list')->with('success', 'Status do colaborador atualizado com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Erro ao atualizar o status do colaborador.');
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $collaborator = Collaborator::findOrFail($id);
+            $collaborator->delete();
+
+            return redirect()->route('admin.list')->with('success', 'Colaborador excluído com sucesso');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Erro ao excluir o colaborador.');
+        }
     }
 }

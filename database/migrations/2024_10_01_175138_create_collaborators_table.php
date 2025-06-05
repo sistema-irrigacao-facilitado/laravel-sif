@@ -14,18 +14,12 @@ return new class extends Migration
         Schema::create('collaborators', function (Blueprint $table) {
             $table->id();
             $table->string('name', 250);
-            $table->string('email')->nullable();
+            $table->string('email')->unique();
             $table->string('password', 70);
             $table->string('telephone', 15);
-            $table->string('cpf', 15)->unique();
-            $table->string('rg', 15)->unique()->nullable();
-            $table->integer('status');
-            $table->enum('perfil', ['regular', 'admin']);
+            $table->integer('status')->default(2);
             $table->timestamps();
             $table->softDeletes();
-            $table->foreignId('collaborators_inclusion_id')->nullable()->constrained('collaborators')->onDelete('cascade');
-            $table->foreignId('collaborators_change_id')->nullable()->constrained('collaborators')->onDelete('cascade');
-            $table->foreignId('collaborators_exclusion_id')->nullable()->constrained('collaborators')->onDelete('cascade');
         });
     }
 

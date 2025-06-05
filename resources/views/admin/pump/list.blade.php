@@ -17,7 +17,7 @@
 
                             <div class="thead-buttons">
                                 <div class="text-end" style="margin-right: 10px;">
-                                    <a href="{{ route('filter_clear.page', 'users') }}" class="btn btn-primary">Limpar
+                                    <a href="{{ route('filter_clear.page', 'pump') }}" class="btn btn-primary">Limpar
                                         filtro</a>
                                 </div>
                                 <div class="text-end" style="margin-right: 10px;">
@@ -25,7 +25,7 @@
                                         form="filtro">Filtrar</button>
                                 </div>
                                 <div class="text-end">
-                                    <a class="btn btn-green" href="">Criar bomba</a>
+                                    <a class="btn btn-green" href="{{ route('admin.pumps.new') }}">Criar bomba</a>
                                 </div>
                             </div>
                         </div>
@@ -33,7 +33,7 @@
                             <table class="table card-table  table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <form action="{{ route('filter.page', 'users') }}" method="POST" id="filtro">
+                                        <form action="{{ route('filter.page', 'pump') }}" method="POST" id="filtro">
                                             @csrf
                                             <td>
                                                 <div class="mb-3">
@@ -86,8 +86,8 @@
                                                         <label class="input-group-text" for="status">Status: </label>
                                                         <select class="form-select" name="status" id="status">
                                                             <option value="">Qualquer</option>
-                                                            <option value="A">Ativo</option>
-                                                            <option value="I">Desativado</option>
+                                                            <option value="2">Ativo</option>
+                                                            <option value="9">Desativado</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -130,28 +130,23 @@
                                                             data-bs-toggle="dropdown">Ação</a>
                                                         <div class="dropdown-menu">
 
-                                                            <a class="dropdown-item" href="">
-                                                                Dados
-                                                            </a>
-
-
-                                                            <a class="dropdown-item" href="">
+                                                            <a class="dropdown-item" href="{{ route('admin.pumps.edit', $item->id) }}">
                                                                 Editar
                                                             </a>
 
-                                                            @if ($item->status == 'A')
-                                                                <a onclick="removeItem('')"
+                                                          
+                                                                <a href="{{ route('admin.pumps.delete', $item->id) }}"
                                                                     class="dropdown-item bg-danger text-light">
                                                                     Excluir
                                                                 </a>
-                                                            @endif
-                                                            @if ($item->status == 'A')
-                                                                <a onclick="disableItem('')"
+                                                          
+                                                            @if ($item->status == 2)
+                                                                <a href="{{ route('admin.pumps.updateStatus', [$item->id, 9]) }}"
                                                                     class="dropdown-item bg-danger text-light">
                                                                     Desativar
                                                                 </a>
                                                             @else
-                                                                <a onclick="enableItem('')"
+                                                                <a href="{{ route('admin.pumps.updateStatus', [$item->id, 2]) }}"
                                                                     class="dropdown-item bg-danger text-light">
                                                                     Ativar
                                                                 </a>

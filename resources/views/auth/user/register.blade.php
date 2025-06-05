@@ -48,10 +48,6 @@
         </div>
         <div class="doble">
             <div class="campo">
-                <input class="input" placeholder="CPF" type="text" name="cpf" required minlength="14" id="cpf">
-                <span class="input-border"></span>
-            </div>
-            <div class="campo">
                 <input class="input" placeholder="Telefone" required minlength="15" type="text" name="telephone" id="telephone">
                 <span class="input-border"></span>
             </div>
