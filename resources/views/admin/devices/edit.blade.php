@@ -14,6 +14,7 @@
                     <form action="{{ route('admin.devices.update', $device->id) }}" method="post" enctype="multipart/form-data"
                         class="card">
                         @csrf
+                        @method('PUT')
                         <div class="card-header">
                             <div class="col">
                                 <h4 class="card-title">Editar Dispositivo</h4>

@@ -14,6 +14,7 @@
                     <form action="{{ route('admin.plants.update', $plant->id) }}" method="post" enctype="multipart/form-data"
                         class="card">
                         @csrf
+                        @method('PUT')
                         <div class="card-header">
                             <div class="col">
                                 <h4 class="card-title">Editar Planta</h4>

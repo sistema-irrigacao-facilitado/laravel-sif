@@ -1,8 +1,5 @@
 @extends('admin.layout.default')
 
-@section('style')
-    <link rel="stylesheet" href="{{ asset('style/list.css') }}">
-@endsection
 
 @section('title', 'Editar Colaborador')
 
@@ -14,6 +11,7 @@
                     <form action="{{ route('admin.update', $collaborator0->id) }}" method="post" enctype="multipart/form-data"
                         class="card">
                         @csrf
+                        @method('PUT')
                         <div class="card-header">
                             <div class="col">
                                 <h4 class="card-title">Editar Colaborador</h4>
@@ -21,6 +19,7 @@
                             <div class="btn-list">
                                 <a href="{{ route('admin.list') }}" class="btn btn-outline-primary me-auto"
                                     aria-label="Voltar">Voltar</a>
+                                     <a class="btn" href="{{ route('admin.updatePassword', $collaborator->id) }}">Alterar senha</a>
                                 <button type="submit" name="save" value="save" class="btn btn-outline-success me-auto"
                                     aria-label="Salvar">Salvar</button>
                             </div>
@@ -45,11 +44,11 @@
 
                                     </div>
 
-                                    <div class="col-6 mb-3">
+                                   
 
-                                        <a class="btn" href="{{ route('admin.updatePassword', $collaborator->id) }}">Alterar senha</button>
+                                       
 
-                                    </div>
+                                   
 
                                     <div class="col-6 mb-3">
 

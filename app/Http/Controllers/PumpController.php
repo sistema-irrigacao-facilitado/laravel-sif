@@ -43,12 +43,12 @@ class PumpController extends Controller
         ];
         $this->applyFilters($query, $request->session(), 'pumps', $filters);
         $collection = $query->orderBy('id')->paginate(30);
-        return view('admin.pump.list', ['collection' => $collection]);
+        return view('admin.pumps.list', ['collection' => $collection]);
     }
 
     public function new()
     {
-        return view('admin.pump.new');
+        return view('admin.pumps.new');
     }
 
     public function store(Request $request)
@@ -66,7 +66,6 @@ class PumpController extends Controller
                 'flow' => $request->flow,
                 'image' => $request->image ? $request->image->store('pumps', 'public') : null,
                 'obs' => $request->obs,
-                'status' => $request->status,
             ]);
 
             $pump->save();
@@ -81,7 +80,7 @@ class PumpController extends Controller
     public function edit($id)
     {
         $pump = Pump::findOrFail($id);
-        return view('admin.pump.edit', compact('pump'));
+        return view('admin.pumps.edit', compact('pump'));
     }
 
     public function update(Request $request, $id)
@@ -92,14 +91,12 @@ class PumpController extends Controller
                 'flow' => 'required|numeric',
                 'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
                 'obs' => 'nullable|string',
-                'status' => 'required|number',
             ]);
 
             $pump = Pump::findOrFail($id);
             $pump->model = $request->model;
             $pump->flow = $request->flow;
             $pump->obs = $request->obs;
-            $pump->status = $request->status;
 
             if ($request->hasFile('image')) {
                 $pump->image = $request->image->store('pumps', 'public');

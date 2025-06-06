@@ -44,7 +44,7 @@ class PlantController extends Controller
         ];
         $this->applyFilters($query, $request->session(), 'plants', $filters);
         $collection = $query->orderBy('id')->paginate(30);
-        return view('admin.plant.list', ['collection' => $collection]);
+        return view('admin.plants', ['collection' => $collection]);
     }
 
      public function new()

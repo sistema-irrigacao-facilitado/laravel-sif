@@ -33,14 +33,14 @@
                                         <div class="mb-3">
                                             <label class="form-label" for="model">Modelo</label>
                                             <input type="text" class="form-control" name="model" id="model"
-                                                placeholder="Nome" required aria-required="true">
+                                                placeholder="Modelo" required aria-required="true">
                                         </div>
                                     </div>
 
                                     <div class="col-4">
                                         <div class="mb-3">
                                             <label class="form-label" for="flow">Vazão</label>
-                                            <input type="number" step="0.1" class="form-control" name="flow" id="flow"
+                                            <input type="number" step="0.1" class="form-control" name="flow" id="flow" placeholder="Vazão"
                                                 required aria-required="true">
                                         </div>
                                     </div>

@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ asset('style/list.css') }}">
 @endsection
 
-@section('title', 'Usuarios')
+@section('title', 'Plantas')
 
 @section('content')
     <div class="page-body">
@@ -17,7 +17,7 @@
 
                             <div class="thead-buttons">
                                 <div class="text-end" style="margin-right: 10px;">
-                                    <a href="{{ route('filter_clear.page', 'users') }}" class="btn btn-primary">Limpar
+                                    <a href="{{ route('filter_clear.page', 'plants') }}" class="btn btn-primary">Limpar
                                         filtro</a>
                                 </div>
                                 <div class="text-end" style="margin-right: 10px;">
@@ -25,7 +25,7 @@
                                         form="filtro">Filtrar</button>
                                 </div>
                                 <div class="text-end">
-                                    <a class="btn btn-green" href="{{ route('admin.users.new') }}">Criar usuário</a>
+                                    <a class="btn btn-green" href="{{ route('admin.plants.new') }}">Criar planta</a>
                                 </div>
                             </div>
                         </div>
@@ -33,7 +33,7 @@
                             <table class="table card-table  table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <form action="{{ route('filter.page', 'users') }}" method="POST" id="filtro">
+                                        <form action="{{ route('filter.page', 'plants') }}" method="POST" id="filtro">
                                             @csrf
                                             <td>
                                                 <div class="mb-3">
@@ -47,8 +47,9 @@
                                             <td>
                                                 <div class="mb-3">
                                                     <div class="input-group">
-                                                        <label class="input-group-text" for="name">Nome: </label>
-                                                        <input type="text" name="name" id="name"
+                                                        <label class="input-group-text" for="common_name">Nome Comum:
+                                                        </label>
+                                                        <input type="text" name="common_name" id="common_name"
                                                             class="form-control">
                                                     </div>
                                                 </div>
@@ -56,17 +57,9 @@
                                             <td>
                                                 <div class="mb-3">
                                                     <div class="input-group">
-                                                        <label class="input-group-text" for="telephone">Telefone: </label>
-                                                        <input type="text" name="telephone" id="telephone"
-                                                            class="form-control">
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="mb-3">
-                                                    <div class="input-group">
-                                                        <label class="input-group-text" for="email">E-Mail: </label>
-                                                        <input type="text" name="email" id="email"
+                                                        <label class="input-group-text" for="scientific_name">Nome
+                                                            Cientifico: </label>
+                                                        <input type="text" name="scientific_name" id="scientific_name"
                                                             class="form-control">
                                                     </div>
                                                 </div>
@@ -106,9 +99,8 @@
                                     </tr>
                                     <tr>
                                         <th>ID.</th>
-                                        <th>Nome</th>
-                                        <th>Telefone</th>
-                                        <th>E-Mail</th>>
+                                        <th>Nome Comum</th>
+                                        <th>Nome Cientifico</th>
                                         <th>Criado</th>
                                         <th>Status</th>
                                         <th>Ação</th>
@@ -121,15 +113,11 @@
                                                 {{ $item->id }}
                                             </td>
                                             <td>
-                                                {{ $item->name }}
+                                                {{ $item->common_name }}
                                             </td>
                                             <td>
-                                                {{ $item->telephone }}
+                                                {{ $item->scientific_name }}
                                             </td>
-                                            <td>
-                                                {{ $item->email }}
-                                            </td>
-
                                             <td>
                                                 {{ dateFormat($item->created_at) }}
                                             </td>
@@ -145,27 +133,27 @@
                                                     <div class="dropdown-menu">
 
                                                         <a class="dropdown-item"
-                                                            href="{{ route('admin.users.edit', $item->id) }}">
+                                                            href="{{ route('admin.device.edit', $item->id) }}">
                                                             Editar
                                                         </a>
 
-
-                                                        <a onclick="removeItem({{ route('admin.users.delete', $item->id) }})"
-                                                            class="dropdown-item bg-danger text-light">
-                                                            Excluir
-                                                        </a>
-
                                                         @if ($item->status == 2)
-                                                            <a href="{{ route('admin.users.updateStatus', [$item->id, 9]) }}"
+                                                            <a href="{{ route('admin.plants.updateStatus', [$item->id, 9]) }}"
                                                                 class="dropdown-item bg-danger text-light">
                                                                 Desativar
                                                             </a>
                                                         @else
-                                                            <a href="{{ route('admin.users.updateStatus', [$item->id, 2]) }}"
-                                                                class="dropdown-item bg-danger text-light">
+                                                            <a href="{{ route('admin.plants.updateStatus', [$item->id, 2]) }}"
+                                                                class="dropdown-item">
                                                                 Ativar
                                                             </a>
                                                         @endif
+                                                        <a href="{{ route('admin.device.delete') }}"
+                                                            class="dropdown-item bg-danger text-light">
+                                                            Excluir
+                                                        </a>
+
+
                                                     </div>
                                                 </div>
 

@@ -1,21 +1,19 @@
 @extends('admin.layout.default')
 
-@section('style')
-    <link rel="stylesheet" href="{{ asset('style/list.css') }}">
-@endsection
 
-@section('title', 'Novo Usuário')
+@section('title', 'Editar senha do Usuário')
 
 @section('content')
     <div class="page-body">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 card">
-                    <form action="{{ route('admin.users.store') }}" method="post" enctype="multipart/form-data" class="card">
+                    <form action="{{ route('admin.users.updatePassword', $collaborator->id) }}" method="post" enctype="multipart/form-data"
+                        class="card">
                         @csrf
                         <div class="card-header">
                             <div class="col">
-                                <h4 class="card-title">Cadastrar Usuário</h4>
+                                <h4 class="card-title">Editar senha do Usuário</h4>
                             </div>
                             <div class="btn-list">
                                 <a href="{{ route('admin.users') }}" class="btn btn-outline-primary me-auto"
@@ -27,28 +25,6 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="row">
-                                    <div class="col-6 mb-3">
-
-                                        <label class="form-label" for="name">Nome</label>
-                                        <input type="text" class="form-control" name="name" id="name" required
-                                            aria-required="true">
-
-                                    </div>
-
-                                    <div class="col-6 mb-3">
-
-                                        <label class="form-label" for="telephone">Telefone</label>
-                                        <input type="text" class="form-control" name="telephone" id="telephone"
-                                            placeholder="Nome" required aria-required="true">
-
-                                    </div>
-                                    <div class="col-6 mb-3">
-
-                                        <label class="form-label" for="email">Email</label>
-                                        <input type="email" class="form-control" name="email" id="email"
-                                            placeholder="Nome" required aria-required="true">
-
-                                    </div>
                                     <div class="col-3 mb-3">
 
                                         <label class="form-label" for="password">Senha</label>

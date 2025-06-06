@@ -16,6 +16,7 @@
     {{-- JS --}}
     <script src="{{ asset('library/jquery/js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('library/jquery/js/jquery.mask.js') }}"></script>
+    <script src="{{ asset('js/mask.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
 
     <link rel="stylesheet" href="{{ asset('style/index.css') }}">
@@ -28,7 +29,9 @@
 </head>
 
 <body>
-    <header class="header">
+
+    <div class="page">
+         <header class="header">
         <div class="logo-nav-container">
             <div class="logo">
                 <img src="{{ asset('images/isologo-wh.png') }}" alt="">
@@ -42,15 +45,23 @@
                     <li><a href="{{ route('admin.list') }}">Colaboradores</a></li>
                     <li><a href="{{ route('admin.pumps') }}">Bomba</a></li>
                     <li><a href="{{ route('admin.plants') }}">Planta</a></li>
+                    <li><a href="{{ route('admin.logs') }}">Logs</a></li>
                 </div>
                 <a href="{{ route('admin.logout') }}" class="logout query">Sair</a>
             </ul>
         </div>
         <a href="{{ route('admin.logout') }}" class="logout normal">Sair</a>
     </header>
+        <div class="page-wrapper">
+
+            <x-alerts />
+
+            @yield('content')
+        </div>
+    </div>
+   
     <script src="{{ asset('js/header.js') }}"></script>
 
-    @yield('content')
     <script>
         function popup(id) {
             $('#id').attr('value', id)

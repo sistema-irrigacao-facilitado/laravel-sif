@@ -13,6 +13,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "laravellegends/pt-br-validator": "^11.0",
+        "rap2hpoutre/laravel-log-viewer": "^2.5",
         "swoft-laravel/validation": "^1.0",
         "x-laravel/validation-extend": "^1.0"
     },

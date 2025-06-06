@@ -24,29 +24,36 @@ class DeviceController extends Controller
 
     public function list(Request $request)
     {
-        $query = Device::query();
-        $filters = [
-            'id' => '=',
-            'model' => '=',
-            'numbering' => function ($query, $value) {
-                $query->where('numbering', 'like', '%' . $value . '%');
-            },
-            'created_at_from' => function ($query, $value) {
-                $query->whereDate('created_at', '>=', $value);
-            },
-            'created_at_to' => function ($query, $value) {
-                $query->whereDate('created_at', '<=', $value);
-            },
-            'status' => '=',
-        ];
-        $this->applyFilters($query, $request->session(), 'devices', $filters);
-        $collection = $query->orderBy('id')->paginate(30);
-        return view('admin.device.list', ['collection' => $collection]);
+        try {
+            $query = Device::query();
+            $filters = [
+                'id' => '=',
+                'model' => function ($query, $value) {
+                    $query->where('model', 'like', '%' . $value . '%');
+                },
+                'numbering' => function ($query, $value) {
+                    $query->where('numbering', 'like', '%' . $value . '%');
+                },
+                'created_at_from' => function ($query, $value) {
+                    $query->whereDate('created_at', '>=', $value);
+                },
+                'created_at_to' => function ($query, $value) {
+                    $query->whereDate('created_at', '<=', $value);
+                },
+                'status' => '=',
+            ];
+            $this->applyFilters($query, $request->session(), 'device', $filters);
+            $collection = $query->orderBy('id')->paginate(30);
+            return view('admin.devices.list', ['collection' => $collection]);
+        } catch (Exception $e) {
+            report($e);
+            return redirect()->back()->with('error', 'Ocorreu um erro ao salvar este dispositivo.');
+        }
     }
 
     public function new()
     {
-        return view('admin.device.new');
+        return view('admin.devices.new');
     }
 
     public function store(Request $request)
@@ -66,7 +73,7 @@ class DeviceController extends Controller
 
             return redirect()->route('admin.devices')->with('success', 'Dispositivo criado com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao salvar este dispositivo.');
         }
     }
@@ -74,7 +81,7 @@ class DeviceController extends Controller
     public function edit($id)
     {
         $device = Device::findOrFail($id);
-        return view('admin.device.edit', compact('device'));
+        return view('admin.devices.edit', compact('device'));
     }
 
     public function update(Request $request, $id)
@@ -93,7 +100,7 @@ class DeviceController extends Controller
 
             return redirect()->route('admin.devices')->with('success', 'Dispositivo atualizado com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este dispositivo.');
         }
     }
@@ -107,7 +114,7 @@ class DeviceController extends Controller
 
             return redirect()->route('admin.devices')->with('success', 'Status do dispositivo atualizado com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Erro ao atualizar o status do dispositivo.');
         }
     }
@@ -120,7 +127,7 @@ class DeviceController extends Controller
 
             return redirect()->route('admin.devices')->with('success', 'Dispositivo excluído com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Erro ao excluir o dispositivo.');
         }
     }

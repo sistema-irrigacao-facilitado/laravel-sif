@@ -57,12 +57,12 @@ class UserController extends Controller
         ];
         $this->applyFilters($query, $request->session(), 'users', $filters);
         $collection = $query->orderBy('id')->paginate(30);
-        return view('admin.user.list', ['collection' => $collection]);
+        return view('admin.users.list', ['collection' => $collection]);
     }
 
     public function new()
     {
-        return view('admin.user.new');
+        return view('admin.users.new');
     }
 
     public function store(Request $request)
@@ -84,9 +84,9 @@ class UserController extends Controller
 
             $user->save();
 
-            return redirect()->route('admin.user')->with('success', 'Usuário criado com sucesso');
+            return redirect()->route('admin.users')->with('success', 'Usuário criado com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao salvar este usuário.');
         }
     }
@@ -95,7 +95,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.user.edit', compact('user'));
+        return view('admin.users.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
@@ -104,7 +104,7 @@ class UserController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'telephone' => 'required|string|max:20',
-                'email' => 'required|email|unique:users,email',
+                'email' => 'required|email',
             ]);
 
             $user = User::findOrFail($id);
@@ -114,9 +114,9 @@ class UserController extends Controller
                 'email' => $request->email,
             ]);
 
-            return redirect()->route('admin.user')->with('success', 'Usuário atualizado com sucesso');
+            return redirect()->route('admin.users')->with('success', 'Usuário atualizado com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este usuário.');
         }
     }
@@ -124,7 +124,7 @@ class UserController extends Controller
     public function editPassword($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.user.password', compact('user'));
+        return view('admin.users.password', compact('user'));
     }
 
     public function updatePassword(Request $request, $id)
@@ -137,9 +137,9 @@ class UserController extends Controller
             $user->update([
                 'password' => Hash::make($request->password),
             ]);
-            return redirect()->route('admin.user.edit', $id)->with('success', 'Senha atualizada com sucesso');
+            return redirect()->route('admin.users.edit', $id)->with('success', 'Senha atualizada com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar a senha deste usuário');
         }
     }
@@ -151,9 +151,9 @@ class UserController extends Controller
             $user->status = $status;
             $user->save();
 
-            return redirect()->route('admin.user')->with('success', 'Status do usuário atualizado com sucesso');
+            return redirect()->route('admin.users')->with('success', 'Status do usuário atualizado com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Erro ao atualizar o status do usuário.');
         }
     }
@@ -164,9 +164,9 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             $user->delete();
 
-            return redirect()->route('admin.user')->with('success', 'Usuário excluído com sucesso');
+            return redirect()->route('admin.users')->with('success', 'Usuário excluído com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Erro ao excluir o usuário.');
         }
     }

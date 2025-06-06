@@ -21,7 +21,7 @@ class ManagerAdminSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => Hash::make('admin123'), 
             'telephone' => '11999999999',
-            'status' => '1',
+            'status' => '2',
         ]);
     }
 }

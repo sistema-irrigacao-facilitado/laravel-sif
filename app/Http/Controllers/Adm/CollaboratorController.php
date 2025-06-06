@@ -46,7 +46,7 @@ class CollaboratorController extends Controller
             },
             'status' => '=',
         ];
-        $this->applyFilters($query, $request->session(), 'admins', $filters);
+        $this->applyFilters($query, $request->session(), 'collaborator', $filters);
         $collection = $query->orderBy('id')->paginate(30);
         return view('admin.list', ['collection' => $collection]);
     }
@@ -77,7 +77,7 @@ class CollaboratorController extends Controller
 
             return redirect()->route('admin.list')->with('success', 'Colaborador criado com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao salvar este colaborador.');
         }
     }
@@ -89,7 +89,7 @@ class CollaboratorController extends Controller
         return view('admin.edit', compact('collaborator'));
     }
 
-     public function editPassword($id)
+    public function editPassword($id)
     {
         $collaborator = Collaborator::findOrFail($id);
         return view('admin.editPassword', compact('collaborator'));
@@ -116,7 +116,7 @@ class CollaboratorController extends Controller
 
             return redirect()->route('admin.list')->with('success', 'Colaborador atualizado com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este colaborador.');
         }
     }
@@ -139,7 +139,7 @@ class CollaboratorController extends Controller
 
             return redirect()->route('admin.list')->with('success', 'Colaborador atualizado com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este colaborador.');
         }
     }
@@ -154,7 +154,7 @@ class CollaboratorController extends Controller
 
             return redirect()->route('admin.list')->with('success', 'Status do colaborador atualizado com sucesso');
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Erro ao atualizar o status do colaborador.');
         }
     }
@@ -162,12 +162,15 @@ class CollaboratorController extends Controller
     public function delete($id)
     {
         try {
-            $collaborator = Collaborator::findOrFail($id);
-            $collaborator->delete();
-
-            return redirect()->route('admin.list')->with('success', 'Colaborador excluído com sucesso');
+            $collaborator = Collaborator::find($id);
+            if ($collaborator) {
+                $collaborator->delete();
+                return redirect()->route('admin.list')->with('success', 'Colaborador excluído com sucesso');
+            } else {
+                return redirect()->back()->with('error', 'O registro não foi encontrado.');
+            }
         } catch (Exception $e) {
-            Log::error($e);
+            report($e);
             return redirect()->back()->with('error', 'Erro ao excluir o colaborador.');
         }
     }

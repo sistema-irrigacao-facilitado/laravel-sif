@@ -17,7 +17,7 @@ return new class extends Migration
             $table->float('flow');
             $table->longText('image')->nullable();
             $table->integer('status')->default(2);
-            $table->string('obs', 255)->nullable();
+            $table->longText('obs', 255)->nullable();
 
             $table->timestamps();
             $table->softDeletes();

@@ -17,7 +17,8 @@
 
                             <div class="thead-buttons">
                                 <div class="text-end" style="margin-right: 10px;">
-                                    <a href="{{ route('filter_clear.page', 'collaborator') }}" class="btn btn-primary">Limpar
+                                    <a href="{{ route('filter_clear.page', 'collaborator') }}"
+                                        class="btn btn-primary">Limpar
                                         filtro</a>
                                 </div>
                                 <div class="text-end" style="margin-right: 10px;">
@@ -25,7 +26,7 @@
                                         form="filtro">Filtrar</button>
                                 </div>
                                 <div class="text-end">
-                                    <a class="btn btn-green" href="">Criar colaborador</a>
+                                    <a class="btn btn-green" href="{{ route('admin.new') }}">Criar colaborador</a>
                                 </div>
                             </div>
                         </div>
@@ -33,7 +34,8 @@
                             <table class="table card-table  table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <form action="{{ route('filter.page', 'collaborator') }}" method="POST" id="filtro">
+                                        <form action="{{ route('filter.page', 'collaborator') }}" method="POST"
+                                            id="filtro">
                                             @csrf
                                             <td>
                                                 <div class="mb-3">
@@ -108,7 +110,7 @@
                                         <th>ID.</th>
                                         <th>Nome</th>
                                         <th>Telefone</th>
-                                        <th>E-Mail</th>>
+                                        <th>E-Mail</th>
                                         <th>Criado</th>
                                         <th>Status</th>
                                         <th>Ação</th>
@@ -129,7 +131,7 @@
                                             <td>
                                                 {{ $item->email }}
                                             </td>
-                                            
+
                                             <td>
                                                 {{ dateFormat($item->created_at) }}
                                             </td>
@@ -138,36 +140,37 @@
 
                                             </td>
                                             <td>
-                                                
-                                                    <div class="dropdown">
-                                                        <a href="#" class="btn dropdown-toggle"
-                                                            data-bs-toggle="dropdown">Ação</a>
-                                                        <div class="dropdown-menu">
 
-                                                            <a class="dropdown-item" href="{{ route('admin.edit', $item->id) }}">
-                                                                Editar
+                                                <div class="dropdown">
+                                                    <a href="#" class="btn dropdown-toggle"
+                                                        data-bs-toggle="dropdown">Ação</a>
+                                                    <div class="dropdown-menu">
+
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('admin.edit', $item->id) }}">
+                                                            Editar
+                                                        </a>
+
+                                                        @if ($item->status == 2)
+                                                            <a href="{{ route('admin.updateStatus', [$item->id, 9]) }}"
+                                                                class="dropdown-item bg-danger text-light">
+                                                                Desativar
                                                             </a>
+                                                        @else
+                                                            <a href="{{ route('admin.updateStatus', [$item->id, 2]) }}"
+                                                                class="dropdown-item">
+                                                                Ativar
+                                                            </a>
+                                                        @endif
 
-                                                          
-                                                                <a href="{{ route('admin.users.delete', $item->id) }}"
-                                                                    class="dropdown-item bg-danger text-light">
-                                                                    Excluir
-                                                                </a>
-                                                         
-                                                            @if ($item->status == 2)
-                                                                <a href="{{ route('admin.updateStatus', [$item->id, 9]) }}"
-                                                                    class="dropdown-item bg-danger text-light">
-                                                                    Desativar
-                                                                </a>
-                                                            @else
-                                                                <a href="{{ route('admin.updateStatus', [$item->id, 2]) }}"
-                                                                    class="dropdown-item bg-danger text-light">
-                                                                    Ativar
-                                                                </a>
-                                                            @endif
-                                                        </div>
+                                                        <a href="{{ route('admin.delete', $item->id) }}"
+                                                            class="dropdown-item bg-danger text-light">
+                                                            Excluir
+                                                        </a>
+
                                                     </div>
-                                                
+                                                </div>
+
 
                                             </td>
                                         </tr>
@@ -185,8 +188,4 @@
         </div>
     </div>
 
-@endsection
-
-@section('script')
-    <script src="../../js/tabelas.js"></script>
 @endsection

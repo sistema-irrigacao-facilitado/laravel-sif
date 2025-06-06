@@ -14,6 +14,7 @@
                     <form action="{{ route('admin.pumps.update', $pump->id) }}" method="post" enctype="multipart/form-data"
                         class="card">
                         @csrf
+                        @method('PUT')
                         <div class="card-header">
                             <div class="col">
                                 <h4 class="card-title">Editar Bomba</h4>
@@ -49,7 +50,7 @@
                                         <div class="mb-3">
                                             <label class="form-label" for="image">Imagem</label>
                                             <input type="file" class="form-control" name="image" id="image"
-                                                required aria-required="true">
+                                               >
                                                <div class="actualImg"><img src="{{ asset('storage/' . $pump->image) }}" alt=""> <span>Imagem Atual</span></div>
                                         </div>
                                     </div>

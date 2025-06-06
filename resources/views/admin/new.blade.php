@@ -1,9 +1,5 @@
 @extends('admin.layout.default')
 
-@section('style')
-    <link rel="stylesheet" href="{{ asset('style/list.css') }}">
-@endsection
-
 @section('title', 'Novo Colaborador')
 
 @section('content')
@@ -31,36 +27,36 @@
 
                                         <label class="form-label" for="name">Nome</label>
                                         <input type="text" class="form-control" name="name" id="name" required
-                                            aria-required="true">
+                                            aria-required="true"  placeholder="Nome">
 
                                     </div>
 
                                     <div class="col-6 mb-3">
 
                                         <label class="form-label" for="telephone">Telefone</label>
-                                        <input type="text" class="form-control" name="telephone" id="telephone"
-                                            placeholder="Nome" required aria-required="true">
+                                        <input type="text" class="form-control phone" name="telephone" id="telephone"
+                                            placeholder="Telefone" required aria-required="true">
 
                                     </div>
                                     <div class="col-6 mb-3">
 
                                         <label class="form-label" for="email">Email</label>
                                         <input type="email" class="form-control" name="email" id="email"
-                                            placeholder="Nome" required aria-required="true">
+                                            placeholder="Email" required aria-required="true">
 
                                     </div>
                                     <div class="col-3 mb-3">
 
                                         <label class="form-label" for="password">Senha</label>
                                         <input type="password" class="form-control" name="password" id="password"
-                                            placeholder="Nome" required aria-required="true">
+                                            placeholder="Senha" required aria-required="true">
 
                                     </div>
                                     <div class="col-3 mb-3">
 
                                         <label class="form-label" for="password_confirmation">Confirmar senha</label>
                                         <input type="password" class="form-control" name="password_confirmation"
-                                            id="password_confirmation" placeholder="Nome" required aria-required="true">
+                                            id="password_confirmation" placeholder="Confirmar senha" required aria-required="true">
 
                                     </div>
                                 </div>

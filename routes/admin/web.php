@@ -31,11 +31,11 @@ Route::controller(DeviceController::class)->group(function () {
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.devices.update');
 
-        Route::put('/admin/devices/{id}/updateStatus/{status}',  'updateStatus')
+        Route::get('/admin/devices/{id}/updateStatus/{status}',  'updateStatus')
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.devices.updateStatus');
 
-        Route::delete('/admin/devices/{id}', 'delete')
+        Route::get('/admin/devices/delete/{id}', 'delete')
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.devices.delete');
 });
@@ -69,11 +69,11 @@ Route::controller(UserController::class)->group(function () {
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.users.updatePassword');
 
-        Route::put('/admin/users/{id}/updateStatus/{status}',  'updateStatus')
+        Route::get('/admin/users/{id}/updateStatus/{status}',  'updateStatus')
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.users.updateStatus');
 
-        Route::delete('/admin/users/{id}', 'delete')
+        Route::get('/admin/users/delete/{id}', 'delete')
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.users.delete');
 });
@@ -103,11 +103,11 @@ Route::controller(AdmCollaboratorController::class)->group(function () {
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.update');
 
-        Route::put('/admin/{id}/updateStatus/{status}',  'updateStatus')
+        Route::get('/admin/{id}/updateStatus/{status}',  'updateStatus')
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.updateStatus');
 
-        Route::delete('/admin/{id}', 'delete')
+        Route::get('/admin/delete/{id}', 'delete')
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.delete');
 
@@ -141,11 +141,11 @@ Route::controller(PumpController::class)->group(function () {
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.pumps.update');
 
-        Route::put('/admin/pumps/{id}/updateStatus/{status}',  'updateStatus')
+        Route::get('/admin/pumps/{id}/updateStatus/{status}',  'updateStatus')
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.pumps.updateStatus');
 
-        Route::delete('/admin/pumps/{id}', 'delete')
+        Route::get('/admin/pumps/delete/{id}', 'delete')
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.pumps.delete');
 });
@@ -171,11 +171,15 @@ Route::controller(PlantController::class)->group(function () {
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.plants.update');
 
-        Route::put('/admin/plants/{id}/updateStatus/{status}',  'updateStatus')
+        Route::get('/admin/plants/{id}/updateStatus/{status}',  'updateStatus')
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.plants.updateStatus');
 
-        Route::delete('/admin/plants/{id}', 'delete')
+        Route::get('/admin/plants/delete/{id}', 'delete')
         ->middleware(['auth:admin', 'verified'])
         ->name('admin.plants.delete');
 });
+
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])
+    ->middleware(['auth:admin', 'verified'])
+    ->name('admin.logs');
