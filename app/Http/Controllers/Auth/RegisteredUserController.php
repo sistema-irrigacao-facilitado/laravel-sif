@@ -32,30 +32,30 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         try {
-            $request->validate([
-                'name' => ['required', 'string', 'max:255'],
-                'lastname' => ['required', 'string', 'max:255'],
-                'telephone' => ['required', 'string', 'max:150'],
-                'email' => ['nullable', 'string', 'email:rfc,dns', 'max:255'],
-                'perfil' => ['required', 'string', 'max:255'],
-                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+           $request->validate([
+                'name' => 'required|string|max:255',
+                'telephone' => 'required|string|max:20',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:6|confirmed',
             ]);
+            $user = new User();
 
-            $user = User::create([
-                'name' => $request->name,
-                'lastname' => $request->lastname,
-                'telephone' => $request->telephone,
-                'perfil' => $request->perfil,
-                'status' => 2,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
 
-            event(new Registered($user));
+            $user->name = $request->name;
+            $user->telephone = $request->telephone;
+            $user->status = 2;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
 
-            Auth::login($user);
+            $user->save();
+            if ($user) {
+                event(new Registered($user));
 
-            return redirect(route('dashboard', absolute: false));
+                Auth::login($user);
+
+                return redirect(route('dashboard', absolute: false));
+            }
+            return redirect()->back()->with('error', 'Não foi possivel fazer o cadastro');
         } catch (ValidationException $e) {
             // Captura erro de validação e retorna os erros com old input
             return redirect()->back()

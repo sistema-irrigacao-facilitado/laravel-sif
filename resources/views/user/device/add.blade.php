@@ -11,7 +11,6 @@
 <body>
     <div class="helcome">
         <div class="helloBlock">
-            <h1>Olá {{ getAuthUser()->name }}.</h1>
             <p>Você está prestes a adicionar seu novo dispositivo SIF, caso tenha dificuldades, siga os passos a seguir.</p>
         </div>
         <div class="backBlock">

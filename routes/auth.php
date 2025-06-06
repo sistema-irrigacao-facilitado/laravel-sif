@@ -23,7 +23,7 @@ Route::prefix('user')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
     ->name('user.register');
 
-    Route::post('registerStore', [RegisteredUserController::class, 'create'])
+    Route::post('registerStore', [RegisteredUserController::class, 'store'])
     ->name('user.register.store');
 });
 

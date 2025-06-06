@@ -9,9 +9,7 @@
 @section('title', 'Configurações do Dispositivo')
 
 @section('content')
-    <a href="#" target="_blank">
-        <div class="whats"><img src="{{ asset('images/wapp.png') }}" alt=""></div>
-    </a>
+
     {{-- $device, $dataDevice, $plant, $pump --}}
     <main>
         <div class="container">

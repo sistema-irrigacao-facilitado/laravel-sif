@@ -9,10 +9,6 @@
 
 @section('content')
 
-    <a href="#" target="_blank">
-        <div class="whats"><img src="{{ asset('images/wapp.png') }}" alt=""></div>
-    </a>
-
     <div class="helcome">
         <h1>Bem vindo&#10098;a&#10099; {{ $user->name }} </h1>
     </div>
