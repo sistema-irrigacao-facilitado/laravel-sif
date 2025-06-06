@@ -133,7 +133,7 @@
                                                     <div class="dropdown-menu">
 
                                                         <a class="dropdown-item"
-                                                            href="{{ route('admin.device.edit', $item->id) }}">
+                                                            href="{{ route('admin.plants.edit', $item->id) }}">
                                                             Editar
                                                         </a>
 
@@ -148,7 +148,7 @@
                                                                 Ativar
                                                             </a>
                                                         @endif
-                                                        <a href="{{ route('admin.device.delete') }}"
+                                                        <a href="{{ route('admin.plants.delete', $item->id) }}"
                                                             class="dropdown-item bg-danger text-light">
                                                             Excluir
                                                         </a>

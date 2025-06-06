@@ -25,7 +25,7 @@
                                         form="filtro">Filtrar</button>
                                 </div>
                                 <div class="text-end">
-                                    <a class="btn btn-green" href="{{ route('admin.devices.new', $item->id) }}">Criar
+                                    <a class="btn btn-green" href="{{ route('admin.devices.new') }}">Criar
                                         dispositivo</a>
                                 </div>
                             </div>
@@ -141,7 +141,7 @@
                                                             Editar
                                                         </a>
 
-                                                         @switch($type)
+                                                         @switch($item->status)
                                                             @case(0)
                                                             <a href="{{ route('admin.devices.updateStatus', [$item->id, 1]) }}"
                                                                 class="dropdown-item">

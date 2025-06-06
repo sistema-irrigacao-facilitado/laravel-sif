@@ -27,5 +27,9 @@ class UserLoginController extends Controller
     public function showLoginForm(){
         return view('auth/user/login');
     }
+    
+    public function showRegisterForm(){
+        return view('auth.user.register');
+    }
 }
 

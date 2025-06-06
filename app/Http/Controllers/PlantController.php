@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class PlantController extends Controller
 {
@@ -44,53 +45,59 @@ class PlantController extends Controller
         ];
         $this->applyFilters($query, $request->session(), 'plants', $filters);
         $collection = $query->orderBy('id')->paginate(30);
-        return view('admin.plants', ['collection' => $collection]);
+        return view('admin.plants.list', ['collection' => $collection]);
     }
 
-     public function new()
+    public function new()
     {
         return view('admin.plants.new');
     }
 
     public function store(Request $request)
-{
-    try {
-        $request->validate([
-            'common_name' => 'required|string|max:255',
-            'scientific_name' => 'required|string|max:255',
-            'water_need' => 'required|string|max:255',
-            'soil_type' => 'required|string|max:255',
-            'humidity_tolerance' => 'required|string|max:255',
-            'temperature_tolerance' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'obs' => 'nullable|string',
-        ]);
+    {
+        try {
+            $request->validate([
+                'common_name' => 'required|string|max:255',
+                'scientific_name' => 'required|string|max:255',
+                'water_need' => 'required|string|max:255',
+                'soil_type' => 'required|string|max:255',
+                'humidity_tolerance' => 'required|string|max:255',
+                'temperature_tolerance' => 'required|string|max:255',
+                'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+                'obs' => 'nullable|string',
+            ]);
 
-        $imagePath = null;
+            $imagePath = null;
 
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('plants', 'public');
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('plants', 'public');
+            }
+
+            $plant = new Plant([
+                'common_name' => $request->common_name,
+                'scientific_name' => $request->scientific_name,
+                'water_need' => $request->water_need,
+                'soil_type' => $request->soil_type,
+                'humidity_tolerance' => $request->humidity_tolerance,
+                'temperature_tolerance' => $request->temperature_tolerance,
+                'image' => $imagePath,
+                'obs' => $request->obs,
+            ]);
+
+            $plant->save();
+
+            return redirect()->route('admin.plants')->with('success', 'Planta criada com sucesso');
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Ocorreu um erro ao salvar esta planta.');
         }
-
-        $plant = new Plant([
-            'common_name' => $request->common_name,
-            'scientific_name' => $request->scientific_name,
-            'water_need' => $request->water_need,
-            'soil_type' => $request->soil_type,
-            'humidity_tolerance' => $request->humidity_tolerance,
-            'temperature_tolerance' => $request->temperature_tolerance,
-            'image' => $imagePath,
-            'obs' => $request->obs,
-        ]);
-
-        $plant->save();
-
-        return redirect()->route('admin.plants')->with('success', 'Planta criada com sucesso');
-    } catch (Exception $e) {
-        Log::error($e);
-        return redirect()->back()->with('error', 'Ocorreu um erro ao salvar esta planta.');
     }
-}
 
 
     public function edit($id)
@@ -99,43 +106,49 @@ class PlantController extends Controller
         return view('admin.plants.edit', compact('plant'));
     }
 
-   public function update(Request $request, $id)
-{
-    try {
-        $request->validate([
-            'common_name' => 'required|string|max:255',
-            'scientific_name' => 'required|string|max:255',
-            'water_need' => 'required|string|max:255',
-            'soil_type' => 'required|string|max:255',
-            'humidity_tolerance' => 'required|string|max:255',
-            'temperature_tolerance' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'obs' => 'nullable|string',
-        ]);
+    public function update(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'common_name' => 'required|string|max:255',
+                'scientific_name' => 'required|string|max:255',
+                'water_need' => 'required|string|max:255',
+                'soil_type' => 'required|string|max:255',
+                'humidity_tolerance' => 'required|string|max:255',
+                'temperature_tolerance' => 'required|string|max:255',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'obs' => 'nullable|string',
+            ]);
 
-        $plant = Plant::findOrFail($id);
+            $plant = Plant::findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('plants', 'public');
-            $plant->image = $imagePath;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('plants', 'public');
+                $plant->image = $imagePath;
+            }
+
+            $plant->update([
+                'common_name' => $request->common_name,
+                'scientific_name' => $request->scientific_name,
+                'water_need' => $request->water_need,
+                'soil_type' => $request->soil_type,
+                'humidity_tolerance' => $request->humidity_tolerance,
+                'temperature_tolerance' => $request->temperature_tolerance,
+                'obs' => $request->obs,
+            ]);
+
+            return redirect()->route('admin.plants')->with('success', 'Planta atualizada com sucesso');
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar esta planta.');
         }
-
-        $plant->update([
-            'common_name' => $request->common_name,
-            'scientific_name' => $request->scientific_name,
-            'water_need' => $request->water_need,
-            'soil_type' => $request->soil_type,
-            'humidity_tolerance' => $request->humidity_tolerance,
-            'temperature_tolerance' => $request->temperature_tolerance,
-            'obs' => $request->obs,
-        ]);
-
-        return redirect()->route('admin.plants')->with('success', 'Planta atualizada com sucesso');
-    } catch (Exception $e) {
-        Log::error($e);
-        return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar esta planta.');
     }
-}
 
 
     public function updateStatus($id, $status)
@@ -165,17 +178,18 @@ class PlantController extends Controller
         }
     }
 
-    public function select($id){
+    public function select($id)
+    {
         $user = User::find(getAuthUser()->id);
         $device = Device::findOrFail($id)->first();
         $plants = Plant::paginate();
         foreach ($plants as $plant) {
             // Decodificando a imagem
             $decodedImage = base64_decode($plant->image);
-    
+
             // Criando um data URI (recomendado para evitar criar arquivos temporários)
             $imageDataUri = 'data:image/jpeg;base64,' . base64_encode($decodedImage);
-    
+
             // Passando os dados para a view
             $plant->image_url = $imageDataUri;
         }
@@ -185,11 +199,11 @@ class PlantController extends Controller
                 if (!$device) {
                     return redirect()->route('dashboard');
                 }
-                
+
                 if ($device->status != 2) {
                     return redirect()->route('dashboard');
                 }
-                if(!$plants){
+                if (!$plants) {
                     return redirect()->route('dashboard');
                 }
                 return view('user.device.select.plant', [
@@ -236,6 +250,4 @@ class PlantController extends Controller
 
         return redirect()->route('logout');
     }
-
-    
 }

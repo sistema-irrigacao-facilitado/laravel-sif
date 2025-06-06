@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -85,6 +86,12 @@ class UserController extends Controller
             $user->save();
 
             return redirect()->route('admin.users')->with('success', 'Usuário criado com sucesso');
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
         } catch (Exception $e) {
             report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao salvar este usuário.');
@@ -115,6 +122,12 @@ class UserController extends Controller
             ]);
 
             return redirect()->route('admin.users')->with('success', 'Usuário atualizado com sucesso');
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
         } catch (Exception $e) {
             report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este usuário.');
@@ -138,6 +151,12 @@ class UserController extends Controller
                 'password' => Hash::make($request->password),
             ]);
             return redirect()->route('admin.users.edit', $id)->with('success', 'Senha atualizada com sucesso');
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
         } catch (Exception $e) {
             report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar a senha deste usuário');

@@ -49,6 +49,7 @@
         <a href="{{ route('user.logout') }}" class="logout normal">Sair</a>
     </header>
     <script src="{{ asset('js/header.js') }}"></script>
+    <x-alerts />
 
     @yield('content')
     <script>

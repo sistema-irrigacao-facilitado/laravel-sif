@@ -13,15 +13,8 @@
     <div class="formBlock">
         <img src="{{ asset('images/isologo-gr.png') }}" alt="">
         <h2>Otimize seu tempo e sua plantação</h2>
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        <x-alerts />
+
         <form action="{{ route('user.login') }}" method="post">
             @csrf
             <input type="text" name="email" id="email" placeholder="Email" required
@@ -44,7 +37,7 @@
                     maxlength="24" >
             </div>
             <button type="submit" class="btn"> <strong>ENTRAR</strong></button>
-            <p>Ainda não possui uma conta? <a href="{{ url('/register') }}" class="cadastre">Cadastre-se</a></p>
+            <p>Ainda não possui uma conta? <a href="{{ route('user.register') }}" class="cadastre">Cadastre-se</a></p>
 
         </form>
     </div>

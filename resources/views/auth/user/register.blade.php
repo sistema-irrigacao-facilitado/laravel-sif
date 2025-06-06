@@ -18,23 +18,16 @@
 </div>
 
 <div class="container">
-    <a href="{{ url('/login') }}" class="voltar"><svg xmlns="http://www.w3.org/2000/svg" width="22.769" height="14.821">
+    <a href="{{ route('user.login') }}" class="voltar"><svg xmlns="http://www.w3.org/2000/svg" width="22.769" height="14.821">
             <path d="M10.212 12.007 7.645 9.414h15.124v-4H7.62l2.585-2.586L7.377 0 0 7.378l7.37 7.443 2.842-2.814z" />
         </svg></a>
     <div>
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        <x-alerts/>
+
         <h1>Cadastro</h1>
         <p>Torne sua vida mais prática e tranquila com S.I.F</p>
     </div>
-    <form action="{{ route('register') }}" method="POST">
+    <form action="{{ route('user.register.store') }}" method="POST">
         @csrf
         <div class="doble">
             <div class="campo">

@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class DeviceController extends Controller
 {
@@ -72,6 +73,12 @@ class DeviceController extends Controller
             $device->save();
 
             return redirect()->route('admin.devices')->with('success', 'Dispositivo criado com sucesso');
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
         } catch (Exception $e) {
             report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao salvar este dispositivo.');
@@ -99,6 +106,12 @@ class DeviceController extends Controller
             ]);
 
             return redirect()->route('admin.devices')->with('success', 'Dispositivo atualizado com sucesso');
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
         } catch (Exception $e) {
             report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este dispositivo.');

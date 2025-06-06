@@ -9,6 +9,7 @@ use App\Models\Collaborator;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class CollaboratorController extends Controller
 {
@@ -76,6 +77,12 @@ class CollaboratorController extends Controller
             $collaborator->save();
 
             return redirect()->route('admin.list')->with('success', 'Colaborador criado com sucesso');
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
         } catch (Exception $e) {
             report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao salvar este colaborador.');
@@ -115,6 +122,12 @@ class CollaboratorController extends Controller
             $collaborator->update($data);
 
             return redirect()->route('admin.list')->with('success', 'Colaborador atualizado com sucesso');
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
         } catch (Exception $e) {
             report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este colaborador.');
@@ -138,6 +151,12 @@ class CollaboratorController extends Controller
             $collaborator->update($data);
 
             return redirect()->route('admin.list')->with('success', 'Colaborador atualizado com sucesso');
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
         } catch (Exception $e) {
             report($e);
             return redirect()->back()->with('error', 'Ocorreu um erro ao atualizar este colaborador.');

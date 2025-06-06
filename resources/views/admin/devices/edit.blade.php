@@ -1,9 +1,5 @@
 @extends('admin.layout.default')
 
-@section('style')
-    <link rel="stylesheet" href="{{ asset('style/list.css') }}">
-@endsection
-
 @section('title', 'Editar Dispositivo')
 
 @section('content')
@@ -32,7 +28,7 @@
                                     <div class="col-6">
                                         <div class="mb-3">
                                             <label class="form-label" for="numbering">Numeração</label>
-                                            <input type="text" class="form-control" value="{{ $device->numbering }}" name="numbering" id="numbering"
+                                            <input type="text" class="form-control numbering" value="{{ $device->numbering }}" name="numbering" id="numbering"
                                                 required aria-required="true">
                                         </div>
                                     </div>

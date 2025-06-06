@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class PumpController extends Controller
 {
@@ -71,6 +72,12 @@ class PumpController extends Controller
             $pump->save();
 
             return redirect()->route('admin.pumps')->with('success', "Bomba d'água criada com sucesso");
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
         } catch (Exception $e) {
             Log::error($e);
             return redirect()->back()->with('error', "Ocorreu um erro ao salvar esta bomba d'água.");
@@ -105,6 +112,12 @@ class PumpController extends Controller
             $pump->save();
 
             return redirect()->route('admin.pumps')->with('success', "Bomba atualizada com sucesso");
+        } catch (ValidationException $e) {
+            // Captura erro de validação e retorna os erros com old input
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Erro ao validar os dados. Verifique os campos informados.');
         } catch (Exception $e) {
             Log::error($e);
             return redirect()->back()->with('error', "Ocorreu um erro ao atualizar esta bomba.");

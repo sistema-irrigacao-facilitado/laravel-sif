@@ -1,9 +1,5 @@
 @extends('admin.layout.default')
 
-@section('style')
-    <link rel="stylesheet" href="{{ asset('style/list.css') }}">
-@endsection
-
 @section('title', 'Novo Usuário')
 
 @section('content')
