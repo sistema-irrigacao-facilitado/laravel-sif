@@ -42,6 +42,7 @@ Inicialmente desenvolvido em PHP puro, foi posteriormente migrado para **Laravel
 
    ```bash
    php artisan storage:link
+   ```
 
    
 ---
