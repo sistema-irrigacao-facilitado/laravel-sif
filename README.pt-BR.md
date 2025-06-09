@@ -37,7 +37,13 @@ Inicialmente desenvolvido em PHP puro, foi posteriormente migrado para **Laravel
    ```bash
    php artisan migrate
    ```
+   
+5. Crie o link público do storage.
 
+   ```bash
+   php artisan storage:link
+
+   
 ---
 
 ## 🗂 Estrutura do Projeto
@@ -97,3 +103,15 @@ php artisan db:seed --class=ManagerAdminSeeder
 ```bash
 docker-compose.yml
 ```
+
+## ESP32
+Neste projeto utilizamo o ESP32, um microcontrolador com acesso a modulo Wi-Fi para realizar a irrigação e mandar os dados para o sistema, o codigo .ino estará dentro do arquivo "esp32".
+
+Nele precisaremos alterar o SSID - Nome da sua rede Wi-Fi, e a senha dela em "password".
+![image](https://github.com/user-attachments/assets/6359b47a-1dbe-4645-8516-50ddc7d027b2)
+
+Precisaremos tambem alterar a numeração do nosso dispositivo, é a partir dele que o sistema reconhecerá a quem esta vinculado e suas configurações, cada numeração deve ter exatamente 8 digitos, todos numeros, podemos alterar isso no codigo na linha abaixo:
+![image](https://github.com/user-attachments/assets/968a3bf2-697e-4317-ba0d-e4ecc35239ec)
+
+Após fazer e conferir as nossas alterações, podemos estar enviando o codigo para o ESP, recomendamos que utilize o Arduino IDE para isso.
+
