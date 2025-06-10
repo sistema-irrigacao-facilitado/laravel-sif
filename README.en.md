@@ -32,13 +32,21 @@ Originally built in pure PHP, the project was upgraded to **Laravel** to simplif
    docker compose exec app bash
    ```
 
-4. Run the migrations:
+4. Install composer and generate the project key:
+
+   ```bash
+   composer install
+   php artisan key:generate
+   ```
+
+
+5. Run the migrations:
 
    ```bash
    php artisan migrate
    ```
 
-5. Create the public storage link:
+6. Create the public storage link:
 
    ```bash
    php artisan storage:link

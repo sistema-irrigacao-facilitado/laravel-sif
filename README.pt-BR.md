@@ -32,13 +32,20 @@ Inicialmente desenvolvido em PHP puro, foi posteriormente migrado para **Laravel
    docker compose exec app bash
    ```
 
-4. Rode as migrações:
+4. Faça a instalação do composer e gere a key do projeto:
+
+   ```bash
+   composer install
+   php artisan key:generate
+   ```
+
+5. Rode as migrações:
 
    ```bash
    php artisan migrate
    ```
    
-5. Crie o link público do storage.
+6. Crie o link público do storage.
 
    ```bash
    php artisan storage:link
