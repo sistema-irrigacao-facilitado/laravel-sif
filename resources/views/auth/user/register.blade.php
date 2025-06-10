@@ -7,14 +7,6 @@
 @section('title', 'Cadastro - SIF')
 
 @section('content')
-    <div class="steps">
-        <div class="row"></div>
-        <div class="passoAtual">
-            <div class="circulo cA">1</div>
-            <p>Cadastro</p>
-        </div>
-        <div class="circulo cP">2</div>
-    </div>
 
     <div class="container">
         <a href="{{ route('user.login') }}" class="voltar"><svg xmlns="http://www.w3.org/2000/svg" width="22.769"
@@ -30,43 +22,44 @@
         <form action="{{ route('user.register.store') }}" method="POST">
             @csrf
             <div class="row">
-                <div class="col-12">
-                    <div class="campo">
-                        <input class="input" placeholder="Nome Completo" type="text" name="name" id="name"
-                            required maxlength="250">
-                        <span class="input-border"></span>
-                    </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label">Nome Completo</label>
+                    <input class="form-control" placeholder="Nome Completo" type="text" name="name" id="name"
+                        required maxlength="250">
+
+
                 </div>
-                <div class="col-6">
-                    <div class="campo">
-                        <input class="input" placeholder="Telefone" required minlength="15" type="text" name="telephone"
-                            id="telephone">
-                        <span class="input-border"></span>
-                    </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label">Telefone</label>
+                    <input class="form-control" placeholder="Telefone" required minlength="15" type="text"
+                        name="telephone" id="telephone">
+
+
                 </div>
-            </div>
-            <div class="col-6">
-                <div class="campo">
-                    <input class="input" placeholder="Email" maxlength="200" type="text" name="email">
-                    <span class="input-border"></span>
+                <div class="col-6 mb-3">
+                    <label class="form-label">Email</label>
+                    <input class="form-control" placeholder="Email" maxlength="200" type="text" name="email">
+
+
                 </div>
-            </div>
-            <div class="col-6">
-                <div class="campo">
-                    <input class="input" placeholder="Senha" required minlength="8" maxlength="24" type="password"
+                <div class="col-6 mb-5">
+                    <label class="form-label">Senha</label>
+                    <input class="form-control" placeholder="Senha" required minlength="8" maxlength="24" type="password"
                         name="password">
-                    <span class="input-border"></span>
+
+
                 </div>
-            </div>
-            <div class="col-6">
-                <div class="campo">
-                    <input class="input" placeholder="Repita a Senha" required minlength="8" maxlength="24"
+                <div class="col-6 mb-5">
+                    <label class="form-label">Repita a Senha</label>
+                    <input class="form-control" placeholder="Repita a Senha" required minlength="8" maxlength="24"
                         type="password" name="password_confirmation">
-                    <span class="input-border"></span>
+
+
                 </div>
+                <button type="submit" class="btn btn-success col-4 offset-4">Cadastre-se</button>
+
             </div>
 
-            <button type="submit" class="cadButton">Cadastre-se</button>
         </form>
     </div>
 @endsection

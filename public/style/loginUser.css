@@ -20,7 +20,7 @@ body{
     align-items: center;
     justify-content: space-evenly;
     min-height: 100vh;
-    background-color: #161616ee;
+    background-color: #161616ee !important;
     position: relative;
 }
 main{
@@ -82,12 +82,12 @@ button{
     width: 50%;
     border: 2px solid #1a242f;
     border-radius: 10px;
-    background-color: rgb(191, 230, 217);
+    background-color: rgb(191, 230, 217) !important;
     cursor: pointer;
     transition: 0.2s;
 }
 button:hover{
-    background-color: rgb(54, 77, 69);
+    background-color: rgb(54, 77, 69) !important;
     color: white;
 }
 form p{
