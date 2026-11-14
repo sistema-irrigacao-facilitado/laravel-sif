@@ -9,28 +9,34 @@
 
 @section('content')
 
-    <main>
-        <div class="vavav">
-            <h1>Acompanhe os dados que seu dispositivo captura.</h1>
-            <a href="{{ route('dashboard') }}" class="voltar">Voltar</a>
-        </div> <br>
+    <main class="relatorio">
+        <a href="{{ route('dashboard') }}" class="voltar">Voltar</a>
+        <h1>Relatório do dispositivo</h1>
+        <p class="relatorio-sub">{{ $device->model }} · N° {{ $device->numbering }}</p>
+
+        @php
+            $chaves = $perMode == 2
+                ? ['hum' => 'average_humidity', 'temp' => 'average_temperature', 'lit' => 'average_liters']
+                : ['hum' => 'humidity', 'temp' => 'temperature', 'lit' => 'liters_pump'];
+            $ultimo = fn($k) => collect($values[$k] ?? [])->last();
+            $fmt = fn($v, $un) => $v === null ? '—' : number_format((float) $v, 1, ',', '') . $un;
+        @endphp
+
+        <div class="kpis">
+            <div class="kpi kpi-umidade"><span class="kpi-rotulo">Umidade</span><span class="kpi-valor">{{ $fmt($ultimo($chaves['hum']), '%') }}</span><span class="kpi-nota">último registro</span></div>
+            <div class="kpi kpi-temp"><span class="kpi-rotulo">Temperatura</span><span class="kpi-valor">{{ $fmt($ultimo($chaves['temp']), ' °C') }}</span><span class="kpi-nota">último registro</span></div>
+            <div class="kpi kpi-litros"><span class="kpi-rotulo">Água usada</span><span class="kpi-valor">{{ $fmt($ultimo($chaves['lit']), ' L') }}</span><span class="kpi-nota">último registro</span></div>
+        </div>
+
         <div class="resultado">
             <form method="GET" action="" class="formFiltro">
-
                 <div class="filt">
-                    <label for="time">Periodo:</label>
+                    <label for="time">Período:</label>
                     <select id="time" name="time">
-                        <option value="" selected>Selecione</option>
-                        <option value="1">1 Hora</option>
-                        <option value="2">2 Hora</option>
-                        <option value="3">3 Hora</option>
-                        <option value="4">4 Hora</option>
-                        <option value="6">6 Hora</option>
-                        <option value="12">12 Hora</option>
-                        <option value="24">24 Hora</option>
-                        <option value="7">7 Dias</option>
-                        <option value="31">1 Mês</option>
-                        <option value="93">3 Mêses</option>
+                        <option value="">Última hora</option>
+                        @foreach (['1' => '1 hora', '2' => '2 horas', '3' => '3 horas', '4' => '4 horas', '6' => '6 horas', '12' => '12 horas', '24' => '24 horas', '7' => '7 dias', '31' => '1 mês', '93' => '3 meses'] as $v => $rotulo)
+                            <option value="{{ $v }}" @selected(request('time') == $v)>{{ $rotulo }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <input type="text" name="from" id="from" style="display: none;">
@@ -38,11 +44,15 @@
                 <button type="submit" class="filtro">Filtrar</button>
             </form>
 
-            <div id="chart"></div>
+            @if ($collection->isEmpty())
+                <div class="sem-dados-grafico">
+                    <strong>Nenhum dado neste período.</strong>
+                    <span>Escolha um período maior ou verifique se o dispositivo está ligado e conectado à internet.</span>
+                </div>
+            @endif
+            <div id="chart" @if ($collection->isEmpty()) style="display:none" @endif></div>
 
-
-
-            <div class="time" style="margin-top: 5px">Exibindo Dados: </div>
+            <div class="time" style="margin-top: 5px">Exibindo dados: </div>
         </div>
     </main>
 

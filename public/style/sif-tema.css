@@ -1,0 +1,122 @@
+/* SIF — camada de polimento (UI/UX). Mantém a identidade: header escuro, verde #008060, amarelo de destaque, títulos em Merriweather. */
+:root {
+    --sif-bg: #f0f2f5;
+    --sif-surface: #ffffff;
+    --sif-linha: #e3e8ee;
+    --sif-texto: #1d201e;
+    --sif-muted: #66737f;
+    --sif-raio: 14px;
+    --sif-sombra: 0 1px 2px rgba(29, 32, 30, .06), 0 8px 24px rgba(29, 32, 30, .07);
+    --sif-foco: 0 0 0 3px rgba(0, 128, 96, .25);
+}
+
+body { background: var(--sif-bg); color: var(--sif-texto); -webkit-font-smoothing: antialiased; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: none; box-shadow: var(--sif-foco); }
+
+/* ---------- Header ---------- */
+.header { position: sticky; top: 0; z-index: 50; margin-bottom: 24px; padding: 6px 5%; box-shadow: 0 2px 12px rgba(0, 0, 0, .3); }
+.logo img { height: 56px; width: auto; }
+.nav li a { padding: 6px 10px; border-radius: 8px; font-weight: 600; opacity: .85; transition: background .2s, opacity .2s; }
+.nav li a:hover { opacity: 1; background: rgba(255, 255, 255, .1); }
+.logout { border-width: 2px; border-color: rgba(235, 80, 80, .6); font-size: .9rem; padding: 5px 12px; }
+
+/* ---------- Voltar (padrão único) ---------- */
+.voltar, .backBlock a {
+    position: static !important; display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 2px !important; margin: 0 0 10px; background: none !important; color: var(--sif-muted) !important;
+    border: none !important; border-radius: 8px; font-weight: 600; font-size: .92rem; transition: color .2s;
+}
+.voltar::before, .backBlock a::before { content: "←"; }
+.voltar:hover, .backBlock a:hover { color: #008060 !important; text-decoration: none; background: none !important; }
+
+/* ---------- Títulos ---------- */
+h1 { font-size: clamp(1.35rem, 4.5vw, 1.9rem); line-height: 1.25; }
+.helcome h1 { margin: 0; }
+.sectionDispositivos > h2 { margin: 0 0 4px; font-size: 1.15rem; color: var(--sif-muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+
+/* ---------- Dashboard: cartões de dispositivo ---------- */
+.dispositivo {
+    border: 1px solid var(--sif-linha); border-radius: var(--sif-raio); box-shadow: var(--sif-sombra);
+    transition: transform .2s, box-shadow .2s;
+}
+.dispositivo:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(29, 32, 30, .12); }
+.dispositivo h3 { font-size: .95rem; color: var(--sif-muted); text-transform: uppercase; letter-spacing: .05em; font-family: var(--fonte-padrao); }
+.getModelo { font-weight: 800; font-size: 1.1rem; }
+.getNum { color: var(--sif-muted); font-size: .85rem; }
+.dispL2 { border-top: 1px solid var(--sif-linha); padding-top: 14px; }
+.sem-dados { width: 100%; padding: 10px 12px; border-radius: 10px; background: #fff8e1; color: #8a6100; font-size: .88rem; line-height: 1.4; margin-bottom: 4px; }
+.ancoragem a, .ancoragem .aButtonExcluir { cursor: pointer; border-radius: 10px; transition: background .2s; }
+.ancoragem a:hover { background: var(--sif-bg); }
+.addDevice, a.addDevice, .adicionarDispositivo { transition: transform .15s, box-shadow .2s; }
+
+/* ---------- Relatório ---------- */
+main.relatorio { width: min(92vw, 880px); margin: 0 auto 48px; padding-top: 4px; }
+.relatorio h1 { margin: 0; }
+.relatorio-sub { color: var(--sif-muted); margin: 2px 0 18px; font-size: .92rem; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+.kpi {
+    display: flex; flex-direction: column; padding: 14px 16px; background: var(--sif-surface);
+    border: 1px solid var(--sif-linha); border-top: 4px solid var(--c, #999); border-radius: var(--sif-raio); box-shadow: var(--sif-sombra);
+}
+.kpi-umidade { --c: #1a73e8; } .kpi-temp { --c: #ff6d00; } .kpi-litros { --c: #8e24aa; }
+.kpi-rotulo { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--sif-muted); }
+.kpi-valor { font-size: 1.5rem; font-weight: 800; line-height: 1.2; color: var(--c); font-family: var(--fonte-padrao); }
+.kpi-nota { font-size: .72rem; color: var(--sif-muted); }
+.resultado { background: var(--sif-surface); border: 1px solid var(--sif-linha); border-radius: var(--sif-raio); box-shadow: var(--sif-sombra); overflow: hidden; }
+.formFiltro { align-items: center; flex-wrap: wrap; gap: 10px 14px; padding: 12px 16px; background: #1d201e; border-radius: 0; }
+.formFiltro .filt { display: flex; align-items: center; gap: 8px; }
+.formFiltro label { margin: 0; font-size: .9rem; opacity: .8; }
+.formFiltro select { padding: 4px 6px; border-radius: 6px; background: rgba(255, 255, 255, .1); color: #fff; }
+.filtro { margin-left: auto; padding: 7px 18px; border: none; border-radius: 8px; background: #ffc300; color: #1d201e; font-weight: 700; transition: filter .2s; }
+.filtro:hover { filter: brightness(.92); }
+#chart { padding: 8px 8px 0; }
+.time { padding: 0 16px 14px; color: var(--sif-muted); font-size: .85rem; text-align: right; }
+.sem-dados-grafico { display: flex; flex-direction: column; gap: 4px; padding: 44px 20px; text-align: center; color: var(--sif-muted); }
+.sem-dados-grafico strong { color: var(--sif-texto); font-size: 1.05rem; }
+
+/* ---------- Configuração ---------- */
+.seAMCItem { border-radius: var(--sif-raio) !important; border: 1px solid var(--sif-linha); box-shadow: var(--sif-sombra) !important; transition: transform .2s; }
+.seAMCItem:hover { transform: translateY(-2px); }
+.img.sem-imagem { display: flex; align-items: center; justify-content: center; min-height: 120px; background: linear-gradient(135deg, #e6f4ea, #f0f2f5); border-radius: 10px; }
+.img.sem-imagem::after { content: "🌱"; font-size: 2.6rem; }
+
+/* ---------- Formulários ---------- */
+input[type="text"], input[type="email"], input[type="password"], input[type="tel"], select, textarea {
+    border-radius: 10px; border: 1px solid #cfd8e1; transition: border-color .2s, box-shadow .2s;
+}
+input:focus, select:focus, textarea:focus { border-color: #008060; box-shadow: var(--sif-foco); outline: none; }
+
+/* ---------- Login / cadastro ---------- */
+.formBlock button, form button.btn {
+    background: #008060 !important; color: #fff !important; border: none !important; border-radius: 12px !important;
+    font-weight: 700; letter-spacing: .03em; transition: background .2s, box-shadow .2s;
+}
+.formBlock button:hover, form button.btn:hover { background: #006650 !important; box-shadow: 0 8px 20px rgba(0, 128, 96, .3); }
+.formBlock > img { height: 64px; width: auto; }
+
+@media (max-width: 600px) {
+    .kpis { grid-template-columns: 1fr; }
+    .kpi { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 8px; border-top-width: 1px; border-left: 4px solid var(--c); }
+    .kpi-nota { display: none; }
+    .logo img { height: 48px; }
+    .filtro { margin-left: 0; width: 100%; }
+}
+
+/* Mobile: hambúrguer à esquerda, logo à direita, sem estourar a largura da tela */
+@media (max-width: 800px) {
+    .logo-nav-container { flex: 1; min-width: 0; }
+    .logo { flex: 1; min-width: 0; justify-content: space-between; }
+    .logo img { margin-left: auto; }
+}
+
+/* Espaçamento vertical: o header já é sticky, então o conteúdo sobe logo abaixo dele */
+main { margin-top: 8px !important; }
+.pagina-add { justify-content: flex-start; min-height: 0; gap: 4px; }
+.pagina-add .helcome { max-height: none; padding-top: 8px; }
+/* O CSS mobile antigo empurrava o conteúdo 15vh por causa do header fixo; agora o header é sticky (ocupa seu próprio espaço) */
+.helcome, .container, .title { margin-top: 8px !important; }
+@media (max-width: 850px) {
+    .ajuda { width: 100% !important; }
+    .ajuda ul { padding-left: 18px; }
+    .ajuda li { text-align: left; }
+}

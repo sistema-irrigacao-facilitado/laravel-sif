@@ -22,7 +22,8 @@
     <link rel="stylesheet" href="{{ asset('style/parts.css') }}">
     <link rel="stylesheet" href="{{ asset('style/partsQuery.css') }}" media="screen and (max-device-width: 800px)">
     @yield('style')
-    
+    <link rel="stylesheet" href="{{ asset('style/sif-tema.css') }}">
+
     <title>@yield('title') - SIF</title>
 
 </head>

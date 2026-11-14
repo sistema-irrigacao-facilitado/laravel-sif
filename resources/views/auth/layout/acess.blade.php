@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css">
     <link href="{{ asset('/library/fontawesome/css/fontawesome.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('/library/fontawesome/css/solid.min.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('style/sif-tema.css') }}">
     @vite(['resources/js/app.js'])
 </head>
 

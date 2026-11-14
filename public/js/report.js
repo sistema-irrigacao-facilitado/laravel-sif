@@ -63,10 +63,10 @@ createdAt = createdAt.map(date => {
     const hours = String(d.getHours()).padStart(2, '0');
     const minutes = String(d.getMinutes()).padStart(2, '0');
     const seconds = String(d.getSeconds()).padStart(2, '0');
-    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    return `${day}/${month} ${hours}:${minutes}`;
 });
 
-if (perMode == 2) {
+if (perMode.val() == 2) {
     umidade = $('#average_humidity').val();
     umidade = umidade ? umidade.split(',').map(Number) : [];
 
@@ -102,38 +102,21 @@ function drawChart() {
         data.addRow([createdAt[i], umidade[i], temperatura[i], litros[i]]);
     }
 
-    // Definindo as opções do gráfico
+    // Opções do gráfico
     var options = {
-        'title': 'Relatorio do Dispositivo',
-        'width': '100%',
-        'height': '50vh',
-        colors: ['#0055ff', '#ff5900', '#9500ff'],
+        height: 360,
+        colors: ['#1a73e8', '#ff6d00', '#8e24aa'],
         curveType: 'function',
+        legend: { position: 'bottom' },
+        chartArea: { left: 44, top: 16, width: '92%', height: '62%' },
+        hAxis: { showTextEvery: Math.max(1, Math.ceil(createdAt.length / 6)), slantedText: false, textStyle: { color: '#6b7a8a' } },
+        vAxis: { gridlines: { color: '#e3e8ee' }, textStyle: { color: '#6b7a8a' } },
+        lineWidth: 2,
     };
 
-    // Criar e desenhar o gráfico
-    var chart = new google.charts.Line(document.getElementById('chart'));
+    var chart = new google.visualization.LineChart(document.getElementById('chart'));
+    chart.draw(data, options);
 
-    chart.draw(data, google.charts.Line.convertOptions(options));
-
-    // NADA FUNCIONA AQ AKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAKAKKAKAKAKAKKAKAKAKKAKAKAKAKKAKAKAKAKAKAKAKAK
-
-    // let googleError = $('[id^="google-visualization-errors-"]');
-
-
-    // console.log(googleError)
-
-    // if (googleError.length != 0) { // Verifica se o elemento existe
-    //     $('#chart').css({
-    //         'display': 'none'
-    //     });
-    //     $('.time').empty();
-    //     html = '<p>Não foi possivel encontrar dados do ultimo periodo selecionado</p> <br> <p>Verifique a conexão de seu dispositivo com a internet</p>'
-
-    //     // Ai depende de quanto tempo a pessoa tem o dispositivo ativado, e qual periodo ela selecionou, da pra fazer uma verificação e colocar um <p> personalizado dizendo o que pode ter ocorrido e o que fazer
-
-    //     $('.time').html(html)
-    // }
 }
 
 // Formatar a data atual

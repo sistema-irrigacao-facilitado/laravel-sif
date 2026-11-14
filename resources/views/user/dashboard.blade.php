@@ -21,7 +21,7 @@
                     <div class="disInfo">
                         <div class="indenDis">
                             <p class="getModelo">{{ $device->model }}</p>
-                            <p class="getNum"></p> N°: {{ $device->numbering }}</p>
+                            <p class="getNum">N°: {{ $device->numbering }}</p>
                         </div>
                         <div class="other">
                             <p>
@@ -116,6 +116,9 @@
                                     <p>Manual</p>
                                 </div>
                             </div> --}}
+                            @if ($device->dataDevice->count() == 0)
+                                <p class="sem-dados">Aguardando os primeiros dados do dispositivo. Ligue-o e conecte-o ao Wi-Fi.</p>
+                            @endif
                             @if ($device->dataDevice->count() > 0)
                                 <div class="acSepar">
                                     <div class="temperatura">

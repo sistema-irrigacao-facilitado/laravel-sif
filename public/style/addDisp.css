@@ -5,7 +5,8 @@
     box-sizing: border-box;
 }
 
-body{
+/* só a área de conteúdo desta página (o header vem do layout padrão) */
+.pagina-add{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;

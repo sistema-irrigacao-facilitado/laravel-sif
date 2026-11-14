@@ -29,18 +29,18 @@
 
                 @if ($plant)
                     <a class="seAMCItem plantaCard" href="{{ route('user.device.plant', $device->id) }}">
-                        <div class="img"><img src="data:image/png;base64,{{ $plant->image }}" alt="Minha Imagem"
-                                class="imagem-obj"></div>
+                        <div class="img"><img src="data:image/png;base64,{{ $plant->image }}" alt="{{ $plant->common_name }}"
+                                class="imagem-obj" onerror="this.closest('.img').classList.add('sem-imagem'); this.remove()"></div>
                         <div class="info">
                             <div class="nome">
                                 <h1>{{ $plant->common_name }}</h1>
                                 <h2>{{ $plant->scientific_name }}</h2>
                             </div>
                             <div class="caracteristicas">
-                                <p>Tipo do solo: {{ $plant->soil_type }}</p>
-                                <p>Nescessidade hidrica: {{ $plant->soil_type }}</p>
-                                <p>Temperatura maxima suportada: {{ $plant->temperature_tolerance }}°C</p>
-                                <p>Umidade minima suportada: {{ $plant->humidity_tolerance }}%</p>
+                                <p>Tipo do solo: {{ ['sandy'=>'arenoso','clayey'=>'argiloso','humus'=>'humoso','calcareous'=>'calcário'][$plant->soil_type] ?? $plant->soil_type }}</p>
+                                <p>Necessidade hídrica: {{ ['low'=>'baixa','medium'=>'média','high'=>'alta'][$plant->water_need] ?? $plant->water_need }}</p>
+                                <p>Temperatura máxima suportada: {{ $plant->temperature_tolerance }}°C</p>
+                                <p>Umidade mínima suportada: {{ $plant->humidity_tolerance }}%</p>
                             </div>
                         </div>
                     </a>
@@ -51,8 +51,8 @@
                 @endif
                 @if ($pump)
                     <a class="seAMCItem bombaCard" href="{{ route('user.device.pump', $device->id) }}">
-                        <div class="img"><img src="data:image/png;base64,{{ $pump->image }}" alt="Minha Imagem"
-                                class="imagem-obj"></div>
+                        <div class="img"><img src="data:image/png;base64,{{ $pump->image }}" alt="{{ $pump->model }}"
+                                class="imagem-obj" onerror="this.closest('.img').classList.add('sem-imagem'); this.remove()"></div>
                         <div class="info">
                             <div class="nome">
                                 <h1>{{ $pump->model }}</h1>
