@@ -19,13 +19,14 @@
                 ? ['hum' => 'average_humidity', 'temp' => 'average_temperature', 'lit' => 'average_liters']
                 : ['hum' => 'humidity', 'temp' => 'temperature', 'lit' => 'liters_pump'];
             $ultimo = fn($k) => collect($values[$k] ?? [])->last();
+            $totalLitros = collect($values[$chaves['lit']] ?? [])->sum();
             $fmt = fn($v, $un) => $v === null ? '—' : number_format((float) $v, 1, ',', '') . $un;
         @endphp
 
         <div class="kpis">
             <div class="kpi kpi-umidade"><span class="kpi-rotulo">Umidade</span><span class="kpi-valor">{{ $fmt($ultimo($chaves['hum']), '%') }}</span><span class="kpi-nota">último registro</span></div>
             <div class="kpi kpi-temp"><span class="kpi-rotulo">Temperatura</span><span class="kpi-valor">{{ $fmt($ultimo($chaves['temp']), ' °C') }}</span><span class="kpi-nota">último registro</span></div>
-            <div class="kpi kpi-litros"><span class="kpi-rotulo">Água usada</span><span class="kpi-valor">{{ $fmt($ultimo($chaves['lit']), ' L') }}</span><span class="kpi-nota">último registro</span></div>
+            <div class="kpi kpi-litros"><span class="kpi-rotulo">Água usada</span><span class="kpi-valor">{{ $fmt($totalLitros, ' L') }}</span><span class="kpi-nota">total no período</span></div>
         </div>
 
         <div class="resultado">

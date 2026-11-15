@@ -110,7 +110,7 @@ function drawChart() {
         legend: { position: 'bottom' },
         chartArea: { left: 44, top: 16, width: '92%', height: '62%' },
         hAxis: { showTextEvery: Math.max(1, Math.ceil(createdAt.length / 6)), slantedText: false, textStyle: { color: '#6b7a8a' } },
-        vAxis: { gridlines: { color: '#e3e8ee' }, textStyle: { color: '#6b7a8a' } },
+        vAxis: { minValue: 0, viewWindow: { min: 0 }, gridlines: { color: '#e3e8ee' }, textStyle: { color: '#6b7a8a' } },
         lineWidth: 2,
     };
 
