@@ -1,0 +1,1306 @@
+<title>SIF Laboratório</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Explore o SIF em 3D e em esquema, clique nas peças para entender cada uma e monte o seu passo a passo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: barra superior com dois modos. Explorar = lista de peças | cena (3D ou esquema) | painel com ficha da peça, regras e atividade. Montar = passos | diagrama do passo | instruções. */
+:root{
+  --bg:#f2f7f3; --surface:#ffffff; --surface2:#e8f0ea; --ink:#16261e; --muted:#586a60; --line:#d3dfd7;
+  --leaf:#2b7a4b; --leaf-ink:#ffffff; --water:#1b7cc2; --soil:#8b5b37; --warn:#b97a10; --bad:#bf4636; --ok:#2b7a4b;
+  --w-pwr:#d23f33; --w-gnd:#2c3430; --w-sig:#d49a0c; --w-soil:#23995a; --w-rel:#e07424;
+  --shadow:0 1px 2px rgba(22,38,30,.06),0 6px 18px rgba(22,38,30,.06);
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Inter","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1612; --surface:#14211b; --surface2:#1b2c24; --ink:#e5efe8; --muted:#93a89c; --line:#26392f;
+  --leaf:#5cbc84; --leaf-ink:#0d1612; --water:#53a9ea; --soil:#c68c5f; --warn:#e0a33c; --bad:#e8766a; --ok:#5cbc84;
+  --w-pwr:#ff7a6b; --w-gnd:#c9d3ce; --w-sig:#f0be3a; --w-soil:#4fd08a; --w-rel:#ff9a4d;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1612; --surface:#14211b; --surface2:#1b2c24; --ink:#e5efe8; --muted:#93a89c; --line:#26392f;
+  --leaf:#5cbc84; --leaf-ink:#0d1612; --water:#53a9ea; --soil:#c68c5f; --warn:#e0a33c; --bad:#e8766a; --ok:#5cbc84;
+  --w-pwr:#ff7a6b; --w-gnd:#c9d3ce; --w-sig:#f0be3a; --w-soil:#4fd08a; --w-rel:#ff9a4d;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25); color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);display:flex;flex-direction:column;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.2;text-wrap:balance;margin:0}
+h2{font-size:1.35rem;font-weight:700}
+h3{font-size:1.05rem;font-weight:600}
+h4{font-size:.76rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-family:var(--f-body)}
+p{margin:0}
+a{color:var(--water)}
+code,.mono{font-family:var(--f-mono);font-size:.86em}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--water);outline-offset:2px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* barra superior */
+.top{flex:none;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:10px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--f-display);font-weight:700;font-size:1.15rem;display:flex;align-items:center;gap:8px;margin-right:auto;color:var(--ink);text-decoration:none}
+.brand svg{width:26px;height:26px}
+.brand small{font-family:var(--f-body);font-weight:500;color:var(--muted);font-size:.8rem}
+.modes{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.modes button{border:0;background:transparent;padding:9px 16px;font-weight:600;cursor:pointer;min-height:44px}
+.modes button[aria-selected="true"]{background:var(--leaf);color:var(--leaf-ink)}
+.top a.gh{font-size:.88rem;color:var(--muted);text-decoration:none;padding:6px 4px}
+.top a.gh:hover{color:var(--ink)}
+
+#app{flex:1;min-height:0;position:relative}
+.mode{height:100%}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.btn{font-weight:600;border-radius:10px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);padding:8px 13px;cursor:pointer;min-height:44px}
+.btn.primary{background:var(--leaf);border-color:var(--leaf);color:var(--leaf-ink)}
+.btn:hover{filter:brightness(.97)}
+.btn[hidden]{display:none}
+.seg{display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:transparent;font-weight:500;padding:8px 14px;cursor:pointer;min-height:44px}
+.seg button[aria-pressed="true"]{background:var(--leaf);color:var(--leaf-ink)}
+.seg button:disabled{opacity:.45;cursor:not-allowed}
+.chip{border:1px solid var(--line);background:var(--surface);font-size:.9rem;padding:8px 12px;border-radius:99px;cursor:pointer;min-height:44px}
+.chip[aria-pressed="true"]{background:var(--water);border-color:var(--water);color:#fff}
+.lab{font-size:.82rem;font-weight:600;color:var(--muted)}
+.val{font-family:var(--f-mono);font-weight:500}
+.mini{font-size:.82rem;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--leaf);min-height:28px}
+.field{display:flex;flex-direction:column;gap:6px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ===== EXPLORAR ===== */
+#explore{display:grid;gap:14px;padding-block:14px;grid-template-columns:minmax(0,1fr);grid-template-areas:"side" "center" "dock" "insp"}
+.side{grid-area:side;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;min-width:0}
+.side .gt{display:none}
+.sidetog{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:6px 12px;min-height:44px;font-weight:600;cursor:pointer}
+.side.collapsed .pi,.side.collapsed .gt{display:none!important}
+.pi{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 11px;cursor:pointer;text-align:left;min-height:44px}
+.pi small{display:none}
+.pi .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.pi b{font-weight:600;font-size:.88rem}
+.pi[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:var(--leaf-ink)}
+.pi[aria-pressed="true"] .dot{outline:2px solid var(--leaf-ink)}
+.pi[hidden]{display:none}
+.center{grid-area:center;display:flex;flex-direction:column;gap:10px;min-width:0}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toolbar .sp1{margin-left:auto}
+.viewport{position:relative;height:min(78vw,540px);min-height:380px;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:radial-gradient(ellipse at 50% 80%,var(--surface2),var(--surface) 72%)}
+.view{position:absolute;inset:0}
+.view[hidden]{display:none}
+#gl canvas{display:block;width:100%;height:100%;touch-action:pan-y;cursor:grab}
+.hud{position:absolute;left:12px;top:12px;display:flex;gap:6px;flex-wrap:wrap;pointer-events:none;max-width:calc(100% - 24px)}
+.hchip{font-size:.78rem;font-weight:600;padding:5px 10px;border-radius:99px;background:var(--surface);border:1px solid var(--line);font-variant-numeric:tabular-nums}
+.hchip.on{background:var(--water);border-color:var(--water);color:#fff}
+.hint{position:absolute;left:0;right:0;bottom:10px;text-align:center;font-size:.85rem;color:var(--muted);pointer-events:none;padding-inline:12px}
+.tags{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.tag{position:absolute;left:0;top:0;pointer-events:auto;border:1px solid var(--line);background:var(--surface);font-size:.76rem;font-weight:600;padding:3px 9px;border-radius:99px;cursor:pointer;white-space:nowrap;box-shadow:var(--shadow);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;will-change:transform}
+.tag.show{opacity:1;visibility:visible}
+.tag[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:var(--leaf-ink)}
+.glfail{padding:24px;color:var(--muted)}
+#schem{display:flex;align-items:center;justify-content:center;padding:8px}
+#scene{width:100%;height:100%}
+.sp{cursor:pointer;outline:none}
+.sp .hit{fill:transparent;stroke:none;pointer-events:all}
+.sp:hover,.sp:focus-visible{filter:drop-shadow(0 0 5px var(--water))}
+.sp.sel{filter:drop-shadow(0 0 3px var(--leaf)) drop-shadow(0 0 9px var(--leaf))}
+.pl{font:600 10px var(--f-mono);fill:var(--water)}
+.hose{stroke:var(--water);stroke-width:5;fill:none;stroke-linecap:round;opacity:.35}
+.hose.flow{opacity:1;stroke-dasharray:10 8;animation:flow .7s linear infinite}
+.hit-line{stroke:transparent;stroke-width:20;fill:none;pointer-events:stroke}
+@keyframes flow{to{stroke-dashoffset:-18}}
+.spin{transform-origin:170px 290px}
+.pumpon .spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.leaf{transition:transform .6s}
+
+/* painel direito */
+.insp{grid-area:insp;display:flex;flex-direction:column;min-width:0;min-height:0}
+.dock{grid-area:dock;min-width:0;display:flex;flex-direction:column}
+.dtabs{display:flex;align-items:center;gap:4px;padding:0 8px;flex:none}
+.dtabs button{border:0;background:transparent;padding:11px 14px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;min-height:44px}
+.dtabs button[aria-selected="true"]{color:var(--ink);border-color:var(--leaf)}
+.btn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.dock.open .dtabs{border-bottom:1px solid var(--line)}
+.dock .tpan{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;align-content:start;max-height:min(240px,34vh);overflow:auto}
+.dock .tpan>*{min-width:0}
+.tpan{padding:16px;display:flex;flex-direction:column;gap:14px;min-height:0;overflow:auto;flex:1}
+.tpan[hidden]{display:none}
+.kind{font-size:.76rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--leaf)}
+dl.tech{margin:0;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.5fr);gap:0}
+dl.tech dt,dl.tech dd{margin:0;padding:7px 0;border-bottom:1px solid var(--line);font-size:.88rem}
+dl.tech dt{color:var(--muted);padding-right:10px}
+ul.tips{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+ul.tips li{font-size:.9rem;padding-left:22px;position:relative}
+ul.tips li::before{content:"";position:absolute;left:3px;top:.5em;width:9px;height:9px;border-radius:50%;background:var(--leaf)}
+.secb{display:flex;flex-direction:column;gap:8px}
+.pending{font-size:.85rem;padding:8px 10px;border-radius:8px;background:var(--surface2);color:var(--muted);border-left:3px solid var(--warn)}
+.pending[hidden]{display:none}
+.stagelist{display:flex;flex-direction:column;gap:4px;margin:0;padding:0;list-style:none}
+.stagelist li{display:flex;gap:10px;align-items:baseline;padding:6px 10px;border-radius:8px;border:1px solid transparent;font-size:.85rem;transition:background .25s,border-color .25s}
+.stagelist li b{font-family:var(--f-display);min-width:78px}
+.stagelist li span{color:var(--muted)}
+.stagelist li.on{background:var(--surface2);border-color:var(--leaf)}
+.now{padding:11px 13px;border-radius:10px;background:var(--surface2);display:flex;gap:10px;align-items:center;font-size:.88rem}
+.now .dot{width:11px;height:11px;border-radius:50%;background:var(--muted);flex:none}
+.now.rega .dot{background:var(--water);box-shadow:0 0 0 5px color-mix(in srgb,var(--water) 25%,transparent)}
+.now.ok .dot{background:var(--ok)}
+.now.seco .dot{background:var(--warn)}
+#chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.78rem;color:var(--muted);margin-top:4px}
+.legend i{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.log ol{list-style:none;margin:6px 0 0;padding:0;max-height:200px;overflow:auto;display:flex;flex-direction:column;gap:5px}
+.log li{font-size:.82rem;display:grid;grid-template-columns:auto 1fr;gap:10px;line-height:1.4}
+.log li time{font-family:var(--f-mono);color:var(--muted);font-size:.78rem}
+.log li.t-rega{color:var(--water)} .log li.t-nuvem{color:var(--leaf)} .log li.t-aviso{color:var(--warn)}
+
+/* ===== MONTAR ===== */
+#build{display:grid;gap:14px;padding-block:14px;grid-template-columns:minmax(0,1fr);grid-template-areas:"steps" "diag" "info"}
+.steps{grid-area:steps;margin:0;padding:0;list-style:none;display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.steps button{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 12px;cursor:pointer;text-align:left;min-height:44px;white-space:nowrap}
+.steps .n{width:24px;height:24px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-size:.78rem;font-weight:700;flex:none}
+.steps button[aria-current="step"]{border-color:var(--leaf);background:var(--surface2)}
+.steps button[aria-current="step"] .n{background:var(--leaf);color:var(--leaf-ink)}
+.steps .ok .n{background:var(--ok);color:var(--leaf-ink)}
+.steps b{font-weight:600;font-size:.88rem}
+.diag{grid-area:diag;min-width:0;padding:14px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto}
+.scrollx{overflow-x:auto}
+.scrollx>svg{min-width:780px;width:100%;height:auto;display:block}
+.info{grid-area:info;min-width:0;padding:18px;display:flex;flex-direction:column;gap:14px;min-height:0;overflow:auto}
+.info .eyebrow{font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600;color:var(--leaf)}
+.task{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:.92rem;cursor:pointer}
+.task input{width:22px;height:22px;accent-color:var(--leaf);margin:1px 0 0;flex:none;cursor:pointer}
+.task input:checked+span{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.call{padding:10px 13px;border-radius:10px;font-size:.88rem;border-left:3px solid var(--warn);background:var(--surface2)}
+.call.tip{border-color:var(--leaf)}
+.call b{display:block;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
+.call.warn b{color:var(--warn)} .call.tip b{color:var(--leaf)}
+.pchips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pchips .chip{min-height:36px;padding:5px 11px;font-size:.82rem}
+.navrow{display:flex;gap:8px;justify-content:space-between;margin-top:auto;padding-top:6px}
+.code{position:relative}
+.code pre{margin:0;padding:11px 56px 11px 13px;border-radius:10px;background:var(--surface2);overflow-x:auto;font-family:var(--f-mono);font-size:.8rem;line-height:1.55;white-space:pre}
+.code .cp{position:absolute;right:6px;top:6px;border:1px solid var(--line);background:var(--surface);border-radius:8px;font-size:.74rem;font-weight:600;padding:4px 9px;cursor:pointer;min-height:30px}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.tool{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.tool input[type=text],.tool input[type=password],.tool input[type=number]{width:100%;font:inherit;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:44px}
+.tool .field+.field{margin-top:10px}
+.err{color:var(--bad);font-size:.82rem;min-height:1.2em}
+.meter{height:14px;border-radius:99px;background:var(--surface2);overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--water);width:0}
+pre.out{margin:6px 0 0;padding:12px 14px;border-radius:10px;background:var(--surface2);overflow-x:auto;font-family:var(--f-mono);font-size:.82rem;line-height:1.55}
+.serial{display:flex;flex-direction:column;gap:8px}
+.serial div{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:12px;padding:10px 12px;border-radius:10px;background:var(--surface2);font-size:.86rem}
+.serial code{overflow-wrap:anywhere}
+.serial span{color:var(--muted)}
+.leg{display:flex;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
+.leg i{display:inline-block;width:22px;height:5px;border-radius:3px;margin-right:6px;vertical-align:middle}
+/* fios */
+.wire{fill:none;stroke-width:3.2;stroke-linejoin:round;stroke-linecap:round;opacity:.85}
+.wire.hot{stroke-width:5.5;opacity:1;filter:drop-shadow(0 0 4px currentColor)}
+.c-pwr{stroke:var(--w-pwr);color:var(--w-pwr)} .c-gnd{stroke:var(--w-gnd);color:var(--w-gnd)} .c-sig{stroke:var(--w-sig);color:var(--w-sig)} .c-soil{stroke:var(--w-soil);color:var(--w-soil)} .c-rel{stroke:var(--w-rel);color:var(--w-rel)}
+.mod rect.body{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.mod.hot rect.body{stroke:var(--leaf);stroke-width:3}
+.mod text{font-family:var(--f-body);fill:var(--ink)}
+.mod .pn{font:500 12px var(--f-mono);fill:var(--muted)}
+.mod .nm{font-weight:600;font-size:13px}
+.mod .cap{font-size:10.5px;fill:var(--muted)}
+.espb{fill:var(--surface2);stroke:var(--ink);stroke-width:1.5}
+.pin{fill:var(--surface);stroke:var(--ink);stroke-width:1.5}
+.pin.used{fill:var(--water);stroke:var(--water)}
+.pinl{font:500 12.5px var(--f-mono);fill:var(--ink)}
+.usedtag{font:600 11px var(--f-body);fill:var(--water)}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}.hose.flow,.pumpon .spin{animation:none}.stagelist li,.leaf,.tag{transition:none}
+}
+/* telas médias: lista de peças em faixa, cena e painel lado a lado */
+@media (min-width:760px){
+  #explore{grid-template-columns:minmax(0,1fr) 330px;grid-template-areas:"side side" "center insp" "dock insp";grid-template-rows:auto minmax(0,1fr) auto}
+  .viewport{height:auto;flex:1;min-height:0}
+  .center{min-height:0}
+  .insp{min-height:0}
+  #build{grid-template-columns:minmax(0,1fr) 360px;grid-template-areas:"steps steps" "diag info";grid-template-rows:auto minmax(0,1fr)}
+}
+@media (min-width:1180px){
+  #explore{grid-template-columns:190px minmax(0,1fr) 330px;grid-template-areas:"side center insp" "side dock insp";grid-template-rows:minmax(0,1fr) auto}
+  .side{flex-direction:column;flex-wrap:nowrap;overflow-y:auto;gap:4px;padding-right:2px}
+  .side .gt{display:block;margin:10px 0 2px}
+  .side .gt:first-child{margin-top:0}
+  .pi,.sidetog{width:100%;padding:7px 11px}
+  #explore.sidec{grid-template-columns:auto minmax(0,1fr) 330px}
+  #explore.sidec .sidetog{width:auto}
+  .pi small{display:block;font-size:.72rem;color:var(--muted);font-family:var(--f-mono)}
+  .pi[aria-pressed="true"] small{color:var(--leaf-ink);opacity:.85}
+  #build{grid-template-columns:230px minmax(0,1fr) 380px;grid-template-areas:"steps diag info";grid-template-rows:minmax(0,1fr)}
+  .steps{flex-direction:column;overflow-x:visible;overflow-y:auto}
+  .steps button{width:100%;white-space:normal}
+}
+@media (max-width:759px){
+  .toolbar .sp1{margin-left:0}
+  .insp{min-height:240px}
+  .tpan{overflow:visible}
+  .dock .tpan{max-height:none}
+  .info,.diag{overflow:visible}
+  .serial div{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:759px){html,body{height:auto;min-height:100%}#app{flex:none}.mode{height:auto}}
+@media (min-width:760px){body{height:100%;overflow:hidden}}
+</style>
+
+<header class="top">
+  <a class="brand" href="#explorar" aria-label="SIF Laboratório">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C10 11 7 15.5 7 20a9 9 0 0 0 18 0c0-4.500-3-9-9-17z" fill="var(--water)"/><path d="M16 27v-9m0 3-4-4m4 2 4-4" stroke="var(--bg)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+    <span>SIF <small>Sistema de Irrigação Facilitado</small></span>
+  </a>
+  <div class="modes" role="tablist" aria-label="Modo">
+    <button role="tab" id="tabExplore" aria-selected="true">Explorar</button>
+    <button role="tab" id="tabBuild" aria-selected="false">Montar o seu</button>
+  </div>
+  <a class="gh" href="https://github.com/sistema-irrigacao-facilitado/laravel-sif" target="_blank" rel="noopener">GitHub</a>
+</header>
+
+<div id="app">
+<!-- ===================== EXPLORAR ===================== -->
+<section id="explore" class="mode" aria-label="Explorar o SIF">
+  <nav class="side" id="parts" aria-label="Peças do SIF">
+    <button class="sidetog" id="sideToggle" aria-expanded="true"><span id="sideLbl">Peças</span><span id="sideCh" aria-hidden="true">▾</span></button>
+  </nav>
+
+  <div class="center">
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Visualização">
+        <button id="vb3d" aria-pressed="true">3D</button>
+        <button id="vbSc" aria-pressed="false">Esquema</button>
+      </div>
+      <button class="btn primary" id="btnExplode">Desmontar</button>
+      <span class="sp1"></span>
+      <button class="btn" id="openRegras" aria-pressed="false">Regras</button>
+      <button class="btn" id="openAtiv" aria-pressed="false">Atividade</button>
+    </div>
+    <div class="viewport">
+      <div class="view" id="gl">
+        <div class="hud" id="hud"><span class="hchip" id="hSolo">Solo 57%</span><span class="hchip" id="hPump">Bomba desligada</span></div>
+        <div class="tags" id="tags"></div>
+        <div class="hint" id="hint">Clique no SIF para desmontar. Arraste para girar.</div>
+      </div>
+      <div class="view" id="schem" hidden>
+        <svg id="scene" viewBox="-70 -40 780 440" role="group" aria-label="Esquema do SIF. Clique numa peça para ver detalhes.">
+          <g class="sp" data-part="cloud" tabindex="0" role="button" aria-label="Plataforma SIF">
+            <rect class="hit" x="478" y="12" width="142" height="68"/>
+            <ellipse cx="548" cy="58" rx="62" ry="26" fill="var(--surface2)" stroke="var(--line)"/>
+            <ellipse cx="520" cy="46" rx="26" ry="20" fill="var(--surface2)" stroke="var(--line)"/>
+            <ellipse cx="560" cy="40" rx="30" ry="22" fill="var(--surface2)"/>
+            <ellipse cx="548" cy="58" rx="58" ry="23" fill="var(--surface2)"/>
+            <text x="548" y="55" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink)" font-family="Inter,sans-serif">Plataforma SIF</text>
+            <text id="cloudTxt" x="548" y="71" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Inter,sans-serif">aguardando leitura</text>
+          </g>
+          <path id="wifi" d="M392 112 C 420 70, 450 60, 478 62" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="3 5"/>
+          <text x="404" y="78" font-size="11" fill="var(--muted)" font-family="Inter,sans-serif">Wi-Fi</text>
+          <path d="M494 266 V 150 H 392" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="2 4"/>
+          <path d="M444 118 H 392" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="2 4"/>
+          <path d="M300 172 V 246 H 284" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="2 4"/>
+          <path d="M240 246 H 170 V 266" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="2 4"/>
+          <text class="pl" x="420" y="144">GPIO 32</text>
+          <text class="pl" x="396" y="112">GPIO 2</text>
+          <text class="pl" x="306" y="214">GPIO 4</text>
+          <g class="sp" data-part="esp" tabindex="0" role="button" aria-label="ESP32">
+            <rect x="262" y="96" width="130" height="76" rx="10" fill="var(--surface2)" stroke="var(--ink)" stroke-width="1.5"/>
+            <text x="327" y="124" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)" font-family="Bricolage Grotesque,sans-serif">ESP32</text>
+            <text x="327" y="141" text-anchor="middle" font-size="10.5" fill="var(--muted)" font-family="Inter,sans-serif">o cérebro do aparelho</text>
+            <circle cx="286" cy="158" r="5" fill="var(--ok)"/><text x="296" y="162" font-size="10" fill="var(--muted)" font-family="Inter,sans-serif">Wi-Fi</text>
+            <circle id="ledPump" cx="338" cy="158" r="5" fill="var(--line)"/><text x="348" y="162" font-size="10" fill="var(--muted)" font-family="Inter,sans-serif">bomba</text>
+          </g>
+          <g class="sp" data-part="dht" tabindex="0" role="button" aria-label="DHT11, sensor de temperatura">
+            <rect x="444" y="102" width="74" height="32" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="481" y="116" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="Inter,sans-serif">temp. do ar</text>
+            <text id="tTxt" x="481" y="129" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)" font-family="JetBrains Mono,monospace">26 °C</text>
+          </g>
+          <g class="sp" data-part="relay" tabindex="0" role="button" aria-label="Relé">
+            <rect class="hit" x="234" y="228" width="56" height="36"/>
+            <rect x="240" y="234" width="44" height="24" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="262" y="250" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Inter,sans-serif">relé</text>
+          </g>
+          <g class="sp" data-part="reservoir" tabindex="0" role="button" aria-label="Reservatório de água">
+            <rect x="24" y="214" width="92" height="110" rx="8" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+            <rect x="27" y="244" width="86" height="77" rx="5" fill="var(--water)" opacity=".4"/>
+            <text x="70" y="236" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Inter,sans-serif">reservatório</text>
+            <path d="M116 292 H 146" stroke="var(--water)" stroke-width="5" opacity=".6"/>
+          </g>
+          <g class="sp" data-part="pump" id="pumpG" tabindex="0" role="button" aria-label="Bomba d'água">
+            <rect class="hit" x="144" y="262" width="52" height="76"/>
+            <circle cx="170" cy="290" r="24" fill="var(--surface2)" stroke="var(--ink)" stroke-width="1.5"/>
+            <g class="spin"><path d="M170 290 m-12 0 h24 M170 278 v24" stroke="var(--water)" stroke-width="3" stroke-linecap="round"/></g>
+            <text x="170" y="334" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Inter,sans-serif">bomba</text>
+          </g>
+          <g class="sp" data-part="hose" tabindex="0" role="button" aria-label="Mangueira">
+            <path id="hose" class="hose" d="M194 290 H 330 Q 400 290 432 244 L 432 232"/>
+            <path class="hit-line" d="M194 290 H 330 Q 400 290 432 244 L 432 232"/>
+          </g>
+          <g class="sp" data-part="pot" tabindex="0" role="button" aria-label="Vaso">
+            <path d="M372 266 H 532 L 516 340 H 388 Z" fill="var(--soil)" stroke="var(--ink)" stroke-width="1.5"/>
+            <path id="wet" d="M372 266 H 532 L 516 340 H 388 Z" fill="#24140a" opacity=".2"/>
+            <text x="452" y="356" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Inter,sans-serif">vaso com a planta</text>
+          </g>
+          <g class="sp" data-part="plant" tabindex="0" role="button" aria-label="Planta">
+            <rect class="hit" x="420" y="172" width="64" height="96"/>
+            <path d="M452 266 V 196" stroke="var(--leaf)" stroke-width="5" stroke-linecap="round" fill="none"/>
+            <g id="leafL" class="leaf" style="transform-origin:452px 214px"><ellipse cx="426" cy="206" rx="28" ry="12" fill="var(--leaf)" transform="rotate(-18 426 206)"/></g>
+            <g id="leafR" class="leaf" style="transform-origin:452px 214px"><ellipse cx="478" cy="206" rx="28" ry="12" fill="var(--leaf)" transform="rotate(18 478 206)"/></g>
+            <ellipse cx="452" cy="190" rx="12" ry="18" fill="var(--leaf)"/>
+          </g>
+          <g class="sp" data-part="solo" tabindex="0" role="button" aria-label="Sensor de umidade do solo">
+            <rect class="hit" x="484" y="260" width="20" height="68"/>
+            <rect x="489" y="266" width="10" height="56" rx="3" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+            <rect x="534" y="286" width="86" height="40" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+            <text x="577" y="302" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="Inter,sans-serif">umidade do solo</text>
+            <text id="mTxt" x="577" y="319" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)" font-family="JetBrains Mono,monospace">52%</text>
+          </g>
+          <circle id="packet" r="6" fill="var(--leaf)" cx="-20" cy="-20"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <aside class="insp card" aria-label="Detalhes da peça">
+    <div class="tpan" id="tab-peca"></div>
+  </aside>
+
+  <div class="dock card" id="dock" hidden>
+    <div class="dtabs" role="tablist" aria-label="Controles do SIF">
+      <button role="tab" data-dock="regras" aria-selected="false">Regras</button>
+      <button role="tab" data-dock="ativ" aria-selected="false">Atividade</button>
+      <button class="btn" id="dockClose" style="margin-left:auto;min-height:36px;padding:4px 12px">Fechar</button>
+    </div>
+    <div class="tpan" id="tab-regras" role="tabpanel" hidden>
+      <p class="mini">Estas são as regras que, no sistema real, você define na plataforma. O aparelho só as recebe no próximo envio de leituras.</p>
+      <div class="field">
+        <span class="lab" id="modeLab">Modo de irrigação</span>
+        <div class="seg" role="group" aria-labelledby="modeLab" style="display:grid;grid-template-columns:1fr 1fr">
+          <button id="mAuto" aria-pressed="true">Automático</button>
+          <button id="mSched" aria-pressed="false">Agendado</button>
+        </div>
+      </div>
+      <div class="field" id="autoBox">
+        <label for="target" class="lab">Umidade ideal da planta: <span class="val" id="targetV">60%</span></label>
+        <input id="target" type="range" min="20" max="90" step="5" value="60">
+        <p class="mini">Liga quando o solo fica abaixo disso e desliga 5 pontos acima.</p>
+      </div>
+      <div class="field" id="schedBox" hidden>
+        <span class="lab" id="hrLab">Horários de rega (todos os dias)</span>
+        <div class="chips" role="group" aria-labelledby="hrLab">
+          <button class="chip" data-t="360" aria-pressed="true">06:00</button>
+          <button class="chip" data-t="720" aria-pressed="false">12:00</button>
+          <button class="chip" data-t="1080" aria-pressed="true">18:00</button>
+        </div>
+        <label for="dur" class="lab" style="margin-top:6px">Tempo ligada: <span class="val" id="durV">6 min</span></label>
+        <input id="dur" type="range" min="2" max="15" step="1" value="6">
+        <p class="mini">Na plataforma você escolhe também os dias da semana.</p>
+      </div>
+      <div class="pending" id="pend" hidden>Mudança salva na plataforma. O aparelho recebe no próximo envio de leituras.</div>
+    </div>
+    <div class="tpan" id="tab-ativ" role="tabpanel" hidden>
+      <div class="row" id="simctl" style="grid-column:1/-1">
+        <button class="btn" id="btnThirst">Dar sede à planta</button>
+        <button class="btn" id="play">Pausar</button>
+        <button class="btn" id="speed">Velocidade 1×</button>
+      </div>
+      <div class="now seco" id="now" aria-live="polite"><span class="dot"></span><span id="nowTxt">Iniciando…</span></div>
+      <div class="secb">
+        <h4>O ciclo do aparelho</h4>
+        <ol class="stagelist" id="stages">
+          <li data-s="mede"><b>1. Mede</b><span>lê solo e temperatura</span></li>
+          <li data-s="decide"><b>2. Decide</b><span>compara com a regra</span></li>
+          <li data-s="rega"><b>3. Rega</b><span>relé liga a bomba</span></li>
+          <li data-s="envia"><b>4. Envia</b><span>manda leituras e litros</span></li>
+          <li data-s="nuvem"><b>5. Plataforma</b><span>guarda e devolve regras</span></li>
+        </ol>
+      </div>
+      <div class="secb">
+        <h4>Umidade do solo, últimas 12 h</h4>
+        <svg id="chart" viewBox="0 0 600 190" role="img" aria-label="Gráfico da umidade do solo, com a umidade ideal e os períodos de bomba ligada"></svg>
+        <div class="legend"><span><i style="background:var(--leaf)"></i>solo</span><span><i style="background:var(--warn)"></i>ideal</span><span><i style="background:var(--water);opacity:.4;height:10px"></i>bomba ligada</span></div>
+        <p class="mini" id="litros">Água usada hoje: 0,0 L</p>
+      </div>
+      <div class="secb log"><h4>O que o aparelho está fazendo</h4><ol id="log"></ol></div>
+      <p class="mini">Tempo acelerado. No aparelho real, as leituras seguem a cada 1 minuto.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MONTAR ===================== -->
+<section id="build" class="mode" aria-label="Montar o seu SIF" hidden>
+  <ol class="steps" id="stepList"></ol>
+  <div class="diag card" id="bDiagram"></div>
+  <div class="info card" id="bInfo"></div>
+</section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function sget(k,d){try{var v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}}
+function sset(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function tr(n){return String(n).replace(".",",")}
+function fmt(min){var m=((min%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")}
+var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+var App={mode:"explore",view:"3d",sel:null,step:1,V3:null};
+
+/* =====================================================================
+   DADOS DAS PEÇAS
+   ===================================================================== */
+var GROUPS=[["Controle",["esp","relay","box","lid"]],["Sensores",["dht","solo"]],["Água",["reservoir","pump","hose"]],["Planta",["pot","plant"]],["Internet",["cloud"]]];
+var GCOL=["var(--water)","var(--leaf)","#4c9fb8","var(--soil)","var(--muted)"];
+var ONLY3D={box:1,lid:1};
+var PARTS={
+esp:{n:"ESP32",sub:"GPIO 2 · 32 · 4",go:2,
+ r:"O cérebro do SIF. Lê os sensores, decide quando regar e conversa com a plataforma pelo Wi-Fi.",
+ t:[["Placa","ESP32 DevKit, com Wi-Fi 2,4 GHz embutido"],["Lógica","3,3 V. Os pinos não aceitam 5 V"],["Alimentação","5 V pelo USB ou pelo pino VIN"],["Pinos usados","GPIO 2 (DHT11), GPIO 32 (solo), GPIO 4 (relé)"],["Leitura analógica","12 bits: valores de 0 a 4095"],["Ciclo","Lê os sensores a cada 5 s e envia a cada 60 s"],["Hora","Vem da internet (NTP), fuso de Brasília"],["Memória","Guarda a última configuração recebida"],["Código","esp32/sif-firmware/sif-firmware.ino"]],
+ d:["No modo automático, o aparelho continua regando mesmo sem internet. O modo agendado precisa da hora, que vem da internet.","Use um bom cabo USB e uma fonte decente. O Wi-Fi gera picos de corrente, e cabo fino faz a placa reiniciar sozinha.","Sensores analógicos devem usar pinos ADC1 (GPIO 32 a 39). Os pinos ADC2 não funcionam com o Wi-Fi ligado. O GPIO 32 já é ADC1.","O GPIO 2 é um pino de boot. Se a gravação falhar com o DHT11 ligado, tire o fio de dados dele só durante o upload.","Em produção, troque setInsecure() por setCACert() no firmware, para validar o certificado HTTPS do servidor."]},
+relay:{n:"Relé",sub:"GPIO 4",go:5,
+ r:"Um interruptor eletrônico. O ESP32 manda um sinal pequeno e o relé fecha o circuito da bomba, que usa muito mais corrente.",
+ t:[["Controle","GPIO 4. Nível alto liga a bomba"],["Alimentação","Normalmente 5 V (veja o seu módulo)"],["Contatos","COM, NO (aberto) e NC (fechado)"],["Usado pelo SIF","COM e NO"],["Capacidade","Módulos comuns de 1 canal aguentam cerca de 10 A. Confira o seu"],["Firmware","ligarBomba() e desligarBomba()"],["Ao iniciar","Sempre começa desligado (LOW)"]],
+ d:["Confirme se o seu módulo liga com nível alto. Se ele for de nível baixo, a bomba liga assim que a placa é ligada e desliga quando deveria ligar. Troque o módulo ou inverta o sinal no firmware.","Use o contato NO (normalmente aberto). Se a placa desligar, a bomba para.","Ponha um diodo (por exemplo 1N4007) em paralelo com a bomba, com a faixa no polo positivo. Ele protege o contato do pico do motor.","Alguns módulos de 5 V não aceitam bem o sinal de 3,3 V do ESP32. Se o relé não clicar, teste outro módulo."]},
+box:{n:"Caixa",sub:"abriga a eletrônica",go:11,
+ r:"Abriga a eletrônica. Dentro ficam o ESP32 e o relé, longe da água.",
+ t:[["Abriga","ESP32, relé e as ligações"],["Fica","Fora do alcance de respingos"]],
+ d:["Prefira caixa com vedação e prensa-cabos, em vez de furos soltos.","Faça uma curva para baixo nos cabos antes de entrar na caixa. A água escorre pela curva e não para dentro.","Um sachê de sílica dentro da caixa ajuda contra a umidade."]},
+lid:{n:"Tampa",sub:"translúcida",go:11,
+ r:"Tire a tampa para ver o ESP32 e o relé. No modelo, ela é translúcida para você ver as luzes funcionando.",
+ t:[["Função","Fechar a caixa"]],
+ d:["Feche bem a tampa depois de qualquer ajuste. Um respingo no ESP32 ou no relé pode queimar a placa."]},
+dht:{n:"DHT11",sub:"GPIO 2",go:3,
+ r:"Mede a temperatura do ar ao redor da planta. O valor vai para o histórico na plataforma.",
+ t:[["Tipo","Sensor digital de 1 fio"],["Alimentação","3,3 a 5,5 V"],["Temperatura","0 a 50 °C, precisão de ±2 °C"],["Umidade do ar","20 a 80%. O SIF usa só a temperatura"],["Leitura","No máximo 1 por segundo"],["Pino","GPIO 2"],["Biblioteca","DHT sensor library (Adafruit)"],["Se falhar","O firmware mantém a última temperatura válida"]],
+ d:["Módulos de 3 pinos já têm o resistor necessário. Se o seu for o DHT11 solto de 4 pinos, ponha um resistor de 4,7 a 10 kΩ entre VCC e DATA.","Instale na sombra e longe da bomba e do ESP32, que esquentam e alteram a leitura.","Quer mais precisão? O DHT22 liga igual. No firmware, troque DHT11 por DHT22 na linha que cria o objeto dht.","Não molhe o sensor."]},
+solo:{n:"Sensor de solo",sub:"GPIO 32",go:4,
+ r:"Fica enterrado no vaso e entrega um número que o firmware transforma em porcentagem de umidade.",
+ t:[["Tipo","Capacitivo, com saída analógica"],["Alimentação","3,3 V (pino 3V3 do ESP32)"],["Pino","GPIO 32, que é ADC1"],["Leitura","Valor alto = solo seco. Valor baixo = solo molhado"],["Conversão","map(leitura, SOLO_SECO, SOLO_MOLHADO, 0, 100)"],["Calibração","SOLO_SECO e SOLO_MOLHADO no config.h"],["Ciclo","Uma leitura a cada 5 s"]],
+ d:["Prefira o capacitivo. O resistivo, de duas pontas de metal, corrói em semanas e a leitura vai se perdendo.","Calibre com o seu sensor: o valor no ar vira SOLO_SECO e o valor num copo d'água vira SOLO_MOLHADO. O ADC do ESP32 não é linear, então os valores padrão só servem de ponto de partida.","Não afunde além da linha marcada no sensor. A eletrônica do topo não pode molhar.","Enterre na zona das raízes, longe do ponto onde a mangueira pinga. Perto demais, ele só mede a água que acabou de cair.","Cada tipo de terra lê diferente. Recalibre se trocar o substrato."]},
+reservoir:{n:"Reservatório",sub:"guarda a água",go:7,
+ r:"Guarda a água de rega. O SIF calcula os litros gastos pelo tempo que a bomba ficou ligada e envia junto das leituras.",
+ t:[["Função","Armazenar a água"],["Litros gastos","minutos ligada × vazão da bomba"],["Dado enviado","liters_pump, a cada envio"],["Nível","O SIF não mede o nível da água"]],
+ d:["Use um recipiente opaco ou cubra o seu. Luz demais cria algas, que entopem a bomba.","Faça uma tampa com furos só para a mangueira e o cabo da bomba.","Como o nível não é medido, confira a água com frequência. Calcule quantos dias de rega cabem no volume.","Água limpa evita entupimento. Se usar água de chuva, passe por um pano ou filtro."]},
+pump:{n:"Bomba",sub:"via relé",go:6,
+ r:"Puxa a água do reservatório e a empurra pela mangueira até a planta.",
+ t:[["Tipo","Bomba submersível DC. As de 3 a 6 V são comuns em kits"],["Alimentação","Fonte própria, passando pelo relé"],["Controle","Relé no GPIO 4"],["Limite","15 minutos seguidos, em qualquer modo"],["Vazão","Cadastrada na plataforma, em L/min"]],
+ d:["Nunca ligue a bomba direto num pino do ESP32. Ele não fornece a corrente que ela precisa.","Não deixe a bomba rodar a seco. O SIF não sabe se a água acabou, então confira o reservatório com frequência.","Meça a vazão real: ponha a mangueira num copo medidor, ligue por 30 s e calcule os litros por minuto. Cadastre esse valor.","Use só fonte de baixa tensão (DC) para a bomba. Água e tomada de 127 ou 220 V não combinam.","Mantenha a entrada da bomba livre e limpe de vez em quando."]},
+hose:{n:"Mangueira",sub:"leva a água",go:7,
+ r:"Leva a água da bomba até o pé da planta.",
+ t:[["Diâmetro","O interno deve encaixar no bico da bomba (5 a 8 mm são comuns)"],["Material","Silicone ou PVC cristal"]],
+ d:["Prenda no bico com uma abraçadeira pequena.","Evite dobras. Elas reduzem a vazão e forçam a bomba.","Deixe a ponta perto da base da planta, não sobre as folhas.","Uma mangueira mais curta rende mais vazão. Prefira o caminho mais direto."]},
+pot:{n:"Vaso",sub:"solo medido",go:7,
+ r:"O solo onde o sensor mede. Quanto mais escuro, mais úmido ele está.",
+ t:[["Drenagem","Precisa de furos no fundo"],["Substrato","Muda a leitura do sensor"]],
+ d:["Faça furos de drenagem e use um prato para coletar o excesso. Raiz encharcada apodrece.","Prefira terra que drene bem. Terra muito argilosa segura água e engana o sensor.","Se mudar de substrato, recalibre o sensor de solo."]},
+plant:{n:"Planta",sub:"umidade ideal",go:7,
+ r:"Cada planta tem uma umidade ideal, cadastrada na plataforma. No modo automático, o SIF mantém o solo nesse valor.",
+ t:[["Modo 1, automático","Liga abaixo da umidade ideal e desliga em ideal + 5 pontos"],["Modo 2, agendado","Liga nos horários marcados, por um tempo definido (até 6 horários por dia)"],["Recebe da plataforma","mode, time_on, period, humidity, temperature, flow"]],
+ d:["Pesquise a umidade que a sua espécie prefere. Suculentas e hortaliças pedem valores bem diferentes.","Comece com um valor um pouco mais baixo e observe por 2 ou 3 dias antes de confiar.","Tenha em mente que o sensor mede o solo no ponto em que está. Plantas grandes podem pedir mais de um ponto de medida."]},
+cloud:{n:"Plataforma SIF",sub:"Laravel",go:8,
+ r:"Recebe cada leitura, calcula as médias do dia, guarda o histórico e só devolve regras novas ao aparelho quando elas mudam.",
+ t:[["Rota","POST /api/device/write"],["Campos","numbering, humidity, temperature, liters_pump"],["Resposta","200, com o campo update quando a configuração mudou"],["Erros","404 se a numeração não existe, 422 se algum campo é inválido"],["Grava","Cada leitura e a média do dia por dispositivo"],["Tecnologia","Laravel, rodando em Docker"]],
+ d:["Em produção, use HTTPS. O firmware atual aceita qualquer certificado, então troque para validar o do seu servidor.","Se a plataforma roda no seu computador, reserve um IP fixo para ele no roteador. Assim o endereço gravado no ESP32 não muda.","O ESP32 não alcança localhost. Use o IP do computador na rede ou um endereço público.","Troque a senha padrão do administrador e faça backup do banco de dados."]}
+};
+var STEP_OF={esp:2,relay:5,dht:3,solo:4,pump:6,reservoir:7,hose:7,pot:7,plant:7,cloud:8,box:11,lid:11};
+
+/* =====================================================================
+   SIMULAÇÃO (as mesmas regras do firmware)
+   ===================================================================== */
+var FOLGA=5,MAX_BOMBA=15,VAZAO=1.5,SEND_EVERY=10,READ_EVERY=5;
+var DIAS=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+var SIM={min:300,day:1,moist:52,read:52,temp:26,pump:false,since:0,limit:0,fired:-1,liters:0,sinceSend:0,tick:0,level:1,
+  hist:[],plat:{mode:1,target:60,times:[360,1080],dur:6},dev:null,pending:false,run:true,fast:false,acc:0,lastSendMs:performance.now()};
+SIM.dev=JSON.parse(JSON.stringify(SIM.plat));
+function addLog(txt,cls){
+  var ol=$("#log"),li=document.createElement("li");
+  if(cls)li.className="t-"+cls;
+  li.innerHTML="<time>"+fmt(SIM.min)+"</time><span></span>";li.lastChild.textContent=txt;
+  ol.insertBefore(li,ol.firstChild);while(ol.children.length>40)ol.removeChild(ol.lastChild);
+}
+function flash(name){
+  var el=$('#stages li[data-s="'+name+'"]');if(!el)return;
+  el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove("on")},reduce?900:750);
+}
+function pumpOn(ms,why){if(SIM.pump)return;SIM.pump=true;SIM.since=SIM.min;SIM.limit=Math.min(ms,MAX_BOMBA);flash("rega");addLog("Bomba ligada: "+why+".","rega")}
+function pumpOff(why){if(!SIM.pump)return;SIM.pump=false;flash("rega");addLog("Bomba desligada: "+why+".","rega")}
+function control(){
+  var d=SIM.dev;
+  if(SIM.pump&&SIM.min-SIM.since>=SIM.limit)pumpOff("tempo atingido");
+  if(d.mode===1){
+    if(d.target<=0)return;
+    if(!SIM.pump&&SIM.read<d.target){flash("decide");pumpOn(MAX_BOMBA,"solo seco, "+SIM.read+"% abaixo dos "+d.target+"% ideais")}
+    else if(SIM.pump&&SIM.read>=d.target+FOLGA){flash("decide");pumpOff("umidade chegou a "+SIM.read+"%")}
+    return;
+  }
+  var key=SIM.day*1440+SIM.min%1440;
+  if(d.times.indexOf(SIM.min%1440)>-1&&key!==SIM.fired){SIM.fired=key;flash("decide");pumpOn(d.dur,"horário agendado das "+fmt(SIM.min)+", por "+d.dur+" min")}
+}
+function simSend(){
+  flash("envia");SIM.lastSendMs=performance.now();
+  var l=SIM.sinceSend;SIM.sinceSend=0;
+  addLog("Enviou: solo "+SIM.read+"%, "+tr(SIM.temp.toFixed(1))+" °C, "+tr(l.toFixed(2))+" L.","nuvem");
+  schemPacket(true);if(App.V3)App.V3.onSend();
+  setTimeout(function(){flash("nuvem");$("#cloudTxt").textContent="solo "+SIM.read+"% · "+tr(SIM.temp.toFixed(0))+" °C"},reduce?0:600);
+  if(SIM.pending){
+    setTimeout(function(){
+      schemPacket(false);SIM.dev=JSON.parse(JSON.stringify(SIM.plat));SIM.pending=false;SIM.fired=-1;$("#pend").hidden=true;
+      var d=SIM.dev;addLog("Recebeu regras novas: "+(d.mode===1?"automático, ideal "+d.target+"%":"agendado, "+d.times.map(fmt).join(" e ")+" por "+d.dur+" min")+".","aviso");flash("nuvem");
+    },reduce?0:800);
+  }
+}
+function simTick(){
+  SIM.tick++;SIM.min++;if(SIM.min%1440===0){SIM.day=(SIM.day+1)%7;SIM.liters=0}
+  SIM.temp=26+3.2*Math.sin((SIM.min%1440-540)/1440*2*Math.PI);
+  SIM.moist-=0.08;
+  if(SIM.pump){SIM.moist+=0.95;SIM.liters+=VAZAO;SIM.sinceSend+=VAZAO;SIM.level-=0.002;if(SIM.level<0.3)SIM.level=1}
+  SIM.moist=clamp(SIM.moist,0,100);
+  if(SIM.tick%READ_EVERY===1){SIM.read=Math.round(SIM.moist);flash("mede")}
+  control();
+  if(SIM.tick%SEND_EVERY===0)simSend();
+  if(SIM.tick%5===0){SIM.hist.push({m:SIM.moist,p:SIM.pump});if(SIM.hist.length>144)SIM.hist.shift()}
+}
+function target(){return SIM.dev.mode===1?SIM.dev.target:60}
+
+/* ---------- esquema 2D ---------- */
+function schemPacket(toCloud){
+  var p=$("#packet"),path=$("#wifi");if(!p||$("#schem").hidden)return;
+  var len=path.getTotalLength(),t0=null,dur=reduce?1:650;
+  p.setAttribute("fill",toCloud?"var(--leaf)":"var(--water)");
+  function step(ts){if(t0===null)t0=ts;var k=Math.min(1,(ts-t0)/dur),d=toCloud?k:1-k,pt=path.getPointAtLength(len*d);
+    p.setAttribute("cx",pt.x);p.setAttribute("cy",pt.y);
+    if(k<1)requestAnimationFrame(step);else{p.setAttribute("cx",-20);p.setAttribute("cy",-20)}}
+  requestAnimationFrame(step);
+}
+function renderSim(){
+  $("#mTxt").textContent=SIM.read+"%";$("#tTxt").textContent=Math.round(SIM.temp)+" °C";
+  $("#wet").setAttribute("opacity",(0.1+SIM.moist/100*0.6).toFixed(2));
+  var droop=(1-Math.min(1,SIM.moist/Math.max(40,target())))*38;
+  $("#leafL").style.transform="rotate("+(-droop)+"deg)";$("#leafR").style.transform="rotate("+droop+"deg)";
+  $("#ledPump").setAttribute("fill",SIM.pump?"var(--water)":"var(--line)");
+  $("#hose").setAttribute("class","hose"+(SIM.pump?" flow":""));
+  $("#pumpG").classList.toggle("pumpon",SIM.pump);
+  $("#litros").textContent="Água usada hoje: "+tr(SIM.liters.toFixed(1))+" L";
+  var now=$("#now"),d=SIM.dev,txt;
+  if(SIM.pump){now.className="now rega";txt="Regando. Solo em "+SIM.read+"%"+(d.mode===1?", desliga ao chegar em "+(d.target+FOLGA)+"%.":", por mais "+Math.max(0,SIM.limit-(SIM.min-SIM.since))+" min.")}
+  else if(d.mode===1){
+    if(SIM.read<d.target){now.className="now seco";txt="Solo em "+SIM.read+"%, abaixo dos "+d.target+"% ideais. Vai regar na próxima leitura."}
+    else{now.className="now ok";txt="Solo em "+SIM.read+"%, acima dos "+d.target+"% ideais. A planta está bem, o aparelho só observa."}
+  }else{
+    var next=null,m=SIM.min%1440,ts=d.times.slice().sort(function(a,b){return a-b}),i;
+    for(i=0;i<ts.length;i++)if(ts[i]>m){next=ts[i];break}
+    if(next===null&&ts.length)next=ts[0];
+    now.className="now ok";txt=ts.length?"Aguardando o próximo horário marcado: "+fmt(next)+". Solo em "+SIM.read+"%.":"Nenhum horário marcado. Escolha um nas Regras."}
+  $("#nowTxt").textContent=txt;
+  drawChart();
+}
+function drawChart(){
+  var W=600,H=190,L=34,R=10,T=10,B=26,pw=W-L-R,ph=H-T-B,N=144;
+  var x=function(i){return L+pw*i/(N-1)},y=function(v){return T+ph*(1-v/100)};
+  var out="",h=SIM.hist,i,v;
+  for(v=0;v<=100;v+=50)out+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="11" fill="var(--muted)" font-family="JetBrains Mono,monospace">'+v+'</text>';
+  var off=N-h.length;
+  for(i=0;i<h.length;i++)if(h[i].p)out+='<rect x="'+x(off+i-.5)+'" y="'+T+'" width="'+(pw/(N-1))+'" height="'+ph+'" fill="var(--water)" opacity=".28"/>';
+  if(SIM.dev.mode===1)out+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(SIM.dev.target)+'" y2="'+y(SIM.dev.target)+'" stroke="var(--warn)" stroke-width="1.8" stroke-dasharray="6 4"/>';
+  if(h.length>1){
+    out+='<polyline points="'+h.map(function(p,k){return x(off+k).toFixed(1)+","+y(p.m).toFixed(1)}).join(" ")+'" fill="none" stroke="var(--leaf)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+    var last=h[h.length-1];out+='<circle cx="'+x(N-1)+'" cy="'+y(last.m)+'" r="4.5" fill="var(--leaf)" stroke="var(--surface)" stroke-width="2"/>';
+  }
+  var lbl=["-12 h","-6 h","agora"],lx=[L,L+pw/2,W-R],an=["start","middle","end"];
+  for(i=0;i<3;i++)out+='<text x="'+lx[i]+'" y="'+(H-6)+'" text-anchor="'+an[i]+'" font-size="11" fill="var(--muted)" font-family="Inter,sans-serif">'+lbl[i]+'</text>';
+  if(!h.length)out+='<text x="'+(L+pw/2)+'" y="'+(T+ph/2)+'" text-anchor="middle" font-size="13" fill="var(--muted)" font-family="Inter,sans-serif">O histórico aparece em instantes…</text>';
+  $("#chart").innerHTML=out;
+}
+setInterval(function(){
+  var now=performance.now(),dt=Math.min(0.25,(now-(simSend._l||now))/1000);simSend._l=now;
+  if(!SIM.run||App.mode!=="explore"||document.hidden)return;
+  SIM.acc+=dt*(SIM.fast?14:5);var n=0;
+  while(SIM.acc>=1&&n<30){SIM.acc-=1;simTick();n++}
+  if(n)renderSim();
+},50);
+
+/* =====================================================================
+   EXPLORAR: lista, painel, seleção
+   ===================================================================== */
+var partsEl=$("#parts"),itemEls={};
+GROUPS.forEach(function(g,gi){
+  var h=document.createElement("h4");h.className="gt";h.textContent=g[0];partsEl.appendChild(h);
+  g[1].forEach(function(id){
+    var b=document.createElement("button");b.className="pi";b.setAttribute("aria-pressed","false");b.dataset.id=id;
+    b.innerHTML='<i class="dot" style="background:'+GCOL[gi]+'"></i><span><b>'+esc(PARTS[id].n)+'</b><small>'+esc(PARTS[id].sub)+'</small></span>';
+    b.onclick=function(){App.select(App.sel===id?null:id)};
+    partsEl.appendChild(b);itemEls[id]=b;
+  });
+});
+/* lista de peças recolhível: lembra a escolha; sem escolha, abre só em tela larga */
+function setSide(open,keep){
+  partsEl.classList.toggle("collapsed",!open);$("#explore").classList.toggle("sidec",!open);
+  $("#sideToggle").setAttribute("aria-expanded",open);$("#sideCh").textContent=open?"▾":"▸";
+  if(!keep)sset("sif-side",open);
+}
+$("#sideToggle").onclick=function(){setSide(partsEl.classList.contains("collapsed"));sideLabel()};
+function sideLabel(){$("#sideLbl").textContent=App.sel&&partsEl.classList.contains("collapsed")?"Peças · "+PARTS[App.sel].n:"Peças"}
+function kindOf(id){for(var i=0;i<GROUPS.length;i++)if(GROUPS[i][1].indexOf(id)>-1)return GROUPS[i][0];return ""}
+function paintInspector(){
+  var id=App.sel,p=id&&PARTS[id],el=$("#tab-peca"),h="";
+  if(!p){
+    h='<div class="secb"><span class="kind">Bem-vindo</span><h2>O SIF cuidando de uma planta</h2><p>Quando o solo seca além do ideal, o ESP32 liga a bomba e a água chega à planta.</p></div>'+
+      '<div class="secb"><ul class="tips"><li>Clique numa peça para ver o que ela faz.</li><li><b>Desmontar</b> mostra o SIF por dentro.</li><li><b>Regras</b> e <b>Atividade</b>, no alto, abrem quando você precisar.</li></ul></div>';
+  }else{
+    h='<div class="secb"><span class="kind">'+esc(kindOf(id))+'</span><h2>'+esc(p.n)+'</h2><p>'+esc(p.r)+'</p></div>'+
+      '<div class="secb"><h4>Ficha técnica</h4><dl class="tech">'+p.t.map(function(r){return "<dt>"+esc(r[0])+"</dt><dd>"+esc(r[1])+"</dd>"}).join("")+'</dl></div>'+
+      '<div class="secb"><h4>Recomendações</h4><ul class="tips">'+p.d.map(function(t){return "<li>"+esc(t)+"</li>"}).join("")+'</ul></div>'+
+      '<div class="row"><button class="btn primary" id="goBuild">Como ligar esta peça</button></div>';
+  }
+  el.innerHTML=h;el.scrollTop=0;
+  var gb=$("#goBuild");if(gb)gb.onclick=function(){App.goBuild(STEP_OF[id]||1)};
+}
+App.select=function(id,src){
+  App.sel=id;
+  Object.keys(itemEls).forEach(function(k){itemEls[k].setAttribute("aria-pressed",k===id)});
+  $$(".sp").forEach(function(g){g.classList.toggle("sel",g.dataset.part===id)});
+  paintInspector();sideLabel();
+  if(id)$("#hint").hidden=true;
+  if(src!=="v3"&&App.V3)App.V3.setSelected(id);
+};
+/* Regras e Atividade valem para o SIF inteiro: ficam numa barra própria, que não muda ao selecionar peças */
+function showDock(t){
+  App.dock=t;
+  $$(".dtabs button[data-dock]").forEach(function(b){b.setAttribute("aria-selected",b.dataset.dock===t)});
+  ["regras","ativ"].forEach(function(k){$("#tab-"+k).hidden=k!==t});
+  $("#openRegras").setAttribute("aria-pressed",t==="regras");$("#openAtiv").setAttribute("aria-pressed",t==="ativ");
+  $("#dock").hidden=!t;$("#dock").classList.toggle("open",!!t);
+  if(t==="ativ")renderSim();
+}
+$$(".dtabs button[data-dock]").forEach(function(b){b.onclick=function(){showDock(b.dataset.dock)}});
+$("#dockClose").onclick=function(){showDock(null)};
+$("#openRegras").onclick=function(){showDock(App.dock==="regras"?null:"regras")};
+$("#openAtiv").onclick=function(){showDock(App.dock==="ativ"?null:"ativ")};
+$$(".sp").forEach(function(g){
+  g.onclick=function(){App.select(App.sel===g.dataset.part?null:g.dataset.part)};
+  g.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();g.onclick()}};
+});
+function setView(v){
+  App.view=v;$("#gl").hidden=v!=="3d";$("#schem").hidden=v!=="schem";
+  $("#vb3d").setAttribute("aria-pressed",v==="3d");$("#vbSc").setAttribute("aria-pressed",v==="schem");
+  $("#btnExplode").hidden=v!=="3d";
+  Object.keys(ONLY3D).forEach(function(k){itemEls[k].hidden=v!=="3d"});
+  if(v==="schem"&&ONLY3D[App.sel])App.select(null);
+  if(v==="3d"&&App.V3)App.V3.resize();
+  renderSim();
+}
+$("#vb3d").onclick=function(){if(App.V3)setView("3d")};
+$("#vbSc").onclick=function(){setView("schem")};
+$("#btnExplode").onclick=function(){if(App.V3)App.V3.toggle()};
+$("#btnThirst").onclick=function(){SIM.moist=Math.max(0,SIM.moist-15);addLog("Você secou o solo: umidade caiu para "+Math.round(SIM.moist)+"%.","aviso");renderSim()};
+$("#play").onclick=function(){SIM.run=!SIM.run;this.textContent=SIM.run?"Pausar":"Continuar"};
+$("#speed").onclick=function(){SIM.fast=!SIM.fast;this.textContent="Velocidade "+(SIM.fast?"3×":"1×")};
+
+/* regras */
+function platChanged(){SIM.pending=true;$("#pend").hidden=false}
+function setRuleMode(m){
+  SIM.plat.mode=m;$("#mAuto").setAttribute("aria-pressed",m===1);$("#mSched").setAttribute("aria-pressed",m===2);
+  $("#autoBox").hidden=m!==1;$("#schedBox").hidden=m!==2;platChanged();
+}
+$("#mAuto").onclick=function(){setRuleMode(1)};
+$("#mSched").onclick=function(){setRuleMode(2)};
+$("#target").oninput=function(){SIM.plat.target=+this.value;$("#targetV").textContent=this.value+"%";platChanged()};
+$("#dur").oninput=function(){SIM.plat.dur=+this.value;$("#durV").textContent=this.value+" min";platChanged()};
+$$(".chip[data-t]").forEach(function(c){c.onclick=function(){
+  c.setAttribute("aria-pressed",c.getAttribute("aria-pressed")!=="true");
+  SIM.plat.times=$$(".chip[data-t]").filter(function(e){return e.getAttribute("aria-pressed")==="true"}).map(function(e){return +e.dataset.t});
+  platChanged();
+}});
+
+/* =====================================================================
+   MODELO 3D
+   ===================================================================== */
+(function(){
+var host=$("#gl"),T=window.THREE;
+function fail(){
+  host.insertAdjacentHTML("afterbegin",'<p class="glfail" id="glfail">O modelo 3D não abriu neste navegador. O esquema mostra o mesmo funcionamento.</p>');
+  $("#vb3d").disabled=true;$("#btnExplode").hidden=true;$("#hud").hidden=true;
+  App.V3=null;setView("schem");
+}
+if(!T){fail();return}
+var renderer;
+try{renderer=new T.WebGLRenderer({antialias:true,alpha:true})}catch(e){fail();return}
+var cv=renderer.domElement;
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.outputEncoding=T.sRGBEncoding;
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
+host.insertBefore(cv,host.firstChild);
+cv.setAttribute("aria-label","Modelo 3D do SIF cuidando de uma planta. Clique para desmontar.");
+var scene=new T.Scene(),camera=new T.PerspectiveCamera(36,1.6,0.1,100);
+scene.add(new T.HemisphereLight(0xffffff,0x6f8f80,0.95));
+var sun=new T.DirectionalLight(0xffffff,0.95);sun.position.set(6,12,8);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
+var sc=sun.shadow.camera;sc.left=-13;sc.right=13;sc.top=13;sc.bottom=-13;sc.near=1;sc.far=45;scene.add(sun);
+var fill=new T.DirectionalLight(0x9ecbff,0.4);fill.position.set(-8,5,-6);scene.add(fill);
+var ground=new T.Mesh(new T.PlaneGeometry(80,80),new T.ShadowMaterial({opacity:0.2}));
+ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+
+function M(c,o){return new T.MeshStandardMaterial(Object.assign({color:c,roughness:0.6,metalness:0.05},o||{}))}
+function led(c){var m=M(0x222222,{emissive:c,emissiveIntensity:0});m.userData.noHL=true;return m}
+function add(g,geo,mat,x,y,z){
+  var m=new T.Mesh(geo,mat);m.position.set(x||0,y||0,z||0);
+  var glass=mat.transparent&&mat.opacity<0.6;m.castShadow=!glass;m.receiveShadow=true;m.userData.hl=!mat.userData.noHL;g.add(m);return m}
+function box(g,w,h,d,mat,x,y,z){return add(g,new T.BoxGeometry(w,h,d),mat,x,y,z)}
+function cyl(g,rt,rb,h,mat,x,y,z,seg){return add(g,new T.CylinderGeometry(rt,rb,h,seg||32),mat,x,y,z)}
+function sph(g,r,mat,x,y,z){return add(g,new T.SphereGeometry(r,20,14),mat,x,y,z)}
+function anchor(g,x,y,z){var o=new T.Object3D();o.position.set(x,y,z);g.add(o);return o}
+var P={},ORDER=[],hits=[];
+function part(id,x,y,z,ox,oy,oz){
+  var g=new T.Group();g.position.set(x,y,z);
+  g.userData={base:new T.Vector3(x,y,z),off:new T.Vector3(ox,oy,oz),id:id};
+  scene.add(g);P[id]=g;ORDER.push(id);return g}
+
+var tray=new T.Group();scene.add(tray);
+box(tray,11.6,0.4,7.6,M(0xb98f5e,{roughness:0.85}),0.3,0.2,0);
+box(tray,11.2,0.04,7.2,M(0xc9a374,{roughness:0.9}),0.3,0.41,0);
+
+var R=part("reservoir",-3.7,0.4,-1.3,-2.2,1.2,0.4);
+cyl(R,1.2,1.2,0.12,M(0x44524d),0,0.06,0);
+cyl(R,1.15,1.15,3,M(0xcfe8f5,{transparent:true,opacity:0.2,depthWrite:false,roughness:0.1}),0,1.62,0);
+var wg=new T.CylinderGeometry(1.05,1.05,2.7,32);wg.translate(0,1.35,0);
+var wmat=M(0x3aa0e6,{transparent:true,opacity:0.8,emissive:0x0a4a80,emissiveIntensity:0.45});wmat.userData.noHL=true;
+var water=add(R,wg,wmat,0,0.12,0);
+cyl(R,1.2,1.2,0.16,M(0x44524d),0,3.2,0);
+var stub=cyl(R,0.12,0.12,0.6,M(0x6b7a75),1.25,0.5,0,16);stub.rotation.z=Math.PI/2;
+
+var Pm=part("pump",-1.7,0.4,-0.1,-1.2,1.0,1.8);
+box(Pm,1.0,0.7,0.8,M(0x35433e),0,0.35,0);
+cyl(Pm,0.36,0.36,0.45,M(0x1f6fb5),0,0.92,0);
+var imp=new T.Group();imp.position.set(0,1.17,0);Pm.add(imp);
+box(imp,0.52,0.05,0.09,M(0xe3edf1),0,0,0);box(imp,0.09,0.05,0.52,M(0xe3edf1),0,0,0);
+var nz=cyl(Pm,0.1,0.1,0.45,M(0x1f6fb5),0.62,0.6,0,16);nz.rotation.z=Math.PI/2;
+var pumpLed=led(0x4db8ff);sph(Pm,0.07,pumpLed,-0.3,0.72,0.41);
+Pm.aOut=anchor(Pm,0.85,0.6,0);Pm.aIn=anchor(Pm,-0.3,0.5,0.42);
+
+var Bx=part("box",0.9,0.4,-2.3,0,0,0),wm=M(0x2a3a37,{roughness:0.7});
+box(Bx,3,0.08,2,wm,0,0.04,0);box(Bx,3,0.7,0.08,wm,0,0.39,0.96);box(Bx,3,0.7,0.08,wm,0,0.39,-0.96);
+box(Bx,0.08,0.7,2,wm,1.46,0.39,0);box(Bx,0.08,0.7,2,wm,-1.46,0.39,0);
+var Ld=part("lid",0.9,0.4,-2.3,0,3.6,0);
+box(Ld,3.06,0.1,2.06,M(0xa9c2b9,{transparent:true,opacity:0.42,depthWrite:false,roughness:0.2}),0,0.82,0);
+box(Ld,0.7,0.03,0.7,M(0x2b7a4b),0,0.89,0);
+
+var E=part("esp",0.3,0.62,-2.25,-0.8,2.3,-0.8);
+box(E,1.6,0.07,0.9,M(0x1f6e4a),0,0,0);
+box(E,0.82,0.1,0.62,M(0xb9c4c9,{metalness:0.7,roughness:0.35}),0.12,0.09,0);
+box(E,0.34,0.03,0.62,M(0x15171a),-0.58,0.05,0);
+box(E,0.22,0.1,0.28,M(0xaab4b8,{metalness:0.8,roughness:0.3}),0.78,0.09,0);
+for(var pi=0;pi<10;pi++){box(E,0.05,0.07,0.05,M(0xd8b24a,{metalness:0.8,roughness:0.3}),-0.65+pi*0.145,0.06,0.4);box(E,0.05,0.07,0.05,M(0xd8b24a,{metalness:0.8,roughness:0.3}),-0.65+pi*0.145,0.06,-0.4)}
+var espLed=led(0x33ff88);sph(E,0.04,espLed,0.55,0.09,-0.28);
+E.aSolo=anchor(E,-0.25,0.12,0.4);E.aDht=anchor(E,0.05,0.12,0.4);E.aRel=anchor(E,0.35,0.12,0.4);
+var rings=[];
+for(var ri=0;ri<3;ri++){var rm=new T.Mesh(new T.RingGeometry(0.5,0.56,48),new T.MeshBasicMaterial({color:0x5cd0ff,transparent:true,opacity:0,side:T.DoubleSide,depthWrite:false}));
+  rm.rotation.x=-Math.PI/2;rm.userData.nohit=true;E.add(rm);rings.push(rm)}
+
+var Rl=part("relay",1.75,0.65,-2.2,1.8,1.4,-0.6);
+box(Rl,0.95,0.12,0.62,M(0x2a5fc4),0,0,0);
+box(Rl,0.4,0.36,0.36,M(0x18181c),-0.1,0.24,0);
+box(Rl,0.3,0.24,0.5,M(0x2f9a52),0.36,0.17,0);
+var relLed=led(0xff3030);sph(Rl,0.05,relLed,0.1,0.1,0.24);
+Rl.aIn=anchor(Rl,-0.4,0.1,0.32);Rl.aOut=anchor(Rl,0.4,0.28,0.3);
+
+var D=part("dht",1.5,0.4,0.9,0.6,1.2,1.6);
+box(D,0.56,0.8,0.4,M(0x2f84d6),0,0.4,0);
+for(var gi=0;gi<5;gi++)box(D,0.4,0.03,0.02,M(0x1b5ea0),0,0.25+gi*0.1,0.21);
+for(var li=0;li<3;li++)box(D,0.04,0.2,0.04,M(0xc9cfd2,{metalness:0.8}),-0.14+li*0.14,0.0,0);
+D.aOut=anchor(D,0,0.1,-0.2);
+
+var Pt=part("pot",3.5,0.4,1.0,1.4,0.4,1.0);
+cyl(Pt,1.2,0.85,1.6,M(0xc4693f,{roughness:0.85}),0,0.8,0,40);
+var rim=add(Pt,new T.TorusGeometry(1.2,0.1,12,40),M(0xb55c35,{roughness:0.85}),0,1.6,0);rim.rotation.x=Math.PI/2;
+var soilMat=M(0x6a4a2c,{roughness:1});soilMat.userData.noHL=true;
+cyl(Pt,1.12,1.12,0.08,soilMat,0,1.52,0,40);
+Pt.aIn=anchor(Pt,-0.55,2.3,0);Pt.aSoil=anchor(Pt,-0.55,1.58,0);
+var So=part("solo",4.1,0.4,1.3,1.7,2.6,0.8);
+box(So,0.38,2.05,0.05,M(0x23483a),0,1.98,0);
+box(So,0.3,0.3,0.12,M(0x15171a),0,2.85,0);
+for(var si=0;si<5;si++)box(So,0.2,0.04,0.06,M(0xd8b24a,{metalness:0.8,roughness:0.3}),0,1.2+si*0.22,0);
+So.aOut=anchor(So,0,3.0,0);
+
+var Pl=part("plant",3.5,1.92,1.0,1.4,2.8,1.0);
+cyl(Pl,0.06,0.1,1.5,M(0x3d8a50),0,0.75,0,10);
+var leaves=[],leafCol=new T.Color(0x3fa05c),dryCol=new T.Color(0xa7a64a),tmpC=new T.Color();
+for(var k=0;k<7;k++){
+  var pv=new T.Group();pv.position.y=0.35+k*0.17;pv.rotation.y=k*2.4;Pl.add(pv);
+  var lm=M(0x3fa05c,{roughness:0.7});
+  var lf=add(pv,new T.SphereGeometry(1,16,12),lm,0.6,0,0);lf.scale.set(0.62,0.07,0.3);
+  leaves.push({pv:pv,mat:lm})}
+var flower=new T.Group();flower.position.y=1.55;Pl.add(flower);
+sph(flower,0.13,M(0xf2c14e),0,0,0);
+for(var fp=0;fp<6;fp++){var pg=new T.Group();pg.rotation.y=fp*Math.PI/3;flower.add(pg);var pe=add(pg,new T.SphereGeometry(1,12,8),M(0xf4a9c8),0.24,0,0);pe.scale.set(0.2,0.05,0.12)}
+
+var C=part("cloud",0.9,4.9,-2.3,0,2.2,-0.8);
+var cloudMat=M(0xffffff,{emissive:0x9bd4ff,emissiveIntensity:0.12,roughness:0.9});cloudMat.userData.noHL=true;
+[[0,0,0,0.7],[0.8,-0.12,0,0.55],[-0.8,-0.15,0,0.5],[0.3,0.35,0,0.5],[-0.3,0.3,0.1,0.45]].forEach(function(a){sph(C,a[3],cloudMat,a[0],a[1],a[2])});
+C.aMid=anchor(C,0,0,0);
+
+var H=part("hose",0,0,0,0,0,0);
+var hoseMat=M(0x6fb3d9,{transparent:true,opacity:0.85,roughness:0.3});
+var hoseMesh=add(H,new T.BufferGeometry(),hoseMat,0,0,0),flowCurve=null;
+var v0=new T.Vector3(),v1=new T.Vector3(),v2=new T.Vector3();
+function buildHose(){
+  var p0=Pm.aOut.getWorldPosition(new T.Vector3()),p3=Pt.aIn.getWorldPosition(new T.Vector3()),ps=Pt.aSoil.getWorldPosition(new T.Vector3());
+  var a=p0.clone().lerp(p3,0.33),b=p0.clone().lerp(p3,0.68);a.y=p0.y+0.35;b.y=p3.y-0.15;
+  var tube=new T.CatmullRomCurve3([p0,a,b,p3],false,"catmullrom",0.4);
+  hoseMesh.geometry.dispose();hoseMesh.geometry=new T.TubeGeometry(tube,32,0.09,8,false);
+  flowCurve=new T.CatmullRomCurve3([p0,a,b,p3,ps],false,"catmullrom",0.4);
+}
+var wires=[];
+function wire(a,b,c){var m=new T.Mesh(new T.BufferGeometry(),new T.MeshStandardMaterial({color:c,roughness:0.5}));m.castShadow=true;scene.add(m);wires.push({a:a,b:b,m:m})}
+wire(So.aOut,E.aSolo,0xe8c33a);wire(D.aOut,E.aDht,0x37c46b);wire(E.aRel,Rl.aIn,0xf0873a);wire(Rl.aOut,Pm.aIn,0xe5483a);
+function buildWires(){wires.forEach(function(w){
+  w.a.getWorldPosition(v0);w.b.getWorldPosition(v1);v2.copy(v0).lerp(v1,0.5);v2.y=Math.max(v0.y,v1.y)+0.3+v0.distanceTo(v1)*0.1;
+  w.m.geometry.dispose();w.m.geometry=new T.TubeGeometry(new T.QuadraticBezierCurve3(v0.clone(),v2.clone(),v1.clone()),18,0.035,6,false)})}
+var guides=[];
+ORDER.forEach(function(id){var g=P[id];if(g.userData.off.lengthSq()===0)return;
+  var gm=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]),new T.LineBasicMaterial({color:0x8aa095,transparent:true,opacity:0.55}));
+  scene.add(gm);guides.push({g:g,l:gm})});
+var drops=[],dropMat=new T.MeshBasicMaterial({color:0x7fd0ff});
+for(var di=0;di<16;di++){var d=new T.Mesh(new T.SphereGeometry(0.075,8,6),dropMat);d.visible=false;d.userData.nohit=true;scene.add(d);drops.push(d)}
+var pkt=new T.Mesh(new T.SphereGeometry(0.14,12,10),new T.MeshBasicMaterial({color:0x5cd0ff}));pkt.visible=false;scene.add(pkt);
+
+ORDER.forEach(function(id){P[id].traverse(function(o){if(o.isMesh&&!o.userData.nohit){o.userData.part=id;hits.push(o)}})});
+tray.traverse(function(o){if(o.isMesh){o.userData.part="tray";hits.push(o)}});
+var exploded=false,selected=null,hovered=null,e=0;
+var tagsEl=$("#tags"),tagEls={},tagInfo={};
+function pick(id){selected=id;tagsPressed();refreshHL();App.select(id,"v3")}
+ORDER.forEach(function(id){
+  if(id==="hose"||id==="box")return;
+  var t=document.createElement("button");t.className="tag";t.textContent=PARTS[id].n;t.setAttribute("aria-pressed","false");
+  t.onclick=function(){pick(selected===id?null:id)};tagsEl.appendChild(t);tagEls[id]=t;
+  var bb=new T.Box3().setFromObject(P[id]),b=P[id].userData.base;
+  tagInfo[id]={dy:bb.max.y-b.y+0.35,cx:(bb.min.x+bb.max.x)/2-b.x,cz:(bb.min.z+bb.max.z)/2-b.z};
+});
+function tagsPressed(){for(var id in tagEls)tagEls[id].setAttribute("aria-pressed",id===selected)}
+var hlCol=new T.Color(0x3aa0ff),partMeshes={};
+ORDER.forEach(function(id){partMeshes[id]=[];P[id].traverse(function(o){if(o.isMesh&&o.userData.hl)partMeshes[id].push(o)})});
+function setHL(id,a){partMeshes[id].forEach(function(o){o.material.emissive.copy(hlCol);o.material.emissiveIntensity=a})}
+function refreshHL(){ORDER.forEach(function(id){setHL(id,(id===selected?1.4:0)+(id===hovered?0.5:0))})}
+function setExplode(v){
+  exploded=v;
+  $("#btnExplode").textContent=v?"Montar de novo":"Desmontar";
+  $("#hint").textContent=v?"Toque numa peça para entender. Arraste para girar.":"Clique no SIF para desmontar. Arraste para girar.";
+  if(!v&&selected)pick(null);
+  if(reduce)e=v?1:0;
+}
+$$(".pi").forEach(function(b){
+  b.addEventListener("mouseenter",function(){if(!P[b.dataset.id])return;hovered=b.dataset.id;refreshHL()});
+  b.addEventListener("mouseleave",function(){if(hovered===b.dataset.id){hovered=null;refreshHL()}});
+});
+
+var az=0.62,pol=1.08,rad=18,idle=0;
+var ray=new T.Raycaster(),ndc=new T.Vector2();
+function pickAt(ev){var r=cv.getBoundingClientRect();ndc.set((ev.clientX-r.left)/r.width*2-1,-((ev.clientY-r.top)/r.height)*2+1);ray.setFromCamera(ndc,camera);
+  var h=ray.intersectObjects(hits,false);return h.length?h[0].object.userData.part:null}
+var drag=null,moved=0;
+cv.addEventListener("pointerdown",function(ev){$("#hint").hidden=true;drag={x:ev.clientX,y:ev.clientY};moved=0;try{cv.setPointerCapture(ev.pointerId)}catch(x){}cv.style.cursor="grabbing"});
+cv.addEventListener("pointermove",function(ev){
+  if(drag){var dx=ev.clientX-drag.x,dy=ev.clientY-drag.y;drag.x=ev.clientX;drag.y=ev.clientY;moved+=Math.abs(dx)+Math.abs(dy);az-=dx*0.008;if(ev.pointerType==="mouse")pol=clamp(pol-dy*0.006,0.4,1.5);idle=0}
+  else if(ev.pointerType==="mouse"){var id=pickAt(ev);id=id==="tray"?null:id;if(id!==hovered){hovered=id;cv.style.cursor=id?"pointer":"grab";refreshHL()}}});
+cv.addEventListener("pointerup",function(ev){
+  if(!drag)return;drag=null;cv.style.cursor=hovered?"pointer":"grab";
+  if(moved<6){var id=pickAt(ev);
+    if(!exploded){if(id){setExplode(true);if(id!=="tray")pick(id)}}
+    else pick(id&&id!=="tray"?id:null)}});
+cv.addEventListener("pointercancel",function(){drag=null});
+cv.addEventListener("pointerleave",function(){if(hovered){hovered=null;refreshHL()}});
+
+function resize(){var w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);cv.style.width="100%";cv.style.height="100%";camera.aspect=w/h;camera.updateProjectionMatrix()}
+if(window.ResizeObserver)new ResizeObserver(resize).observe(host);else window.addEventListener("resize",resize);
+var visible=true;
+if(window.IntersectionObserver)new IntersectionObserver(function(en){visible=en[0].isIntersecting}).observe(host);
+
+function ease(x){return x*x*(3-2*x)}
+var clock=new T.Clock(),tgt=new T.Vector3(0.4,1.9,0),wp=new T.Vector3(),lastE=-1,pulse=-1,pk=null,flashC=0,hudIn=0;
+function onSend(){var p=E.getWorldPosition(new T.Vector3());p.y+=0.4;pk={t:0,from:p};pulse=0}
+
+function frame(){
+  requestAnimationFrame(frame);
+  var dt=Math.min(clock.getDelta(),0.1);
+  if(App.mode!=="explore"||App.view!=="3d"||!visible||document.hidden)return;
+  var time=clock.elapsedTime;
+  var tgtE=exploded?1:0;
+  if(reduce)e=tgtE;else e+=(tgtE-e)*Math.min(1,dt*3.4);
+  if(Math.abs(e-tgtE)<0.0008)e=tgtE;
+  var k=ease(e);
+  if(Math.abs(e-lastE)>1e-5){
+    ORDER.forEach(function(id){var g=P[id];g.position.copy(g.userData.base).addScaledVector(g.userData.off,k)});
+    scene.updateMatrixWorld(true);buildHose();buildWires();
+    guides.forEach(function(q){var pa=q.g.userData.base,pb=q.g.position,a=q.l.geometry.attributes.position;a.setXYZ(0,pa.x,pa.y,pa.z);a.setXYZ(1,pb.x,pb.y,pb.z);a.needsUpdate=true;q.l.visible=k>0.03});
+    lastE=e}
+
+  var m=SIM.moist,tg=target(),pump=SIM.pump;
+  var dd=clamp((tg+2-m)/26,0,1);
+  leaves.forEach(function(l,i){l.pv.rotation.z=(0.5-dd*1.15)+Math.sin(time*1.3+i)*(reduce?0:0.025);l.mat.color.copy(leafCol).lerp(dryCol,dd*0.8)});
+  flower.scale.setScalar(clamp((m-(tg-4))/14,0,1)+0.0001);
+  soilMat.color.setHex(0x8a6a48).lerp(tmpC.setHex(0x34200f),clamp(m/80,0,1));
+  water.scale.y=SIM.level;
+
+  pumpLed.emissiveIntensity=pump?1.2:0;relLed.emissiveIntensity=pump?1.4:0;
+  espLed.emissiveIntensity=0.5+0.5*Math.sin(time*5)*(reduce?0:1);
+  if(pump)imp.rotation.y+=dt*14;
+  for(var i=0;i<drops.length;i++){var dr=drops[i];dr.visible=pump&&!!flowCurve;if(pump&&flowCurve){var f=(time*0.55+i/drops.length)%1;flowCurve.getPoint(f,dr.position)}}
+
+  if(pk){pk.t+=dt/1.4;var tp=C.aMid.getWorldPosition(v1);var u=clamp(pk.t,0,1),ue=ease(u);
+    pkt.visible=true;pkt.position.copy(pk.from).lerp(tp,ue);pkt.position.y+=Math.sin(u*Math.PI)*0.6;
+    if(pk.t>=1){pk=null;pkt.visible=false;flashC=1}}
+  cloudMat.emissiveIntensity=0.12+flashC*0.9;flashC=Math.max(0,flashC-dt*1.6);
+  rings.forEach(function(r,i){
+    var q=pulse<0?-1:(pulse-i*0.25)/1.2;
+    if(q<0||q>1){r.material.opacity=0}else{r.position.y=0.2+q*2.2;r.scale.setScalar(0.6+q*1.0);r.material.opacity=0.75*(1-q)}});
+  if(pulse>=0){pulse+=dt;if(pulse>2.2)pulse=-1}
+  C.position.y=C.userData.base.y+C.userData.off.y*k+(reduce?0:Math.sin(time*1.1)*0.08);
+
+  if(selected&&!reduce)setHL(selected,1.1+0.6*Math.sin(time*4)+(hovered===selected?0.4:0));
+
+  if(!drag&&!exploded&&!selected&&!reduce&&idle>1.5)az+=dt*0.12;
+  idle+=dt;
+  var asp=camera.aspect,fit=asp<0.9?1.6:asp<1.3?1.25:1;
+  var rt=(18+8*k)*fit;rad+=(rt-rad)*Math.min(1,dt*4);
+  tgt.set(0.4,1.9+1.3*k,0.3*k);
+  camera.position.set(tgt.x+rad*Math.sin(pol)*Math.sin(az),tgt.y+rad*Math.cos(pol),tgt.z+rad*Math.sin(pol)*Math.cos(az));
+  camera.lookAt(tgt);camera.updateMatrixWorld(true);
+
+  var w=host.clientWidth,h=host.clientHeight;
+  for(var id in tagEls){var t=tagEls[id],ti=tagInfo[id],g=P[id];
+    wp.set(g.position.x+ti.cx,g.position.y+ti.dy,g.position.z+ti.cz).project(camera);
+    var show=k>0.85&&wp.z<1;t.classList.toggle("show",show);
+    if(show)t.style.transform="translate("+Math.round((wp.x*0.5+0.5)*w)+"px,"+Math.round((-wp.y*0.5+0.5)*h)+"px) translate(-50%,-100%)"}
+
+  hudIn-=dt;if(hudIn<=0){hudIn=0.25;
+    $("#hSolo").textContent="Solo "+SIM.read+"%";
+    var hp=$("#hPump");hp.textContent=pump?"Bomba ligada":"Bomba desligada";hp.classList.toggle("on",pump)}
+  renderer.render(scene,camera);
+}
+App.V3={
+  setSelected:function(id){
+    if(id&&!exploded)setExplode(true);
+    selected=id;tagsPressed();refreshHL();
+  },
+  toggle:function(){setExplode(!exploded)},
+  resize:resize,onSend:onSend
+};
+resize();scene.updateMatrixWorld(true);buildHose();buildWires();frame();
+})();
+
+/* =====================================================================
+   MONTAR O SEU
+   ===================================================================== */
+var MATS=[
+ ["ESP32 DevKit","1","Com Wi-Fi, de 30 ou 38 pinos. Tenha um cabo USB que transmita dados, não só carga."],
+ ["Sensor de umidade do solo capacitivo","1","Saída analógica, 3 fios. Evite o de duas pontas de metal, que corrói."],
+ ["DHT11 em módulo","1","O de 3 pinos (VCC, DATA, GND) já vem com o resistor necessário."],
+ ["Módulo relé de 1 canal","1","Nível alto, 5 V, com contatos COM, NO e NC. Veja se aceita sinal de 3,3 V."],
+ ["Bomba d'água submersível DC","1","As de 3 a 6 V são comuns. Anote a vazão em L/min."],
+ ["Fonte DC da bomba","1","Mesma tensão da bomba, com corrente folgada. Só baixa tensão."],
+ ["Diodo 1N4007","1","Protege o relé do pico do motor da bomba."],
+ ["Jumpers macho-fêmea e fêmea-fêmea","12","Para ligar sem solda no começo."],
+ ["Mangueira","1 m","Diâmetro interno igual ao bico da bomba."],
+ ["Reservatório com tampa","1","Opaco ou coberto, para não criar algas."],
+ ["Caixa para a eletrônica","1","Com vedação e prensa-cabos."],
+ ["Vaso com furos de drenagem e uma planta","1","O sensor precisa de terra de verdade."]
+];
+var TROUBLE=[
+ ["[envio] falhou: HTTP -1","O aparelho não alcança o servidor.","Confira SERVIDOR_URL: use o IP do computador, não localhost. Mesma rede, e o firewall liberando a porta 8000."],
+ ["HTTP 404, dispositivo não encontrado","A numeração gravada no ESP32 não existe na plataforma.","Compare NUMERACAO do config.h com a cadastrada. São 8 dígitos exatos."],
+ ["HTTP 422","Algum campo enviado é inválido.","A numeração precisa de 8 caracteres. Confira o config.h."],
+ ["Wi-Fi não conecta","A rede é de 5 GHz ou a senha está errada.","O ESP32 só usa 2,4 GHz. Confira nome e senha no config.h."],
+ ["Umidade sempre em 0% ou 100%","Calibração fora do ponto ou fio solto.","Meça de novo o valor no ar e na água e atualize SOLO_SECO e SOLO_MOLHADO. Confira AOUT no GPIO 32 e a alimentação no 3V3."],
+ ["Bomba liga quando a placa é ligada","O relé é de nível baixo.","Troque por um módulo de nível alto ou inverta o sinal no firmware."],
+ ["O relé clica, mas a bomba não liga","Fiação dos contatos ou fonte.","Confira fonte (+) no COM, NO na bomba (+) e bomba (−) na fonte (−). Veja se a fonte está ligada."],
+ ["A bomba liga, mas não sai água","Entrada fora da água, ar na bomba ou mangueira dobrada.","Afunde a bomba, tire as bolhas e desdobre a mangueira."],
+ ["Temperatura não muda","DHT11 mal ligado.","Confira VCC, DATA no GPIO 2 e GND. Se a leitura falhar, o firmware mantém a última válida."],
+ ["Falha ao gravar o firmware","Pino de boot ocupado ou falta de driver.","Segure BOOT ao iniciar a gravação. Tire o fio de dados do GPIO 2. Instale o driver CP210x ou CH340 da sua placa."],
+ ["O modo agendado não dispara","O aparelho não tem a hora.","A hora vem da internet (NTP). Confira se o Wi-Fi está conectado."]
+];
+var CMD1=["git clone https://github.com/sistema-irrigacao-facilitado/laravel-sif.git","cd laravel-sif","cp .env.example .env","docker compose up -d","docker compose exec app bash"].join("\n");
+var CMD2=["composer install","php artisan key:generate","php artisan migrate","php artisan storage:link","php artisan db:seed --class=ManagerAdminSeeder"].join("\n");
+var SERIAL=[
+ ["[config] nenhuma configuração salva, aguardando a plataforma","Primeira vez que liga: ainda não há regras na memória."],
+ ["[wifi] conectando a MinhaRede...","Tentando entrar no Wi-Fi. Repete a cada 10 s se falhar."],
+ ["[envio] ok: solo 41%, 26.0°C","A plataforma aceitou a leitura."],
+ ["[config] modo 1, umidade alvo 60%, vazão 1.50 L/min, período 0s","A plataforma devolveu as regras e o aparelho as guardou."],
+ ["[bomba] ligada (solo seco) por até 900s","Solo abaixo do ideal: o relé fechou."],
+ ["[bomba] desligada (umidade atingida)","O solo chegou ao ideal mais 5 pontos."]
+];
+var STEPS=[
+ {t:"Reúna as peças",v:"mat",parts:[],
+  intro:"A lista cabe numa compra pequena. Conferir as especificações evita a maior parte dos problemas depois.",
+  tasks:["Conferi as especificações de cada peça","Tenho um cabo USB que transmite dados","Entendi que a bomba usa só fonte de baixa tensão"],
+  warn:["Água e eletricidade não se misturam. Mantenha ESP32, relé e fonte longe de respingos, e nunca ligue a bomba direto numa tomada."]},
+ {t:"Conheça os pinos da placa",v:"wire",parts:["esp"],
+  intro:"O firmware usa três pinos de sinal e os de energia. O nome impresso na sua placa pode ser D2, IO2 ou GPIO2: é o mesmo pino.",
+  tasks:["Achei 3V3 e GND na minha placa","Achei o pino VIN (5 V)","Achei os pinos GPIO 2, GPIO 32 e GPIO 4"],
+  warn:["Os pinos de sinal do ESP32 trabalham com 3,3 V. Nunca ligue 5 V neles."],
+  tip:["O desenho dos pinos muda entre fabricantes. Confira o pinout da sua placa antes de ligar fios. Os pinos podem ser trocados no config.h, mas mantenha o sensor de solo num pino ADC1 (32 a 39)."]},
+ {t:"Ligue o DHT11",v:"wire",parts:["dht"],
+  intro:"Três fios: energia, sinal e terra. Faça com tudo desligado.",
+  tasks:["VCC do DHT11 no 3V3 do ESP32","DATA do DHT11 no GPIO 2","GND do DHT11 no GND do ESP32"],
+  warn:["A ordem dos pinos muda de módulo para módulo (VCC, DATA, GND ou DATA, VCC, GND). Leia o que está impresso na placinha."],
+  tip:["Se o seu DHT11 é o solto de 4 pinos, ponha um resistor de 4,7 a 10 kΩ entre VCC e DATA e deixe o terceiro pino sem ligar.","O GPIO 2 é pino de boot. Se a gravação falhar, tire o fio DATA só durante o upload."]},
+ {t:"Ligue o sensor de solo",v:"wire",parts:["solo"],
+  intro:"Também são três fios. Este é o único sensor analógico do SIF.",
+  tasks:["VCC do sensor no 3V3 do ESP32","AOUT (saída analógica) no GPIO 32","GND do sensor no GND do ESP32"],
+  warn:["Alimente com 3V3. Assim o sinal nunca passa do que o ESP32 aguenta."],
+  tip:["O sensor tem uma linha marcada. Não afunde além dela e mantenha o topo, onde fica a eletrônica, seco."]},
+ {t:"Ligue o relé",v:"wire",parts:["relay"],
+  intro:"O relé recebe o sinal do ESP32 e chaveia a bomba. Neste passo ligamos só o lado do controle.",
+  tasks:["VCC do módulo no pino VIN (5 V)","GND do módulo no GND","IN do módulo no GPIO 4"],
+  warn:["O pino VIN só entrega 5 V quando a placa é alimentada pelo USB.","Confirme que o seu módulo liga com nível alto. Se for de nível baixo, a bomba liga ao ligar a placa."],
+  tip:["Quando você gravar o firmware e a bomba for acionada, vai ouvir o clique do relé."]},
+ {t:"Ligue a bomba e a fonte",v:"wire",parts:["pump","relay"],
+  intro:"O lado de potência do relé. A fonte passa pelo contato COM, sai pelo NO e vai para a bomba. A corrente da bomba nunca passa pelo ESP32.",
+  tasks:["Fonte (+) no COM do relé","NO do relé no (+) da bomba","(−) da bomba no (−) da fonte","Diodo em paralelo com a bomba, faixa no (+)","Testei a bomba por 2 segundos dentro da água"],
+  warn:["Desligue a fonte antes de mexer nos fios.","A bomba só pode ligar dentro da água. Rodar a seco queima."],
+  tip:["Use NO, não NC. Se a placa perder energia, a bomba para."]},
+ {t:"Monte a parte da água",v:"hydro",parts:["reservoir","pump","hose","pot","plant","solo"],
+  intro:"A água precisa chegar à base da planta, e o sensor precisa medir o solo certo.",
+  tasks:["Bomba afundada no reservatório, com a entrada livre","Mangueira presa ao bico, sem dobras","Ponta da mangueira na base da planta","Sensor enterrado na zona das raízes, longe do ponto onde a água cai","Vaso com furos de drenagem"],
+  warn:["O topo do sensor, onde fica a eletrônica, deve ficar fora da terra e longe da água."],
+  tip:["Cubra o reservatório. Luz demais cria algas, que entopem a bomba."]},
+ {t:"Coloque a plataforma no ar",v:"plat",parts:["cloud"],
+  intro:"A plataforma é um site em Laravel que roda no Docker. Pode ficar no seu computador ou num servidor.",
+  code:[["No terminal do seu computador",CMD1],["Dentro do contêiner",CMD2]],
+  tasks:["A plataforma abre em http://localhost:8000","Entrei em /admin como administrador (admin@admin.com, senha admin123) e troquei a senha","Como admin, cadastrei a bomba (com a vazão), a planta (com a umidade ideal) e o dispositivo (modelo e numeração de 8 dígitos)","Como usuário, adicionei o dispositivo pela numeração, escolhi planta e bomba e salvei o modo de rega","Anotei o IP do computador na rede (comando ipconfig no Windows)"],
+  warn:["A senha padrão do administrador é pública no repositório. Troque antes de colocar a plataforma na internet."],
+  tip:["Quando você salva o modo de rega, a plataforma marca o dispositivo para receber a configuração no próximo envio."]},
+ {t:"Grave o firmware",v:"fw",parts:["esp"],
+  intro:"O firmware fica na pasta esp32/sif-firmware do repositório. Os valores do seu Wi-Fi, servidor e calibração vão no config.h.",
+  tasks:["Instalei a Arduino IDE e o suporte a placas ESP32","Instalei as bibliotecas DHT sensor library, NTPClient e ArduinoJson (versão 7)","Copiei config.example.h para config.h e preenchi com a ferramenta ao lado","Medi SOLO_SECO (sensor no ar) e SOLO_MOLHADO (na água) e coloquei no config.h","Escolhi a placa ESP32 Dev Module e a porta, e gravei"],
+  warn:["No SERVIDOR_URL, localhost não funciona. Para o ESP32, localhost é ele mesmo. Use o IP do computador."],
+  tip:["Se aparecer Failed to connect, segure o botão BOOT quando começar a gravar.","Se a porta não aparece, instale o driver do conversor USB da sua placa (CP210x ou CH340).","A configuração que o ESP32 recebe da plataforma fica guardada na memória dele."]},
+ {t:"Faça o primeiro teste",v:"serial",parts:["esp","relay","pump"],
+  intro:"Abra o monitor serial da Arduino IDE em 115200. É assim que o aparelho conta o que está fazendo.",
+  tasks:["Vi o aparelho conectar ao Wi-Fi","Vi uma linha [envio] ok","A leitura apareceu na plataforma","Tirei o sensor da terra e a bomba ligou (com a ponta da mangueira num copo)","Voltei o sensor para a terra úmida e a bomba desligou"],
+  tip:["Com o sensor fora da terra, a leitura cai e fica abaixo da umidade ideal. É um jeito rápido de testar o modo automático.","O primeiro envio leva até 1 minuto: o aparelho envia a cada 60 s."]},
+ {t:"Instale e faça a manutenção",v:"trouble",parts:["box","lid"],
+  intro:"Com tudo funcionando, é hora de proteger e deixar o SIF no lugar. Se algo der errado, a tabela ao lado ajuda a achar o problema.",
+  tasks:["Eletrônica dentro da caixa, com prensa-cabos","Cabos com curva para baixo antes de entrar na caixa","Reservatório cheio e coberto","Medi a vazão real da bomba e cadastrei na plataforma","Marquei uma data para revisar: nível de água, entrada da bomba e sensor"],
+  tip:["Revise de tempos em tempos a água do reservatório, a entrada da bomba e a calibração do sensor. O SIF não mede o nível da água."]}
+];
+
+/* ---------- ligação dos fios ---------- */
+var ESP_PINS=[["3V3",100],["GND",140],["GPIO 2",180],["GPIO 32",220],["GPIO 4",260],["VIN (5V)",300],["GND",340]];
+var USED={"3V3":"energia dos sensores","GPIO 2":"DHT11","GPIO 32":"sensor de solo","GPIO 4":"relé","VIN (5V)":"energia do relé","GND":"terra comum"};
+var MODS=[
+ {id:"dht",s:3,x:420,y:60,w:150,h:90,n:"DHT11",c:"temperatura",L:[["VCC",80],["DATA",105],["GND",130]]},
+ {id:"solo",s:4,x:420,y:180,w:150,h:90,n:"Sensor de solo",c:"capacitivo",L:[["VCC",200],["AOUT",225],["GND",250]]},
+ {id:"relay",s:5,x:420,y:300,w:170,h:140,n:"Módulo relé",c:"1 canal",L:[["VCC",325],["IN",350],["GND",375]],Rp:[["COM",325],["NO",350],["NC",375]]},
+ {id:"pump",s:6,x:730,y:300,w:140,h:60,n:"Bomba",c:"DC",L:[["+",320],["−",345]]},
+ {id:"sup",s:6,x:730,y:420,w:140,h:70,n:"Fonte DC",c:"mesma tensão da bomba",L:[["+",440],["−",470]]}
+];
+var WIRES=[
+ {s:3,c:"pwr",p:[[200,100],[300,100],[300,80],[420,80]]},
+ {s:3,c:"sig",p:[[200,180],[330,180],[330,105],[420,105]]},
+ {s:3,c:"gnd",p:[[200,140],[350,140],[350,130],[420,130]]},
+ {s:4,c:"pwr",p:[[200,100],[280,100],[280,200],[420,200]]},
+ {s:4,c:"soil",p:[[200,220],[340,220],[340,225],[420,225]]},
+ {s:4,c:"gnd",p:[[200,140],[360,140],[360,250],[420,250]]},
+ {s:5,c:"pwr",p:[[200,300],[300,300],[300,325],[420,325]]},
+ {s:5,c:"rel",p:[[200,260],[310,260],[310,350],[420,350]]},
+ {s:5,c:"gnd",p:[[200,340],[320,340],[320,375],[420,375]]},
+ {s:6,c:"pwr",p:[[590,350],[670,350],[670,320],[730,320]]},
+ {s:6,c:"pwr",p:[[730,440],[640,440],[640,325],[590,325]]},
+ {s:6,c:"gnd",p:[[730,345],[700,345],[700,470],[730,470]]}
+];
+function wiringSVG(n){
+  var s='<svg viewBox="0 0 900 540" role="img" aria-label="Diagrama de ligação dos fios até o passo '+n+'">';
+  s+='<rect class="espb" x="30" y="40" width="170" height="470" rx="14"/>';
+  s+='<text x="115" y="70" text-anchor="middle" font-family="Bricolage Grotesque,sans-serif" font-weight="700" font-size="18" fill="var(--ink)">ESP32</text>';
+  s+='<text x="115" y="88" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--muted)">DevKit, visto de cima</text>';
+  s+='<rect x="85" y="486" width="60" height="24" rx="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/><text x="115" y="502" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="Inter,sans-serif">USB</text>';
+  ESP_PINS.forEach(function(p){
+    var used=n===2&&USED[p[0]];
+    s+='<circle class="pin'+(used?" used":"")+'" cx="200" cy="'+p[1]+'" r="5.5"/><text class="pinl" x="188" y="'+(p[1]+4)+'" text-anchor="end">'+p[0]+'</text>';
+    if(n===2&&USED[p[0]])s+='<text class="usedtag" x="214" y="'+(p[1]+4)+'">'+USED[p[0]]+'</text>';
+  });
+  MODS.forEach(function(m){
+    if(m.s>n)return;
+    var hot=m.s===n||(n===6&&m.id==="relay");
+    s+='<g class="mod'+(hot?" hot":"")+'"><rect class="body" x="'+m.x+'" y="'+m.y+'" width="'+m.w+'" height="'+m.h+'" rx="10"/>';
+    s+='<text class="nm" x="'+(m.x+m.w/2)+'" y="'+(m.y+m.h-22)+'" text-anchor="middle">'+m.n+'</text><text class="cap" x="'+(m.x+m.w/2)+'" y="'+(m.y+m.h-8)+'" text-anchor="middle">'+m.c+'</text>';
+    m.L.forEach(function(p){s+='<circle class="pin" cx="'+m.x+'" cy="'+p[1]+'" r="5"/><text class="pn" x="'+(m.x+12)+'" y="'+(p[1]+4)+'">'+p[0]+'</text>'});
+    (m.Rp||[]).forEach(function(p){s+='<circle class="pin" cx="'+(m.x+m.w)+'" cy="'+p[1]+'" r="5"/><text class="pn" x="'+(m.x+m.w-12)+'" y="'+(p[1]+4)+'" text-anchor="end">'+p[0]+'</text>'});
+    s+='</g>';
+  });
+  if(n>=6)s+='<g class="mod"><text class="cap" x="800" y="380" text-anchor="middle" style="font-size:11px">diodo em paralelo com a bomba,</text><text class="cap" x="800" y="394" text-anchor="middle" style="font-size:11px">faixa no (+)</text></g>';
+  WIRES.forEach(function(w){
+    if(w.s>n)return;
+    s+='<polyline class="wire c-'+w.c+(w.s===n?" hot":"")+'" points="'+w.p.map(function(q){return q.join(",")}).join(" ")+'"/>';
+  });
+  s+='</svg>';
+  return '<div class="scrollx">'+s+'</div><div class="leg"><span><i style="background:var(--w-pwr)"></i>energia (+)</span><span><i style="background:var(--w-gnd)"></i>terra (GND)</span><span><i style="background:var(--w-sig)"></i>sinal do DHT11</span><span><i style="background:var(--w-soil)"></i>sinal do solo</span><span><i style="background:var(--w-rel)"></i>comando do relé</span></div>';
+}
+function hydroSVG(){
+  var s='<div class="scrollx"><svg viewBox="0 0 760 360" role="img" aria-label="Montagem da parte da água: bomba no reservatório, mangueira até a base da planta e sensor no solo">';
+  s+='<rect x="30" y="140" width="170" height="190" rx="10" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="200" width="162" height="126" rx="6" fill="var(--water)" opacity=".35"/>';
+  s+='<rect x="22" y="130" width="186" height="14" rx="5" fill="var(--surface2)" stroke="var(--ink)" stroke-width="1.5"/>';
+  s+='<rect x="70" y="290" width="70" height="32" rx="8" fill="var(--surface2)" stroke="var(--ink)" stroke-width="2"/><text x="105" y="311" text-anchor="middle" font-size="12" fill="var(--ink)" font-family="Inter,sans-serif">bomba</text>';
+  s+='<path d="M140 302 H 170 V 90 H 520 V 190" fill="none" stroke="var(--water)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>';
+  s+='<circle cx="520" cy="206" r="5" fill="var(--water)"/><circle cx="520" cy="226" r="4" fill="var(--water)" opacity=".6"/>';
+  s+='<path d="M450 250 H 650 L 630 340 H 470 Z" fill="var(--soil)" stroke="var(--ink)" stroke-width="2"/><rect x="450" y="244" width="200" height="12" rx="4" fill="var(--soil)" stroke="var(--ink)" stroke-width="1.5"/>';
+  s+='<path d="M560 250 V 150" stroke="var(--leaf)" stroke-width="6" stroke-linecap="round"/><ellipse cx="528" cy="168" rx="30" ry="10" fill="var(--leaf)" transform="rotate(-20 528 168)"/><ellipse cx="594" cy="160" rx="30" ry="10" fill="var(--leaf)" transform="rotate(20 594 160)"/><ellipse cx="560" cy="140" rx="12" ry="20" fill="var(--leaf)"/>';
+  s+='<rect x="616" y="200" width="12" height="100" rx="3" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><rect x="612" y="190" width="20" height="14" rx="3" fill="var(--ink)"/>';
+  s+='<line x1="640" y1="250" x2="700" y2="250" stroke="var(--muted)" stroke-dasharray="3 3"/><text x="704" y="254" font-size="11" fill="var(--muted)" font-family="Inter,sans-serif">terra</text>';
+  s+='<line x1="470" y1="344" x2="650" y2="344" stroke="var(--line)"/><text x="560" y="358" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Inter,sans-serif">furos de drenagem</text>';
+  var marks=[[105,270,1],[340,78,2],[532,206,3],[622,200,4],[560,340,5],[115,124,6]];
+  marks.forEach(function(m){s+='<circle cx="'+m[0]+'" cy="'+m[1]+'" r="12" fill="var(--leaf)"/><text x="'+m[0]+'" y="'+(m[1]+4.5)+'" text-anchor="middle" font-size="13" font-weight="700" fill="var(--leaf-ink)" font-family="Inter,sans-serif">'+m[2]+'</text>'});
+  s+='</svg></div><ol class="tips" style="margin:0;padding-left:20px;display:grid;gap:4px;font-size:.88rem"><li>Bomba afundada, com a entrada livre.</li><li>Mangueira sem dobras, presa com abraçadeira.</li><li>Ponta na base da planta, e não sobre as folhas.</li><li>Sensor na zona das raízes, longe do ponto onde a água cai.</li><li>Furos de drenagem e prato para o excesso.</li><li>Reservatório coberto, com furos só para mangueira e cabo.</li></ol>';
+  return s;
+}
+function platSVG(){
+  function bx(x,y,w,h,t,l,hot){var s='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="12" fill="var(--surface)" stroke="'+(hot?"var(--leaf)":"var(--line)")+'" stroke-width="'+(hot?2.5:1.5)+'"/><text x="'+(x+14)+'" y="'+(y+26)+'" font-family="Bricolage Grotesque,sans-serif" font-weight="700" font-size="15" fill="var(--ink)">'+t+'</text>';
+    l.forEach(function(r,i){s+='<text x="'+(x+14)+'" y="'+(y+48+i*18)+'" font-size="12" fill="var(--muted)" font-family="Inter,sans-serif">'+r+'</text>'});return s}
+  var s='<div class="scrollx"><svg viewBox="0 0 800 340" role="img" aria-label="Quem faz o quê: o administrador cadastra, o usuário vincula e configura, a plataforma guarda e o ESP32 envia leituras e recebe regras">';
+  s+=bx(20,20,250,120,"1. Administrador",["cadastra a bomba (vazão)","cadastra a planta (umidade ideal)","cadastra o dispositivo","(modelo e numeração de 8 dígitos)"]);
+  s+=bx(20,190,250,130,"2. Usuário",["adiciona o dispositivo pela numeração","escolhe a planta e a bomba","define o modo e os horários de rega"]);
+  s+=bx(310,100,200,130,"Plataforma SIF",["guarda as regras","guarda as leituras","e as médias do dia"],true);
+  s+=bx(550,100,230,130,"3. ESP32",["envia solo, temperatura","e litros a cada 1 min","recebe as regras novas"]);
+  s+='<path d="M270 80 H 290 V 150 H 310" fill="none" stroke="var(--ink)" stroke-width="2"/><path d="M270 255 H 290 V 190 H 310" fill="none" stroke="var(--ink)" stroke-width="2"/>';
+  s+='<path d="M510 140 H 550" fill="none" stroke="var(--leaf)" stroke-width="3"/><path d="M544 134 L552 140 L544 146" fill="none" stroke="var(--leaf)" stroke-width="3"/>';
+  s+='<path d="M550 190 H 510" fill="none" stroke="var(--water)" stroke-width="3"/><path d="M516 184 L508 190 L516 196" fill="none" stroke="var(--water)" stroke-width="3"/>';
+  s+='<text x="530" y="128" text-anchor="middle" font-size="10" fill="var(--leaf)" font-family="Inter,sans-serif">leituras</text><text x="530" y="212" text-anchor="middle" font-size="10" fill="var(--water)" font-family="Inter,sans-serif">regras</text>';
+  s+='</svg></div>';
+  return s;
+}
+var cfgState={wn:"",ws:"",su:"http://192.168.0.10:8000",nu:"00000001",ks:2800,km:1200,kr:2000};
+function fwTools(){
+  return '<div class="tool"><div><h3 style="margin-bottom:10px">Gerador do config.h</h3>'+
+   '<div class="field"><label for="wn" class="lab">Nome da rede Wi-Fi</label><input type="text" id="wn" autocomplete="off" placeholder="MinhaRede"></div>'+
+   '<div class="field"><label for="ws" class="lab">Senha do Wi-Fi</label><input type="password" id="ws" autocomplete="off" placeholder="fica só neste navegador"></div>'+
+   '<div class="field"><label for="su" class="lab">Endereço da plataforma</label><input type="text" id="su" autocomplete="off"></div>'+
+   '<div class="field"><label for="nu" class="lab">Numeração do dispositivo (8 dígitos)</label><input type="text" id="nu" inputmode="numeric" maxlength="8"><div class="err" id="nuErr"></div></div></div>'+
+   '<div style="min-width:0"><h3 style="margin-bottom:10px">Resultado</h3><pre class="out" id="cfg"></pre><div class="row" style="margin-top:10px"><button class="btn primary" id="copyCfg">Copiar</button><span class="mini" id="copyMsg"></span></div><p class="mini" style="margin-top:8px">Substitua estas linhas no seu config.h. O resto (pinos e tempos) já vem certo no config.example.h.</p></div></div>'+
+   '<div class="tool" style="margin-top:6px"><div><h3 style="margin-bottom:10px">Calibração do sensor de solo</h3>'+
+   '<div class="field"><label for="ks" class="lab">Leitura no ar (SOLO_SECO)</label><input type="number" id="ks"></div>'+
+   '<div class="field"><label for="km" class="lab">Leitura na água (SOLO_MOLHADO)</label><input type="number" id="km"></div><p class="mini" style="margin-top:8px">Valores de exemplo. Meça os do seu sensor no monitor serial.</p></div>'+
+   '<div><label for="kr" class="lab">Leitura atual: <span class="val" id="krV">2000</span></label><input id="kr" type="range" min="0" max="4095" step="10"><div class="meter" aria-hidden="true"><i id="kBar"></i></div><p style="margin-top:8px">O firmware mostraria <b class="val" id="kPct">50%</b> de umidade.</p></div></div>';
+}
+function bindFw(){
+  ["wn","ws","su","nu","ks","km","kr"].forEach(function(id){var el=$("#"+id);el.value=cfgState[id];
+    el.addEventListener("input",function(){cfgState[id]=el.value;drawCfg();calib()})});
+  drawCfg();calib();
+  $("#copyCfg").onclick=function(){
+    var txt=cfgText(),msg=$("#copyMsg");
+    var fb=function(){var r=document.createRange();r.selectNodeContents($("#cfg"));var s=getSelection();s.removeAllRanges();s.addRange(r);msg.textContent="Selecionado. Use Ctrl+C."};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(function(){msg.textContent="Copiado. Cole no config.h."},fb);else fb();
+  };
+}
+function cfgText(){
+  var q=function(s){return String(s).replace(/\\/g,"\\\\").replace(/"/g,'\\"')};
+  var n=cfgState.nu,ok=/^\d{8}$/.test(n),er=$("#nuErr");if(er)er.textContent=ok?"":"Use exatamente 8 números ("+n.length+" agora).";
+  return '#define WIFI_NOME      "'+q(cfgState.wn||"nome-da-sua-rede")+'"\n#define WIFI_SENHA     "'+q(cfgState.ws||"senha-da-sua-rede")+'"\n#define SERVIDOR_URL   "'+q((cfgState.su||"").replace(/\/+$/,""))+'"\n#define NUMERACAO      "'+q(n)+'"\n#define SOLO_SECO      '+(+cfgState.ks||0)+'\n#define SOLO_MOLHADO   '+(+cfgState.km||0);
+}
+function drawCfg(){var el=$("#cfg");if(el)el.textContent=cfgText()}
+function calib(){
+  var a=+cfgState.ks,b=+cfgState.km,r=+cfgState.kr;if(!$("#kPct"))return;
+  $("#krV").textContent=r;var p=a===b?0:Math.round((r-a)*100/(b-a));p=clamp(p,0,100);
+  $("#kPct").textContent=p+"%";$("#kBar").style.width=p+"%";
+}
+function serialView(){return '<div><h3 style="margin-bottom:6px">O que você deve ver no monitor serial</h3><p class="mini" style="margin-bottom:10px">Exemplo do que o firmware escreve. Os números mudam com o seu solo.</p></div><div class="serial">'+SERIAL.map(function(r){return '<div><code>'+esc(r[0])+'</code><span>'+esc(r[1])+'</span></div>'}).join("")+'</div>'}
+function matView(){
+  var chk=sget("sif-mats",{});
+  return '<div><h3 style="margin-bottom:6px">Lista de peças</h3><p class="mini">Marque o que você já tem.</p></div><div class="tablewrap"><table><thead><tr><th></th><th>Peça</th><th>Qtd</th><th>O que conferir</th></tr></thead><tbody>'+
+   MATS.map(function(m,i){return '<tr><td><input type="checkbox" class="mchk" data-i="'+i+'" id="mt'+i+'" aria-label="Tenho: '+esc(m[0])+'"'+(chk[i]?" checked":"")+'></td><td><label for="mt'+i+'">'+esc(m[0])+'</label></td><td>'+esc(m[1])+'</td><td>'+esc(m[2])+'</td></tr>'}).join("")+'</tbody></table></div>';
+}
+function troubleView(){
+  return '<div><h3 style="margin-bottom:6px">Se algo der errado</h3><p class="mini">Procure o sintoma na primeira coluna.</p></div><div class="tablewrap"><table><thead><tr><th>Sintoma</th><th>Causa provável</th><th>O que fazer</th></tr></thead><tbody>'+
+   TROUBLE.map(function(r){return '<tr><td><b>'+esc(r[0])+'</b></td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td></tr>'}).join("")+'</tbody></table></div>';
+}
+function codeBlock(label,text){return '<div class="secb"><span class="lab">'+esc(label)+'</span><div class="code"><pre>'+esc(text)+'</pre><button class="cp" data-copy="'+encodeURIComponent(text)+'">Copiar</button></div></div>'}
+
+var checks=sget("sif-checks",{});
+function stepDone(i){var s=STEPS[i];for(var k=0;k<s.tasks.length;k++)if(!checks["s"+(i+1)+"t"+k])return false;return true}
+function renderSteps(){
+  var ol=$("#stepList");ol.innerHTML="";
+  STEPS.forEach(function(s,i){
+    var li=document.createElement("li"),b=document.createElement("button");
+    b.innerHTML='<span class="n">'+(stepDone(i)?"✓":(i+1))+'</span><b>'+esc(s.t)+'</b>';
+    if(stepDone(i))b.className="ok";
+    if(i+1===App.step)b.setAttribute("aria-current","step");
+    b.onclick=function(){goStep(i+1)};li.appendChild(b);ol.appendChild(li);
+  });
+}
+function renderBuild(){
+  var n=App.step,s=STEPS[n-1],d=$("#bDiagram"),h="";
+  if(s.v==="wire")h=wiringSVG(n);else if(s.v==="hydro")h=hydroSVG();else if(s.v==="plat")h=platSVG();
+  else if(s.v==="fw")h=fwTools();else if(s.v==="serial")h=serialView();else if(s.v==="mat")h=matView();else h=troubleView();
+  d.innerHTML=h;d.scrollTop=0;
+  if(s.v==="fw")bindFw();
+  $$(".mchk",d).forEach(function(c){c.onchange=function(){var o=sget("sif-mats",{});o[c.dataset.i]=c.checked;sset("sif-mats",o)}});
+  var i="";
+  i+='<div class="secb"><span class="eyebrow">Passo '+n+' de '+STEPS.length+'</span><h2>'+esc(s.t)+'</h2><p>'+esc(s.intro)+'</p></div>';
+  if(s.parts&&s.parts.length)i+='<div class="pchips"><span class="mini">Ver no SIF:</span>'+s.parts.map(function(p){return '<button class="chip" data-part="'+p+'">'+esc(PARTS[p].n)+'</button>'}).join("")+'</div>';
+  (s.code||[]).forEach(function(c){i+=codeBlock(c[0],c[1])});
+  i+='<div class="secb"><h4>Faça e marque</h4>'+s.tasks.map(function(t,k){var key="s"+n+"t"+k;return '<label class="task"><input type="checkbox" data-k="'+key+'"'+(checks[key]?" checked":"")+'><span>'+esc(t)+'</span></label>'}).join("")+'</div>';
+  (s.warn||[]).forEach(function(t){i+='<div class="call warn"><b>Atenção</b>'+esc(t)+'</div>'});
+  (s.tip||[]).forEach(function(t){i+='<div class="call tip"><b>Dica</b>'+esc(t)+'</div>'});
+  i+='<div class="navrow"><button class="btn" id="prevS"'+(n===1?" disabled":"")+'>Anterior</button>'+(n<STEPS.length?'<button class="btn primary" id="nextS">Próximo passo</button>':'<button class="btn primary" id="doneS">Voltar a explorar</button>')+'</div>';
+  var inf=$("#bInfo");inf.innerHTML=i;inf.scrollTop=0;
+  $$("input[data-k]",inf).forEach(function(c){c.onchange=function(){checks[c.dataset.k]=c.checked;sset("sif-checks",checks);renderSteps()}});
+  $$("button[data-part]",inf).forEach(function(b){b.onclick=function(){App.goExplore(b.dataset.part)}});
+  var pv=$("#prevS"),nx=$("#nextS"),dn=$("#doneS");
+  if(pv)pv.onclick=function(){goStep(n-1)};if(nx)nx.onclick=function(){goStep(n+1)};if(dn)dn.onclick=function(){App.goExplore(null)};
+  renderSteps();
+}
+function setHash(h){App.hh=h;try{if(location.hash.slice(1)!==h)location.hash=h}catch(e){}}
+function goStep(n){App.step=clamp(n,1,STEPS.length);sset("sif-step",App.step);setHash("montar-"+App.step);renderBuild()}
+document.addEventListener("click",function(e){
+  var c=e.target.closest&&e.target.closest(".cp");if(!c)return;
+  var t=decodeURIComponent(c.dataset.copy);
+  var fb=function(){var pre=c.parentNode.querySelector("pre"),r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);c.textContent="Selecionado"};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){c.textContent="Copiado";setTimeout(function(){c.textContent="Copiar"},1400)},fb);else fb();
+});
+
+/* =====================================================================
+   NAVEGAÇÃO
+   ===================================================================== */
+function showMode(m){
+  App.mode=m;
+  $("#explore").hidden=m!=="explore";$("#build").hidden=m!=="build";
+  $("#tabExplore").setAttribute("aria-selected",m==="explore");$("#tabBuild").setAttribute("aria-selected",m==="build");
+  if(m==="explore"){if(App.V3)App.V3.resize();renderSim()}
+}
+App.goBuild=function(n){showMode("build");goStep(n||App.step)};
+App.goExplore=function(id){
+  showMode("explore");setHash("explorar");
+  if(id){if(ONLY3D[id]&&App.view!=="3d"&&App.V3)setView("3d");App.select(id)}
+};
+$("#tabExplore").onclick=function(){App.goExplore(null)};
+$("#tabBuild").onclick=function(){App.goBuild()};
+function route(){
+  var h=(location.hash||"").slice(1);
+  if(h&&h===App.hh)return;
+  App.hh=h;
+  var m=/^montar(?:-(\d+))?$/.exec(h);
+  if(m){showMode("build");App.step=clamp(+(m[1]||sget("sif-step",1)),1,STEPS.length);renderBuild()}
+  else showMode("explore");
+}
+window.addEventListener("hashchange",route);
+
+/* início */
+setView(App.V3?"3d":"schem");
+paintInspector();
+setSide(sget("sif-side",window.innerWidth>=1180),true);
+showDock(null);
+addLog("Aparelho ligado. Regras carregadas: automático, ideal 60%.","aviso");
+route();
+renderSim();
+})();
+</script>
