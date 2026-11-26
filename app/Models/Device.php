@@ -47,8 +47,8 @@ class Device extends Model
 
     public function updateIoT($device)
 {
-    $plant = Plant::where('device_id', $device->id)->first();
-    $pump = Pump::where('device_id', $device->id)->first();
+    $plant = Plant::find($device->plant_id);
+    $pump = Pump::find($device->pump_id);
 
     $dados = [
         "mode" => $device->mode,

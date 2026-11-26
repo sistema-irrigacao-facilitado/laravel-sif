@@ -12,6 +12,7 @@ class AverageData extends Model
     protected $casts = [
         'humidity' => 'array',
         'temperature' => 'array',
+        'liters' => 'array',
         'data' => 'array',
     ];
 
@@ -19,7 +20,11 @@ class AverageData extends Model
         'device_id',
         'humidity',
         'temperature',
+        'liters',
         'data',
+        'average_humidity',
+        'average_temperature',
+        'average_liters',
     ];
 
     public function device()
@@ -35,6 +40,11 @@ class AverageData extends Model
     public function addTemperatureData($temperature)
     {
         $this->temperature = array_merge($this->temperature ?? [], [$temperature]);
+    }
+
+    public function addLiters($liters)
+    {
+        $this->liters = array_merge($this->liters ?? [], [$liters]);
     }
 
     public function addDate($date)

@@ -9,6 +9,14 @@ class DataDevice extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'humidity',
+        'temperature',
+        'liters_pump',
+        'device_id',
+        'average_data_id',
+    ];
+
     public function device(){
         return $this->belongsTo('App\Models\Device');
     }
