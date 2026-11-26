@@ -1,5 +1,7 @@
 <title>SIF Laboratório</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32">
+<link rel="apple-touch-icon" href="img/isologo-gr.png">
 <meta name="description" content="Explore o SIF em 3D e em esquema, clique nas peças para entender cada uma e monte o seu passo a passo.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,8 +47,11 @@ button{font:inherit;color:inherit}
 /* barra superior */
 .top{flex:none;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:10px;border-bottom:1px solid var(--line)}
 .brand{font-family:var(--f-display);font-weight:700;font-size:1.15rem;display:flex;align-items:center;gap:8px;margin-right:auto;color:var(--ink);text-decoration:none}
-.brand svg{width:26px;height:26px}
-.brand small{font-family:var(--f-body);font-weight:500;color:var(--muted);font-size:.8rem}
+.brand img{height:34px;width:auto}
+.lg-d{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lg-l{display:none}:root:not([data-theme="light"]) .lg-d{display:inline}}
+:root[data-theme="dark"] .lg-l{display:none}:root[data-theme="dark"] .lg-d{display:inline}
+.brand small{font-family:var(--f-body);font-weight:600;color:var(--muted);font-size:.88rem}
 .modes{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
 .modes button{border:0;background:transparent;padding:9px 16px;font-weight:600;cursor:pointer;min-height:44px}
 .modes button[aria-selected="true"]{background:var(--leaf);color:var(--leaf-ink)}
@@ -257,9 +262,10 @@ pre.out{margin:6px 0 0;padding:12px 14px;border-radius:10px;background:var(--sur
 </style>
 
 <header class="top">
-  <a class="brand" href="#explorar" aria-label="SIF Laboratório">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C10 11 7 15.5 7 20a9 9 0 0 0 18 0c0-4.500-3-9-9-17z" fill="var(--water)"/><path d="M16 27v-9m0 3-4-4m4 2 4-4" stroke="var(--bg)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-    <span>SIF <small>Sistema de Irrigação Facilitado</small></span>
+  <a class="brand" href="#explorar" aria-label="SIF, Sistema de Irrigação Facilitado">
+    <img class="lg-l" src="img/isologo-gr.png" alt="" width="40" height="38">
+    <img class="lg-d" src="img/isologo-wh.png" alt="" width="40" height="38">
+    <span><small>Sistema de Irrigação Facilitado</small></span>
   </a>
   <div class="modes" role="tablist" aria-label="Modo">
     <button role="tab" id="tabExplore" aria-selected="true">Explorar</button>
@@ -794,7 +800,10 @@ box(Bx,3,0.08,2,wm,0,0.04,0);box(Bx,3,0.7,0.08,wm,0,0.39,0.96);box(Bx,3,0.7,0.08
 box(Bx,0.08,0.7,2,wm,1.46,0.39,0);box(Bx,0.08,0.7,2,wm,-1.46,0.39,0);
 var Ld=part("lid",0.9,0.4,-2.3,0,3.6,0);
 box(Ld,3.06,0.1,2.06,M(0xa9c2b9,{transparent:true,opacity:0.42,depthWrite:false,roughness:0.2}),0,0.82,0);
-box(Ld,0.7,0.03,0.7,M(0x2b7a4b),0,0.89,0);
+/* logo oficial do SIF impresso na tampa */
+var logoTex=new T.TextureLoader().load("img/isologo-gr.png");logoTex.encoding=T.sRGBEncoding;
+var logoMat=new T.MeshBasicMaterial({map:logoTex,transparent:true,depthWrite:false});logoMat.userData.noHL=true;
+var logoPl=add(Ld,new T.PlaneGeometry(1.5,1.4),logoMat,0,0.875,0);logoPl.rotation.x=-Math.PI/2;logoPl.castShadow=false;logoPl.userData.nohit=true;logoPl.userData.hl=false;
 
 var E=part("esp",0.3,0.62,-2.25,-0.8,2.3,-0.8);
 box(E,1.6,0.07,0.9,M(0x1f6e4a),0,0,0);
