@@ -6,6 +6,8 @@ Inicialmente desenvolvido em PHP puro, foi posteriormente migrado para **Laravel
 
 🏆 **Premiado com 1º Lugar na categoria Ciências Agrárias da FI Ciências 2024**, uma das maiores feiras de ciência da América Latina.
 
+🧪 **Veja funcionando, sem montar nada:** [Laboratório do SIF](https://sistema-irrigacao-facilitado.github.io/laravel-sif/), com modelo 3D interativo, esquema e guia de montagem passo a passo.
+
 ---
 
 ## 🚀 Como Rodar

@@ -6,6 +6,8 @@ Originally built in pure PHP, the project was upgraded to **Laravel** to simplif
 
 🏆 **Awarded 1st Place in the Agricultural Sciences category at FI Ciências 2024**, one of the largest science fairs in Latin America.
 
+🧪 **See it working, no hardware needed:** [SIF Lab](https://sistema-irrigacao-facilitado.github.io/laravel-sif/), with an interactive 3D model, a schematic view and a step-by-step build guide (in Portuguese).
+
 ---
 
 ### 🚀 How to Run
